@@ -1,12 +1,10 @@
-export const runtime = 'nodejs';
-
 import { NextRequest, NextResponse } from "next/server";
 import { JWTService } from "../../auth/jwt-service";
 
 const jwtService = new JWTService()
 
 export async function authMiddleware(request: NextRequest) {
-  console.log('🔍 Middleware executando para:', request.url);
+  console.log('🔍 Proxy executando para:', request.url);
 
   const token = request.cookies.get('auth_token')?.value
 

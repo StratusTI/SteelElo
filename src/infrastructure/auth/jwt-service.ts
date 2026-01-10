@@ -6,26 +6,19 @@ import { JWTPayload } from "./jwt-payload";
 export class JWTService implements AuthService {
   private readonly secret: Uint8Array
 
-  constructor(
-    secret?: string
-  ) {
+  constructor(secret?: string) {
     const resolvedSecret = secret || process.env.JWT_SECRET;
 
     if (!resolvedSecret) {
       throw new Error('JWT_SECRET is not defined');
     }
 
-    // Converte a string secret para Uint8Array
     this.secret = new TextEncoder().encode(resolvedSecret);
   }
 
   async verifyToken(token: string): Promise<UserProps | null> {
     try {
-      console.log('🔐 Verificando token...');
-
       const { payload } = await jose.jwtVerify(token, this.secret);
-
-      console.log('✅ Token válido:', payload.data);
       return UserEntity.fromJSON(payload.data as UserProps)
     } catch (err) {
       console.error('❌ JWT verification failed:', err);
