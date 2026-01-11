@@ -1,5 +1,7 @@
 import { ApiReference } from '@scalar/nextjs-api-reference'
-const config = {
+import type { HtmlRenderingConfiguration } from '@scalar/nextjs-api-reference'
+
+const config: Partial<HtmlRenderingConfiguration> = {
   url: 'http://localhost:3000/openapi.json',
   theme: 'alternate',
 }
