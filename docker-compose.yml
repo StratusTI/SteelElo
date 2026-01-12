@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   nextjs:
-    image: ghcr.io/${GITHUB_REPOSITORY}:latest
+    image: stratusti/steelelo:latest
     container_name: nextjs-app
     restart: unless-stopped
     ports:
