@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: stratus-ti/steelelo
+  IMAGE_NAME: stratusti/steelelo
 
 jobs:
   build-and-push:
