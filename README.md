@@ -1,74 +1,57 @@
-# Como usar o AuthContext & AuthProvider
+# Validando Usuário/JWT- Cookies Headers
 
 ## API Routes
 ```ts
-// app/api/users/route.ts
-import { requireAuth } from '@/interface-adapters/guards/require-auth'
-import { makeGetUsersUseCase } from '@/application/use-cases/factories/make-get-users'
+// app/api/auth/me/route.ts
+import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 
 export async function GET() {
-  // Verificar autenticação
-  const { user, error } = await requireAuth()
-  if (error) return error
+  const { user, error } = await verifyJWT();
+  if (error) return error;
 
-  // Executar use case
-  const getUsers = makeGetUsersUseCase()
-  const result = await getUsers.execute()
+  return NextResponse.json(user);
+}
 
-  return Response.json(result.data, { status: result.statusCode })
+export async function POST(request: Request) {
+  const { email, password } = await request.json();
+  const { user, error } = await verifyJWT({ email, password });
+  if (error) return error;
+
+  return NextResponse.json(user);
 }
 ```
 
 ```ts
 // app/api/users/[id]/route.ts
-import { requireAuth } from '@/interface-adapters/guards/require-auth'
-import { makeGetUserByIdUseCase } from '@/application/use-cases/factories/make-get-user-by-id'
+import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 
 export async function GET() {
-  // Verificar autenticação
-  const { user, error } = await requireAuth()
-  if (error) return error
+  const { user, error } = await verifyJWT();
+  if (error) return error;
 
-  // Executar use case
-  const getUserById = makeGetUserByIdUseCase()
-  const result = await getUserById.execute()
-
-  return Response.json(result.data, { status: result.statusCode })
+  return NextResponse.json(user);
 }
-```
 
-```ts
-// app/api/admin/users/route.ts
-import { requireAdmin } from '@/interface-adapters/guards/require-admin'
-import { makeDeleteUserUseCase } from '@/application/use-cases/factories/make-delete-user'
+export async function PUT(request: Request) {
+  const { user, error } = await verifyJWT();
+  if (error) return error;
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  // Verificar se é admin
-  const { user, error } = await requireAdmin()
-  if (error) return error
+  const { name, email } = await request.json();
+  const { user: updatedUser, error: updateError } = await updateUser({ id: user.id, name, email });
+  if (updateError) return updateError;
 
-  const deleteUser = makeDeleteUserUseCase()
-  const result = await deleteUser.execute({ id: params.id })
-
-  return Response.json(result.data, { status: result.statusCode })
+  return NextResponse.json(updatedUser);
 }
 ```
 
 ## Server Components
 ```tsx
 // app/dashboard/page.tsx
-import { getAuthUser } from '@/interface-adapters/guards/require-auth'
-import { redirect } from 'next/navigation'
+import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 
 export default async function DashboardPage() {
-  const user = await getAuthUser()
-
-  if (!user) {
-    redirect('/login')
-  }
+  const { user, error } = await verifyJWT();
+  if (error) return error;
 
   return (
     <div>

@@ -1,5 +1,5 @@
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import { NextResponse } from 'next/server';
+import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 
 export async function GET() {
   const { user, error } = await verifyJWT();
