@@ -6,13 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 44385",
-    "lint": "biome check",
+    "lint": "biome lint --write",
     "format": "biome format --write",
+    "format:check": "biome format --check",
+    "test:unit": "vitest run",
     "prisma:generate": "prisma generate --schema=./prisma/elo/schema.prisma && prisma generate --schema=./prisma/steel/schema.prisma",
     "prisma:studio:steel": "prisma studio --schema=./prisma/steel/schema.prisma",
     "prisma:studio:elo": "cross-env SELECTED_SCHEMA=elo prisma studio",
     "prisma:pull:steel": "cross-env SELECTED_SCHEMA=steel prisma db pull",
-    "prisma:pull:elo": "cross-env SELECTED_SCHEMA=elo prisma db pull"
+    "prisma:pull:elo": "cross-env SELECTED_SCHEMA=elo prisma db pull",
+    "prisma:validate": "prisma validate && prisma format",
+    "prepare": "husky"
   },
   "dependencies": {
     "@prisma/client": "6.18.0",
@@ -26,14 +30,18 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
+    "husky": "^9.1.7",
     "prisma": "6.18.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.17"
   }
 }
