@@ -1,10 +1,8 @@
-// app/api/auth/me/route.ts
-
+import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/src/interface-adapters/guards/require-auth';
 
 export async function GET() {
-  const { user, error } = await requireAuth();
+  const { user, error } = await verifyJWT();
 
   if (error || !user) {
     return (

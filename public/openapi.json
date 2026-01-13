@@ -16,22 +16,147 @@
     }
   ],
   "paths": {
-    "/hello": {
+    "/auth/me": {
       "get": {
-        "tags": ["Exemplo"],
-        "summary": "Retorna uma saudação",
-        "description": "Endpoint simples que retorna Hello World",
+        "tags": ["Autenticação"],
+        "summary": "Retorna dados do usuário autenticado",
+        "description": "Endpoint que retorna as informações completas do usuário atualmente autenticado através do token JWT armazenado nos cookies",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Sucesso",
+            "description": "Dados do usuário retornados com sucesso",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID único do usuário",
+                          "example": 1
+                        },
+                        "nome": {
+                          "type": "string",
+                          "description": "Primeiro nome do usuário",
+                          "example": "João"
+                        },
+                        "sobrenome": {
+                          "type": "string",
+                          "description": "Sobrenome do usuário",
+                          "example": "Silva"
+                        },
+                        "nomeCompleto": {
+                          "type": "string",
+                          "description": "Nome completo do usuário",
+                          "example": "João Silva"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "description": "E-mail do usuário",
+                          "example": "joao.silva@exemplo.com"
+                        },
+                        "foto": {
+                          "type": "string",
+                          "description": "URL da foto de perfil do usuário",
+                          "example": "https://exemplo.com/fotos/joao.jpg"
+                        },
+                        "telefone": {
+                          "type": "string",
+                          "description": "Telefone do usuário",
+                          "example": "(11) 98765-4321"
+                        },
+                        "admin": {
+                          "type": "boolean",
+                          "description": "Indica se o usuário é administrador",
+                          "example": false
+                        },
+                        "superadmin": {
+                          "type": "boolean",
+                          "description": "Indica se o usuário é super administrador",
+                          "example": false
+                        },
+                        "role": {
+                          "type": "string",
+                          "description": "Papel/função do usuário no sistema",
+                          "enum": ["user", "admin", "superadmin"],
+                          "example": "user"
+                        },
+                        "idempresa": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "ID da empresa associada ao usuário",
+                          "example": 5
+                        },
+                        "departamento": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Departamento do usuário",
+                          "example": "TI"
+                        },
+                        "time": {
+                          "type": "string",
+                          "description": "Time/equipe do usuário",
+                          "example": "Desenvolvimento"
+                        },
+                        "online": {
+                          "type": "boolean",
+                          "description": "Indica se o usuário está online",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado - Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
                     "message": {
                       "type": "string",
-                      "example": "Hello World"
+                      "example": "Não autenticado"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Token ausente",
+                    "value": {
+                      "message": "Unauthorized"
+                    }
+                  },
+                  "invalidToken": {
+                    "summary": "Token inválido",
+                    "value": {
+                      "message": "Invalid token"
+                    }
+                  },
+                  "notAuthenticated": {
+                    "summary": "Usuário não autenticado",
+                    "value": {
+                      "success": false,
+                      "message": "Não autenticado"
                     }
                   }
                 }
@@ -42,10 +167,20 @@
       }
     }
   },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "auth_token",
+        "description": "Token JWT de autenticação armazenado em cookie"
+      }
+    }
+  },
   "tags": [
     {
-      "name": "Exemplo",
-      "description": "Endpoints de exemplo"
+      "name": "Autenticação",
+      "description": "Endpoints relacionados à autenticação e gerenciamento de sessão do usuário"
     }
   ]
 }
