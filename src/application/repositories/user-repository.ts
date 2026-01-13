@@ -1,3 +1,5 @@
+// src/application/repositories/user-repository.ts
+
 import { UserEntity } from "@/src/domain/entities/user";
 
 export interface UserRepository {

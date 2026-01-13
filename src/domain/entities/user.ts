@@ -1,3 +1,5 @@
+// src/domain/entities/user.ts
+
 export interface UserProps {
   id: number
   nome: string

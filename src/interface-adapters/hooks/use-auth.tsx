@@ -1,4 +1,5 @@
 // src/interface-adapters/hooks/use-auth.tsx
+
 'use client'
 
 import { UserProps } from "@/src/domain/entities/user"

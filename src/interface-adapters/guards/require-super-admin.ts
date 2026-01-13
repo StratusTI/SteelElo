@@ -1,4 +1,5 @@
 // src/interface-adapters/guards/require-syper-admin.ts
+
 import { UserProps } from "@/src/domain/entities/user";
 import { NextResponse } from "next/server";
 import { requireAuth } from "./require-auth";
