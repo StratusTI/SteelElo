@@ -1,17 +1,21 @@
 import { getAuthUser } from '@/src/http/middlewares/verify-jwt';
-import { getUserFullName, isUserAdmin, isUserSuperAdmin } from '@/src/utils/user';
+import {
+  getUserFullName,
+  isUserAdmin,
+  isUserSuperAdmin,
+} from '@/src/utils/user';
 import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
-  const user = await getAuthUser()
+  const user = await getAuthUser();
 
   if (!user) {
-    redirect('https://painel.stratustelecom.com.br/main/login.php')
+    redirect('https://painel.stratustelecom.com.br/main/login.php');
   }
 
-  const fullName = getUserFullName(user)
-  const isAdmin = isUserAdmin(user)
-  const isSuperAdmin = isUserSuperAdmin(user)
+  const fullName = getUserFullName(user);
+  const isAdmin = isUserAdmin(user);
+  const isSuperAdmin = isUserSuperAdmin(user);
 
   return (
     <div>
@@ -20,5 +24,5 @@ export default async function ProfilePage() {
       <p>Admin: {isAdmin ? 'Yes' : 'No'}</p>
       <p>Super Admin: {isSuperAdmin ? 'Yes' : 'No'}</p>
     </div>
-  )
+  );
 }
