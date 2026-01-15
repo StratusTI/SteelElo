@@ -5,7 +5,7 @@ export async function GET() {
   const { user, error } = await verifyJWT();
 
   if (error || !user) {
-    return error
+    return error;
   }
 
   const nomeCompleto = `${user.nome} ${user.sobrenome}`.trim();
@@ -28,5 +28,5 @@ export async function GET() {
     },
     200,
     'User data retrieved successfully',
-  )
+  );
 }

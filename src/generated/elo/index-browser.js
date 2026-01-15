@@ -138,6 +138,7 @@ exports.Prisma.ProjetoMembroScalarFieldEnum = {
   projetoId: 'projetoId',
   usuarioId: 'usuarioId',
   role: 'role',
+  source: 'source',
   adicionadoEm: 'adicionadoEm'
 };
 
@@ -629,6 +630,10 @@ exports.Prisma.ProjetoOrderByRelevanceFieldEnum = {
   nome: 'nome',
   descricao: 'descricao',
   cor: 'cor'
+};
+
+exports.Prisma.ProjetoMembroOrderByRelevanceFieldEnum = {
+  source: 'source'
 };
 
 exports.Prisma.ColunaOrderByRelevanceFieldEnum = {

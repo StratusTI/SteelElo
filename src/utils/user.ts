@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
-import { ErrorResponse } from "../@types/http-response";
 import { User } from "../@types/user";
+import type { VerifyJWTResult } from "../http/middlewares/verify-jwt";
 import { verifyUserRole } from "../http/middlewares/verify-users-role";
 
 export function getUserFullName(user: User): string {
@@ -15,10 +14,10 @@ export function isUserSuperAdmin(user: User): boolean {
   return user.superadmin;
 }
 
-export async function requireAdmin(): Promise<{ user: User | null; error ?: NextResponse<ErrorResponse> }> {
+export async function requireAdmin(): Promise<VerifyJWTResult> {
   return verifyUserRole('admin')
 }
 
-export async function requireSuperAdmin(): Promise<{ user: User | null; error ?: NextResponse<ErrorResponse> }> {
+export async function requireSuperAdmin(): Promise<VerifyJWTResult> {
   return verifyUserRole('superadmin')
 }

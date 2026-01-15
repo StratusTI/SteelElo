@@ -6984,6 +6984,7 @@ export namespace Prisma {
     projetoId: number | null
     usuarioId: number | null
     role: $Enums.ProjetoMemberRole | null
+    source: string | null
     adicionadoEm: Date | null
   }
 
@@ -6992,6 +6993,7 @@ export namespace Prisma {
     projetoId: number | null
     usuarioId: number | null
     role: $Enums.ProjetoMemberRole | null
+    source: string | null
     adicionadoEm: Date | null
   }
 
@@ -7000,6 +7002,7 @@ export namespace Prisma {
     projetoId: number
     usuarioId: number
     role: number
+    source: number
     adicionadoEm: number
     _all: number
   }
@@ -7022,6 +7025,7 @@ export namespace Prisma {
     projetoId?: true
     usuarioId?: true
     role?: true
+    source?: true
     adicionadoEm?: true
   }
 
@@ -7030,6 +7034,7 @@ export namespace Prisma {
     projetoId?: true
     usuarioId?: true
     role?: true
+    source?: true
     adicionadoEm?: true
   }
 
@@ -7038,6 +7043,7 @@ export namespace Prisma {
     projetoId?: true
     usuarioId?: true
     role?: true
+    source?: true
     adicionadoEm?: true
     _all?: true
   }
@@ -7133,6 +7139,7 @@ export namespace Prisma {
     projetoId: number
     usuarioId: number
     role: $Enums.ProjetoMemberRole | null
+    source: string | null
     adicionadoEm: Date | null
     _count: ProjetoMembroCountAggregateOutputType | null
     _avg: ProjetoMembroAvgAggregateOutputType | null
@@ -7160,6 +7167,7 @@ export namespace Prisma {
     projetoId?: boolean
     usuarioId?: boolean
     role?: boolean
+    source?: boolean
     adicionadoEm?: boolean
     projeto?: boolean | ProjetoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projetoMembro"]>
@@ -7171,10 +7179,11 @@ export namespace Prisma {
     projetoId?: boolean
     usuarioId?: boolean
     role?: boolean
+    source?: boolean
     adicionadoEm?: boolean
   }
 
-  export type ProjetoMembroOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projetoId" | "usuarioId" | "role" | "adicionadoEm", ExtArgs["result"]["projetoMembro"]>
+  export type ProjetoMembroOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projetoId" | "usuarioId" | "role" | "source" | "adicionadoEm", ExtArgs["result"]["projetoMembro"]>
   export type ProjetoMembroInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projeto?: boolean | ProjetoDefaultArgs<ExtArgs>
   }
@@ -7189,6 +7198,7 @@ export namespace Prisma {
       projetoId: number
       usuarioId: number
       role: $Enums.ProjetoMemberRole | null
+      source: string | null
       adicionadoEm: Date | null
     }, ExtArgs["result"]["projetoMembro"]>
     composites: {}
@@ -7564,6 +7574,7 @@ export namespace Prisma {
     readonly projetoId: FieldRef<"ProjetoMembro", 'Int'>
     readonly usuarioId: FieldRef<"ProjetoMembro", 'Int'>
     readonly role: FieldRef<"ProjetoMembro", 'ProjetoMemberRole'>
+    readonly source: FieldRef<"ProjetoMembro", 'String'>
     readonly adicionadoEm: FieldRef<"ProjetoMembro", 'DateTime'>
   }
     
@@ -48895,6 +48906,7 @@ export namespace Prisma {
     projetoId: 'projetoId',
     usuarioId: 'usuarioId',
     role: 'role',
+    source: 'source',
     adicionadoEm: 'adicionadoEm'
   };
 
@@ -49512,6 +49524,13 @@ export namespace Prisma {
   };
 
   export type ProjetoOrderByRelevanceFieldEnum = (typeof ProjetoOrderByRelevanceFieldEnum)[keyof typeof ProjetoOrderByRelevanceFieldEnum]
+
+
+  export const ProjetoMembroOrderByRelevanceFieldEnum: {
+    source: 'source'
+  };
+
+  export type ProjetoMembroOrderByRelevanceFieldEnum = (typeof ProjetoMembroOrderByRelevanceFieldEnum)[keyof typeof ProjetoMembroOrderByRelevanceFieldEnum]
 
 
   export const ColunaOrderByRelevanceFieldEnum: {
@@ -50181,6 +50200,7 @@ export namespace Prisma {
     projetoId?: IntFilter<"ProjetoMembro"> | number
     usuarioId?: IntFilter<"ProjetoMembro"> | number
     role?: EnumProjetoMemberRoleNullableFilter<"ProjetoMembro"> | $Enums.ProjetoMemberRole | null
+    source?: StringNullableFilter<"ProjetoMembro"> | string | null
     adicionadoEm?: DateTimeNullableFilter<"ProjetoMembro"> | Date | string | null
     projeto?: XOR<ProjetoScalarRelationFilter, ProjetoWhereInput>
   }
@@ -50190,28 +50210,32 @@ export namespace Prisma {
     projetoId?: SortOrder
     usuarioId?: SortOrder
     role?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
     adicionadoEm?: SortOrderInput | SortOrder
     projeto?: ProjetoOrderByWithRelationInput
+    _relevance?: ProjetoMembroOrderByRelevanceInput
   }
 
   export type ProjetoMembroWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    projetoId_usuarioId?: ProjetoMembroProjetoIdUsuarioIdCompoundUniqueInput
+    projetoId_usuarioId_source?: ProjetoMembroProjetoIdUsuarioIdSourceCompoundUniqueInput
     AND?: ProjetoMembroWhereInput | ProjetoMembroWhereInput[]
     OR?: ProjetoMembroWhereInput[]
     NOT?: ProjetoMembroWhereInput | ProjetoMembroWhereInput[]
     projetoId?: IntFilter<"ProjetoMembro"> | number
     usuarioId?: IntFilter<"ProjetoMembro"> | number
     role?: EnumProjetoMemberRoleNullableFilter<"ProjetoMembro"> | $Enums.ProjetoMemberRole | null
+    source?: StringNullableFilter<"ProjetoMembro"> | string | null
     adicionadoEm?: DateTimeNullableFilter<"ProjetoMembro"> | Date | string | null
     projeto?: XOR<ProjetoScalarRelationFilter, ProjetoWhereInput>
-  }, "id" | "projetoId_usuarioId">
+  }, "id" | "projetoId_usuarioId_source">
 
   export type ProjetoMembroOrderByWithAggregationInput = {
     id?: SortOrder
     projetoId?: SortOrder
     usuarioId?: SortOrder
     role?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
     adicionadoEm?: SortOrderInput | SortOrder
     _count?: ProjetoMembroCountOrderByAggregateInput
     _avg?: ProjetoMembroAvgOrderByAggregateInput
@@ -50228,6 +50252,7 @@ export namespace Prisma {
     projetoId?: IntWithAggregatesFilter<"ProjetoMembro"> | number
     usuarioId?: IntWithAggregatesFilter<"ProjetoMembro"> | number
     role?: EnumProjetoMemberRoleNullableWithAggregatesFilter<"ProjetoMembro"> | $Enums.ProjetoMemberRole | null
+    source?: StringNullableWithAggregatesFilter<"ProjetoMembro"> | string | null
     adicionadoEm?: DateTimeNullableWithAggregatesFilter<"ProjetoMembro"> | Date | string | null
   }
 
@@ -53645,6 +53670,7 @@ export namespace Prisma {
   export type ProjetoMembroCreateInput = {
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
     projeto: ProjetoCreateNestedOneWithoutMembrosInput
   }
@@ -53654,12 +53680,14 @@ export namespace Prisma {
     projetoId: number
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
   }
 
   export type ProjetoMembroUpdateInput = {
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     projeto?: ProjetoUpdateOneRequiredWithoutMembrosNestedInput
   }
@@ -53669,6 +53697,7 @@ export namespace Prisma {
     projetoId?: IntFieldUpdateOperationsInput | number
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -53677,12 +53706,14 @@ export namespace Prisma {
     projetoId: number
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
   }
 
   export type ProjetoMembroUpdateManyMutationInput = {
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -53691,6 +53722,7 @@ export namespace Prisma {
     projetoId?: IntFieldUpdateOperationsInput | number
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -57372,9 +57404,16 @@ export namespace Prisma {
     isNot?: ProjetoWhereInput
   }
 
-  export type ProjetoMembroProjetoIdUsuarioIdCompoundUniqueInput = {
+  export type ProjetoMembroOrderByRelevanceInput = {
+    fields: ProjetoMembroOrderByRelevanceFieldEnum | ProjetoMembroOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ProjetoMembroProjetoIdUsuarioIdSourceCompoundUniqueInput = {
     projetoId: number
     usuarioId: number
+    source: string
   }
 
   export type ProjetoMembroCountOrderByAggregateInput = {
@@ -57382,6 +57421,7 @@ export namespace Prisma {
     projetoId?: SortOrder
     usuarioId?: SortOrder
     role?: SortOrder
+    source?: SortOrder
     adicionadoEm?: SortOrder
   }
 
@@ -57396,6 +57436,7 @@ export namespace Prisma {
     projetoId?: SortOrder
     usuarioId?: SortOrder
     role?: SortOrder
+    source?: SortOrder
     adicionadoEm?: SortOrder
   }
 
@@ -57404,6 +57445,7 @@ export namespace Prisma {
     projetoId?: SortOrder
     usuarioId?: SortOrder
     role?: SortOrder
+    source?: SortOrder
     adicionadoEm?: SortOrder
   }
 
@@ -65471,6 +65513,7 @@ export namespace Prisma {
   export type ProjetoMembroCreateWithoutProjetoInput = {
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
   }
 
@@ -65478,6 +65521,7 @@ export namespace Prisma {
     id?: number
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
   }
 
@@ -65963,6 +66007,7 @@ export namespace Prisma {
     projetoId?: IntFilter<"ProjetoMembro"> | number
     usuarioId?: IntFilter<"ProjetoMembro"> | number
     role?: EnumProjetoMemberRoleNullableFilter<"ProjetoMembro"> | $Enums.ProjetoMemberRole | null
+    source?: StringNullableFilter<"ProjetoMembro"> | string | null
     adicionadoEm?: DateTimeNullableFilter<"ProjetoMembro"> | Date | string | null
   }
 
@@ -74952,6 +74997,7 @@ export namespace Prisma {
     id?: number
     usuarioId: number
     role?: $Enums.ProjetoMemberRole | null
+    source?: string | null
     adicionadoEm?: Date | string | null
   }
 
@@ -75287,6 +75333,7 @@ export namespace Prisma {
   export type ProjetoMembroUpdateWithoutProjetoInput = {
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -75294,6 +75341,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -75301,6 +75349,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     usuarioId?: IntFieldUpdateOperationsInput | number
     role?: NullableEnumProjetoMemberRoleFieldUpdateOperationsInput | $Enums.ProjetoMemberRole | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
     adicionadoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 

@@ -44,10 +44,11 @@ model ProjetoMembro {
   projetoId    Int                @map("projeto_id")
   usuarioId    Int                @map("usuario_id")
   role         ProjetoMemberRole? @default(member)
+  source       String?            @default("direct") @db.VarChar(50)
   adicionadoEm DateTime?          @default(now()) @map("adicionado_em") @db.DateTime(0)
   projeto      Projeto            @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_pm_projeto")
 
-  @@unique([projetoId, usuarioId], map: "uniq_projeto_usuario")
+  @@unique([projetoId, usuarioId, source], map: "uniq_projeto_usuario_source")
   @@index([projetoId], map: "idx_projeto")
   @@index([usuarioId], map: "idx_usuario")
   @@map("projeto_membros")

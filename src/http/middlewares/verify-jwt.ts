@@ -1,3 +1,4 @@
+import { ErrorResponse } from "@/src/@types/http-response";
 import { User } from "@/src/@types/user";
 import { standardError } from "@/src/utils/http-response";
 import { decodeToken, verifyToken } from "@/src/utils/jwt";
@@ -14,7 +15,12 @@ export async function getAuthUser(): Promise<User | null> {
   return user
 }
 
-export async function verifyJWT(): Promise<{ user: User | null; error?: NextResponse }> {
+export interface VerifyJWTResult {
+  user: User | null
+  error?: NextResponse<ErrorResponse>
+}
+
+export async function verifyJWT(): Promise<VerifyJWTResult> {
   const cookieStore = await cookies()
   const token = cookieStore.get('auth_token')?.value
 

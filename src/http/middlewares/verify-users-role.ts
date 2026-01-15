@@ -20,6 +20,10 @@ export async function verifyUserRole(
 }> {
   const { user, error } = await verifyJWT()
 
+  if (error || !user) {
+    return { user: null, error }
+  }
+
   if (user?.superadmin) return { user }
 
   if (requiredRole === 'superadmin') {
