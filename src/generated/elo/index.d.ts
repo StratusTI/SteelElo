@@ -546,6 +546,15 @@ export const AtividadeVisibilidade: {
 
 export type AtividadeVisibilidade = (typeof AtividadeVisibilidade)[keyof typeof AtividadeVisibilidade]
 
+
+export const DocumentoStatus: {
+  draft: 'draft',
+  published: 'published',
+  private: 'private'
+};
+
+export type DocumentoStatus = (typeof DocumentoStatus)[keyof typeof DocumentoStatus]
+
 }
 
 export type ProjetoStatus = $Enums.ProjetoStatus
@@ -675,6 +684,10 @@ export const AtividadeEntidade: typeof $Enums.AtividadeEntidade
 export type AtividadeVisibilidade = $Enums.AtividadeVisibilidade
 
 export const AtividadeVisibilidade: typeof $Enums.AtividadeVisibilidade
+
+export type DocumentoStatus = $Enums.DocumentoStatus
+
+export const DocumentoStatus: typeof $Enums.DocumentoStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5586,11 +5599,13 @@ export namespace Prisma {
   export type ProjetoAvgAggregateOutputType = {
     id: number | null
     ownerId: number | null
+    idempresa: number | null
   }
 
   export type ProjetoSumAggregateOutputType = {
     id: number | null
     ownerId: number | null
+    idempresa: number | null
   }
 
   export type ProjetoMinAggregateOutputType = {
@@ -5601,6 +5616,7 @@ export namespace Prisma {
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number | null
+    idempresa: number | null
     status: $Enums.ProjetoStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5614,6 +5630,7 @@ export namespace Prisma {
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number | null
+    idempresa: number | null
     status: $Enums.ProjetoStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5627,6 +5644,7 @@ export namespace Prisma {
     dataInicio: number
     dataFim: number
     ownerId: number
+    idempresa: number
     status: number
     createdAt: number
     updatedAt: number
@@ -5637,11 +5655,13 @@ export namespace Prisma {
   export type ProjetoAvgAggregateInputType = {
     id?: true
     ownerId?: true
+    idempresa?: true
   }
 
   export type ProjetoSumAggregateInputType = {
     id?: true
     ownerId?: true
+    idempresa?: true
   }
 
   export type ProjetoMinAggregateInputType = {
@@ -5652,6 +5672,7 @@ export namespace Prisma {
     dataInicio?: true
     dataFim?: true
     ownerId?: true
+    idempresa?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5665,6 +5686,7 @@ export namespace Prisma {
     dataInicio?: true
     dataFim?: true
     ownerId?: true
+    idempresa?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5678,6 +5700,7 @@ export namespace Prisma {
     dataInicio?: true
     dataFim?: true
     ownerId?: true
+    idempresa?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5778,6 +5801,7 @@ export namespace Prisma {
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number
+    idempresa: number
     status: $Enums.ProjetoStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5810,6 +5834,7 @@ export namespace Prisma {
     dataInicio?: boolean
     dataFim?: boolean
     ownerId?: boolean
+    idempresa?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5839,12 +5864,13 @@ export namespace Prisma {
     dataInicio?: boolean
     dataFim?: boolean
     ownerId?: boolean
+    idempresa?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjetoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "descricao" | "cor" | "dataInicio" | "dataFim" | "ownerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["projeto"]>
+  export type ProjetoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "descricao" | "cor" | "dataInicio" | "dataFim" | "ownerId" | "idempresa" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["projeto"]>
   export type ProjetoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     atividades?: boolean | Projeto$atividadesArgs<ExtArgs>
     capacidadeTime?: boolean | Projeto$capacidadeTimeArgs<ExtArgs>
@@ -5887,6 +5913,7 @@ export namespace Prisma {
       dataInicio: Date | null
       dataFim: Date | null
       ownerId: number
+      idempresa: number
       status: $Enums.ProjetoStatus | null
       createdAt: Date | null
       updatedAt: Date | null
@@ -6279,6 +6306,7 @@ export namespace Prisma {
     readonly dataInicio: FieldRef<"Projeto", 'DateTime'>
     readonly dataFim: FieldRef<"Projeto", 'DateTime'>
     readonly ownerId: FieldRef<"Projeto", 'Int'>
+    readonly idempresa: FieldRef<"Projeto", 'Int'>
     readonly status: FieldRef<"Projeto", 'ProjetoStatus'>
     readonly createdAt: FieldRef<"Projeto", 'DateTime'>
     readonly updatedAt: FieldRef<"Projeto", 'DateTime'>
@@ -42583,6 +42611,7 @@ export namespace Prisma {
     parentId: number | null
     ordem: number | null
     projetoId: number | null
+    status: $Enums.DocumentoStatus | null
     createdBy: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -42596,6 +42625,7 @@ export namespace Prisma {
     parentId: number | null
     ordem: number | null
     projetoId: number | null
+    status: $Enums.DocumentoStatus | null
     createdBy: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -42609,6 +42639,7 @@ export namespace Prisma {
     parentId: number
     ordem: number
     projetoId: number
+    status: number
     createdBy: number
     createdAt: number
     updatedAt: number
@@ -42640,6 +42671,7 @@ export namespace Prisma {
     parentId?: true
     ordem?: true
     projetoId?: true
+    status?: true
     createdBy?: true
     createdAt?: true
     updatedAt?: true
@@ -42653,6 +42685,7 @@ export namespace Prisma {
     parentId?: true
     ordem?: true
     projetoId?: true
+    status?: true
     createdBy?: true
     createdAt?: true
     updatedAt?: true
@@ -42666,6 +42699,7 @@ export namespace Prisma {
     parentId?: true
     ordem?: true
     projetoId?: true
+    status?: true
     createdBy?: true
     createdAt?: true
     updatedAt?: true
@@ -42766,6 +42800,7 @@ export namespace Prisma {
     parentId: number | null
     ordem: number
     projetoId: number
+    status: $Enums.DocumentoStatus
     createdBy: number
     createdAt: Date | null
     updatedAt: Date | null
@@ -42798,6 +42833,7 @@ export namespace Prisma {
     parentId?: boolean
     ordem?: boolean
     projetoId?: boolean
+    status?: boolean
     createdBy?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -42818,12 +42854,13 @@ export namespace Prisma {
     parentId?: boolean
     ordem?: boolean
     projetoId?: boolean
+    status?: boolean
     createdBy?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DocumentoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titulo" | "icone" | "conteudo" | "parentId" | "ordem" | "projetoId" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["documento"]>
+  export type DocumentoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titulo" | "icone" | "conteudo" | "parentId" | "ordem" | "projetoId" | "status" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["documento"]>
   export type DocumentoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     versoes?: boolean | Documento$versoesArgs<ExtArgs>
     parent?: boolean | Documento$parentArgs<ExtArgs>
@@ -42848,6 +42885,7 @@ export namespace Prisma {
       parentId: number | null
       ordem: number
       projetoId: number
+      status: $Enums.DocumentoStatus
       createdBy: number
       createdAt: Date | null
       updatedAt: Date | null
@@ -43231,6 +43269,7 @@ export namespace Prisma {
     readonly parentId: FieldRef<"Documento", 'Int'>
     readonly ordem: FieldRef<"Documento", 'Int'>
     readonly projetoId: FieldRef<"Documento", 'Int'>
+    readonly status: FieldRef<"Documento", 'DocumentoStatus'>
     readonly createdBy: FieldRef<"Documento", 'Int'>
     readonly createdAt: FieldRef<"Documento", 'DateTime'>
     readonly updatedAt: FieldRef<"Documento", 'DateTime'>
@@ -48893,6 +48932,7 @@ export namespace Prisma {
     dataInicio: 'dataInicio',
     dataFim: 'dataFim',
     ownerId: 'ownerId',
+    idempresa: 'idempresa',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -49421,6 +49461,7 @@ export namespace Prisma {
     parentId: 'parentId',
     ordem: 'ordem',
     projetoId: 'projetoId',
+    status: 'status',
     createdBy: 'createdBy',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -50043,6 +50084,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DocumentoStatus'
+   */
+  export type EnumDocumentoStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentoStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'AtividadeTipo'
    */
   export type EnumAtividadeTipoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AtividadeTipo'>
@@ -50084,6 +50132,7 @@ export namespace Prisma {
     dataInicio?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     ownerId?: IntFilter<"Projeto"> | number
+    idempresa?: IntFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableFilter<"Projeto"> | $Enums.ProjetoStatus | null
     createdAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
@@ -50110,6 +50159,7 @@ export namespace Prisma {
     dataInicio?: SortOrderInput | SortOrder
     dataFim?: SortOrderInput | SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
     status?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -50140,6 +50190,7 @@ export namespace Prisma {
     dataInicio?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     ownerId?: IntFilter<"Projeto"> | number
+    idempresa?: IntFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableFilter<"Projeto"> | $Enums.ProjetoStatus | null
     createdAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
@@ -50166,6 +50217,7 @@ export namespace Prisma {
     dataInicio?: SortOrderInput | SortOrder
     dataFim?: SortOrderInput | SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
     status?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -50187,6 +50239,7 @@ export namespace Prisma {
     dataInicio?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     ownerId?: IntWithAggregatesFilter<"Projeto"> | number
+    idempresa?: IntWithAggregatesFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableWithAggregatesFilter<"Projeto"> | $Enums.ProjetoStatus | null
     createdAt?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
@@ -53056,6 +53109,7 @@ export namespace Prisma {
     parentId?: IntNullableFilter<"Documento"> | number | null
     ordem?: IntFilter<"Documento"> | number
     projetoId?: IntFilter<"Documento"> | number
+    status?: EnumDocumentoStatusFilter<"Documento"> | $Enums.DocumentoStatus
     createdBy?: IntFilter<"Documento"> | number
     createdAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
@@ -53073,6 +53127,7 @@ export namespace Prisma {
     parentId?: SortOrderInput | SortOrder
     ordem?: SortOrder
     projetoId?: SortOrder
+    status?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -53094,6 +53149,7 @@ export namespace Prisma {
     parentId?: IntNullableFilter<"Documento"> | number | null
     ordem?: IntFilter<"Documento"> | number
     projetoId?: IntFilter<"Documento"> | number
+    status?: EnumDocumentoStatusFilter<"Documento"> | $Enums.DocumentoStatus
     createdBy?: IntFilter<"Documento"> | number
     createdAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
@@ -53111,6 +53167,7 @@ export namespace Prisma {
     parentId?: SortOrderInput | SortOrder
     ordem?: SortOrder
     projetoId?: SortOrder
+    status?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -53132,6 +53189,7 @@ export namespace Prisma {
     parentId?: IntNullableWithAggregatesFilter<"Documento"> | number | null
     ordem?: IntWithAggregatesFilter<"Documento"> | number
     projetoId?: IntWithAggregatesFilter<"Documento"> | number
+    status?: EnumDocumentoStatusWithAggregatesFilter<"Documento"> | $Enums.DocumentoStatus
     createdBy?: IntWithAggregatesFilter<"Documento"> | number
     createdAt?: DateTimeNullableWithAggregatesFilter<"Documento"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Documento"> | Date | string | null
@@ -53534,6 +53592,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -53560,6 +53619,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -53585,6 +53645,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53611,6 +53672,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53637,6 +53699,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -53649,6 +53712,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53662,6 +53726,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56584,6 +56649,7 @@ export namespace Prisma {
     icone: string
     conteudo?: string | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -56601,6 +56667,7 @@ export namespace Prisma {
     parentId?: number | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -56613,6 +56680,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56630,6 +56698,7 @@ export namespace Prisma {
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56645,6 +56714,7 @@ export namespace Prisma {
     parentId?: number | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -56655,6 +56725,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56668,6 +56739,7 @@ export namespace Prisma {
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57275,6 +57347,7 @@ export namespace Prisma {
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57283,6 +57356,7 @@ export namespace Prisma {
   export type ProjetoAvgOrderByAggregateInput = {
     id?: SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
   }
 
   export type ProjetoMaxOrderByAggregateInput = {
@@ -57293,6 +57367,7 @@ export namespace Prisma {
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57306,6 +57381,7 @@ export namespace Prisma {
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57314,6 +57390,7 @@ export namespace Prisma {
   export type ProjetoSumOrderByAggregateInput = {
     id?: SortOrder
     ownerId?: SortOrder
+    idempresa?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -60287,6 +60364,13 @@ export namespace Prisma {
     ordem?: SortOrder
   }
 
+  export type EnumDocumentoStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentoStatus | EnumDocumentoStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentoStatus[]
+    notIn?: $Enums.DocumentoStatus[]
+    not?: NestedEnumDocumentoStatusFilter<$PrismaModel> | $Enums.DocumentoStatus
+  }
+
   export type DocumentoVersaoListRelationFilter = {
     every?: DocumentoVersaoWhereInput
     some?: DocumentoVersaoWhereInput
@@ -60316,6 +60400,7 @@ export namespace Prisma {
     parentId?: SortOrder
     ordem?: SortOrder
     projetoId?: SortOrder
+    status?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60337,6 +60422,7 @@ export namespace Prisma {
     parentId?: SortOrder
     ordem?: SortOrder
     projetoId?: SortOrder
+    status?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60350,6 +60436,7 @@ export namespace Prisma {
     parentId?: SortOrder
     ordem?: SortOrder
     projetoId?: SortOrder
+    status?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60361,6 +60448,16 @@ export namespace Prisma {
     ordem?: SortOrder
     projetoId?: SortOrder
     createdBy?: SortOrder
+  }
+
+  export type EnumDocumentoStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentoStatus | EnumDocumentoStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentoStatus[]
+    notIn?: $Enums.DocumentoStatus[]
+    not?: NestedEnumDocumentoStatusWithAggregatesFilter<$PrismaModel> | $Enums.DocumentoStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentoStatusFilter<$PrismaModel>
+    _max?: NestedEnumDocumentoStatusFilter<$PrismaModel>
   }
 
   export type DocumentoScalarRelationFilter = {
@@ -64101,6 +64198,10 @@ export namespace Prisma {
     connect?: DocumentoWhereUniqueInput | DocumentoWhereUniqueInput[]
   }
 
+  export type EnumDocumentoStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DocumentoStatus
+  }
+
   export type DocumentoVersaoUpdateManyWithoutDocumentoNestedInput = {
     create?: XOR<DocumentoVersaoCreateWithoutDocumentoInput, DocumentoVersaoUncheckedCreateWithoutDocumentoInput> | DocumentoVersaoCreateWithoutDocumentoInput[] | DocumentoVersaoUncheckedCreateWithoutDocumentoInput[]
     connectOrCreate?: DocumentoVersaoCreateOrConnectWithoutDocumentoInput | DocumentoVersaoCreateOrConnectWithoutDocumentoInput[]
@@ -65220,6 +65321,23 @@ export namespace Prisma {
     _max?: NestedEnumRoadmapVisibilidadeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumDocumentoStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentoStatus | EnumDocumentoStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentoStatus[]
+    notIn?: $Enums.DocumentoStatus[]
+    not?: NestedEnumDocumentoStatusFilter<$PrismaModel> | $Enums.DocumentoStatus
+  }
+
+  export type NestedEnumDocumentoStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentoStatus | EnumDocumentoStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentoStatus[]
+    notIn?: $Enums.DocumentoStatus[]
+    not?: NestedEnumDocumentoStatusWithAggregatesFilter<$PrismaModel> | $Enums.DocumentoStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentoStatusFilter<$PrismaModel>
+    _max?: NestedEnumDocumentoStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumAtividadeTipoFilter<$PrismaModel = never> = {
     equals?: $Enums.AtividadeTipo | EnumAtividadeTipoFieldRefInput<$PrismaModel>
     in?: $Enums.AtividadeTipo[]
@@ -65418,6 +65536,7 @@ export namespace Prisma {
     icone: string
     conteudo?: string | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -65433,6 +65552,7 @@ export namespace Prisma {
     conteudo?: string | null
     parentId?: number | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -65918,6 +66038,7 @@ export namespace Prisma {
     parentId?: IntNullableFilter<"Documento"> | number | null
     ordem?: IntFilter<"Documento"> | number
     projetoId?: IntFilter<"Documento"> | number
+    status?: EnumDocumentoStatusFilter<"Documento"> | $Enums.DocumentoStatus
     createdBy?: IntFilter<"Documento"> | number
     createdAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Documento"> | Date | string | null
@@ -66197,6 +66318,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66222,6 +66344,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66262,6 +66385,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66287,6 +66411,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66311,6 +66436,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66336,6 +66462,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66431,6 +66558,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66456,6 +66584,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66641,6 +66770,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66666,6 +66796,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -66916,6 +67047,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66941,6 +67073,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67227,6 +67360,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -67252,6 +67386,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -67311,6 +67446,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67336,6 +67472,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67969,6 +68106,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -67994,6 +68132,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -68173,6 +68312,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68198,6 +68338,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68373,6 +68514,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -68398,6 +68540,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -68566,6 +68709,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68591,6 +68735,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68717,6 +68862,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -68742,6 +68888,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -68809,6 +68956,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68834,6 +68982,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69084,6 +69233,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -69109,6 +69259,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -69249,6 +69400,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69274,6 +69426,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70117,6 +70270,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -70142,6 +70296,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -70222,6 +70377,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70247,6 +70403,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71068,6 +71225,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -71093,6 +71251,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -71218,6 +71377,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71243,6 +71403,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73054,6 +73215,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -73079,6 +73241,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -73233,6 +73396,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73258,6 +73422,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73936,6 +74101,7 @@ export namespace Prisma {
     icone: string
     conteudo?: string | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -73952,6 +74118,7 @@ export namespace Prisma {
     parentId?: number | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -73968,6 +74135,7 @@ export namespace Prisma {
     icone: string
     conteudo?: string | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -73983,6 +74151,7 @@ export namespace Prisma {
     conteudo?: string | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74007,6 +74176,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74032,6 +74202,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74102,6 +74273,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74118,6 +74290,7 @@ export namespace Prisma {
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74158,6 +74331,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74183,6 +74357,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74205,6 +74380,7 @@ export namespace Prisma {
     icone: string
     conteudo?: string | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74221,6 +74397,7 @@ export namespace Prisma {
     parentId?: number | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74248,6 +74425,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74264,6 +74442,7 @@ export namespace Prisma {
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74335,6 +74514,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74360,6 +74540,7 @@ export namespace Prisma {
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
+    idempresa: number
     status?: $Enums.ProjetoStatus | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -74458,6 +74639,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74483,6 +74665,7 @@ export namespace Prisma {
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
+    idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74968,6 +75151,7 @@ export namespace Prisma {
     conteudo?: string | null
     parentId?: number | null
     ordem?: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -75236,6 +75420,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75251,6 +75436,7 @@ export namespace Prisma {
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75265,6 +75451,7 @@ export namespace Prisma {
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77829,6 +78016,7 @@ export namespace Prisma {
     conteudo?: string | null
     ordem?: number
     projetoId: number
+    status?: $Enums.DocumentoStatus
     createdBy: number
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
@@ -77874,6 +78062,7 @@ export namespace Prisma {
     icone?: StringFieldUpdateOperationsInput | string
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77889,6 +78078,7 @@ export namespace Prisma {
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77903,6 +78093,7 @@ export namespace Prisma {
     conteudo?: NullableStringFieldUpdateOperationsInput | string | null
     ordem?: IntFieldUpdateOperationsInput | number
     projetoId?: IntFieldUpdateOperationsInput | number
+    status?: EnumDocumentoStatusFieldUpdateOperationsInput | $Enums.DocumentoStatus
     createdBy?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

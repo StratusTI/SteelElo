@@ -15,7 +15,7 @@
     "test:coverage": "vitest --coverage",
     "test:integration": "vitest run --dir src/__tests__/integration",
     "test:repositories": "vitest run --dir src/__tests__/repositories",
-    "test:unit": "vitest run --dir src/use-cases",
+    "test:unit": "vitest run --dir src/use-cases && vitest run --dir src/utils",
     "prisma:generate": "prisma generate --schema=./prisma/elo/schema.prisma && prisma generate --schema=./prisma/steel/schema.prisma",
     "prisma:migrate:dev:steel": "cross-env SELECTED_SCHEMA=steel DATABASE_STEEL_URL=mysql://root:M7a64tl0@10.25.100.10:3306/steel_test prisma migrate dev",
     "prisma:migrate:dev:elo": "cross-env SELECTED_SCHEMA=elo DATABASE_ELO_URL=mysql://root:M7a64tl0@10.25.100.10:3306/easyretro_test prisma migrate dev",
@@ -30,8 +30,10 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@anthropic-ai/claude-code": "^2.1.9",
     "@prisma/client": "6.18.0",
     "@scalar/nextjs-api-reference": "^0.9.9",
+    "g": "^2.0.1",
     "jose": "^6.1.3",
     "next": "16.1.1",
     "pnpm": "^10.27.0",
