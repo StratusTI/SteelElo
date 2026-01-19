@@ -128,6 +128,7 @@ exports.Prisma.ProjetoScalarFieldEnum = {
   dataInicio: 'dataInicio',
   dataFim: 'dataFim',
   ownerId: 'ownerId',
+  idempresa: 'idempresa',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -554,6 +555,7 @@ exports.Prisma.DocumentoScalarFieldEnum = {
   parentId: 'parentId',
   ordem: 'ordem',
   projetoId: 'projetoId',
+  status: 'status',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1009,6 +1011,12 @@ exports.RoadmapVisibilidade = exports.$Enums.RoadmapVisibilidade = {
   publico: 'publico',
   privado: 'privado',
   restrito: 'restrito'
+};
+
+exports.DocumentoStatus = exports.$Enums.DocumentoStatus = {
+  draft: 'draft',
+  published: 'published',
+  private: 'private'
 };
 
 exports.AtividadeTipo = exports.$Enums.AtividadeTipo = {

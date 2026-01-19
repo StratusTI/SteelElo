@@ -7,10 +7,12 @@ CREATE TABLE `projetos` (
     `data_inicio` DATE NULL,
     `data_fim` DATE NULL,
     `owner_id` INTEGER NOT NULL,
+    `id_empresa` INTEGER NOT NULL,
     `status` ENUM('ativo', 'pausado', 'concluido', 'cancelado') NULL DEFAULT 'ativo',
     `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updated_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
 
+    INDEX `idx_empresa`(`id_empresa`, `status`),
     INDEX `idx_owner`(`owner_id`),
     INDEX `idx_status`(`status`),
     PRIMARY KEY (`id`)
@@ -632,11 +634,12 @@ CREATE TABLE `documentos` (
     `parent_id` INTEGER NULL,
     `ordem` INTEGER NOT NULL DEFAULT 0,
     `projeto_id` INTEGER NOT NULL,
+    `status` ENUM('draft', 'published', 'private') NOT NULL DEFAULT 'draft',
     `created_by` INTEGER NOT NULL,
     `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updated_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
 
-    INDEX `idx_projeto`(`projeto_id`),
+    INDEX `idx_projeto`(`projeto_id`, `status`),
     INDEX `idx_parent`(`parent_id`),
     INDEX `idx_created_by`(`created_by`),
     INDEX `idx_ordem`(`ordem`),

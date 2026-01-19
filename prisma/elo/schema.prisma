@@ -17,9 +17,11 @@ model Projeto {
   dataInicio       DateTime?          @map("data_inicio") @db.Date
   dataFim          DateTime?          @map("data_fim") @db.Date
   ownerId          Int                @map("owner_id")
+  idempresa        Int                @map("id_empresa")
   status           ProjetoStatus?     @default(ativo)
   createdAt        DateTime?          @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt        DateTime?          @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+
   atividades       Atividade[]
   capacidadeTime   CapacidadeTime[]
   colunas          Coluna[]
@@ -34,6 +36,7 @@ model Projeto {
   tarefas          Tarefa[]
   userStories      UserStory[]
 
+  @@index([idempresa, status], map: "idx_empresa")
   @@index([ownerId], map: "idx_owner")
   @@index([status], map: "idx_status")
   @@map("projetos")
@@ -718,6 +721,7 @@ model Documento {
   parentId  Int?              @map("parent_id")
   ordem     Int               @default(0)
   projetoId Int               @map("projeto_id")
+  status    DocumentoStatus   @default(draft)
   createdBy Int               @map("created_by")
   createdAt DateTime?         @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt DateTime?         @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
@@ -726,7 +730,7 @@ model Documento {
   children  Documento[]       @relation("DocumentoHierarchy")
   projeto   Projeto           @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_doc_projeto")
 
-  @@index([projetoId], map: "idx_projeto")
+  @@index([projetoId, status], map: "idx_projeto")
   @@index([parentId], map: "idx_parent")
   @@index([createdBy], map: "idx_created_by")
   @@index([ordem], map: "idx_ordem")
@@ -1062,4 +1066,10 @@ enum AtividadeVisibilidade {
   publica
   projeto
   privada
+}
+
+enum DocumentoStatus {
+  draft
+  published
+  private
 }
