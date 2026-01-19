@@ -1,8 +1,8 @@
 import { PrismaProjectsRepository } from "@/src/repositories/prisma/prisma-project-repository";
-import { GetProjectsDetailsUseCase } from "../get-projects-details";
+import { GetProjectDetailsUseCase } from "../get-project-details";
 
-export function makeGetProjectDetailsUseCase(): GetProjectsDetailsUseCase {
+export function makeGetProjectDetailsUseCase(): GetProjectDetailsUseCase {
   const projectRepository = new PrismaProjectsRepository()
 
-  return new GetProjectsDetailsUseCase(projectRepository)
+  return new GetProjectDetailsUseCase(projectRepository)
 }
