@@ -123,13 +123,17 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.ProjetoScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
+  projectId: 'projectId',
   descricao: 'descricao',
-  cor: 'cor',
+  icone: 'icone',
+  backgroundUrl: 'backgroundUrl',
   dataInicio: 'dataInicio',
   dataFim: 'dataFim',
   ownerId: 'ownerId',
   idempresa: 'idempresa',
   status: 'status',
+  prioridade: 'prioridade',
+  acesso: 'acesso',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -156,7 +160,9 @@ exports.Prisma.TarefaScalarFieldEnum = {
   id: 'id',
   titulo: 'titulo',
   descricao: 'descricao',
-  prazo: 'prazo',
+  data_inicio: 'data_inicio',
+  data_fim: 'data_fim',
+  status: 'status',
   prioridade: 'prioridade',
   ordem: 'ordem',
   estimativaHoras: 'estimativaHoras',
@@ -630,8 +636,10 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ProjetoOrderByRelevanceFieldEnum = {
   nome: 'nome',
+  projectId: 'projectId',
   descricao: 'descricao',
-  cor: 'cor'
+  icone: 'icone',
+  backgroundUrl: 'backgroundUrl'
 };
 
 exports.Prisma.ProjetoMembroOrderByRelevanceFieldEnum = {
@@ -804,10 +812,20 @@ exports.Prisma.AtividadeComentarioOrderByRelevanceFieldEnum = {
   texto: 'texto'
 };
 exports.ProjetoStatus = exports.$Enums.ProjetoStatus = {
-  ativo: 'ativo',
-  pausado: 'pausado',
-  concluido: 'concluido',
-  cancelado: 'cancelado'
+  draft: 'draft',
+  planning: 'planning',
+  execution: 'execution',
+  monitoring: 'monitoring',
+  completed: 'completed',
+  cancelled: 'cancelled'
+};
+
+exports.ProjetoPriority = exports.$Enums.ProjetoPriority = {
+  urgent: 'urgent',
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
+  none: 'none'
 };
 
 exports.ProjetoMemberRole = exports.$Enums.ProjetoMemberRole = {
@@ -817,10 +835,20 @@ exports.ProjetoMemberRole = exports.$Enums.ProjetoMemberRole = {
   viewer: 'viewer'
 };
 
+exports.TarefaStatus = exports.$Enums.TarefaStatus = {
+  backlog: 'backlog',
+  todo: 'todo',
+  in_progress: 'in_progress',
+  done: 'done',
+  cancelled: 'cancelled'
+};
+
 exports.TarefaPrioridade = exports.$Enums.TarefaPrioridade = {
-  baixa: 'baixa',
-  media: 'media',
-  alta: 'alta'
+  urgent: 'urgent',
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
+  none: 'none'
 };
 
 exports.UserStoryStatus = exports.$Enums.UserStoryStatus = {

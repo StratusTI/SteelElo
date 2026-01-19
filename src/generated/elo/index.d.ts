@@ -219,13 +219,26 @@ export type ComentarioLike = $Result.DefaultSelection<Prisma.$ComentarioLikePayl
  */
 export namespace $Enums {
   export const ProjetoStatus: {
-  ativo: 'ativo',
-  pausado: 'pausado',
-  concluido: 'concluido',
-  cancelado: 'cancelado'
+  draft: 'draft',
+  planning: 'planning',
+  execution: 'execution',
+  monitoring: 'monitoring',
+  completed: 'completed',
+  cancelled: 'cancelled'
 };
 
 export type ProjetoStatus = (typeof ProjetoStatus)[keyof typeof ProjetoStatus]
+
+
+export const ProjetoPriority: {
+  urgent: 'urgent',
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
+  none: 'none'
+};
+
+export type ProjetoPriority = (typeof ProjetoPriority)[keyof typeof ProjetoPriority]
 
 
 export const ProjetoMemberRole: {
@@ -238,10 +251,23 @@ export const ProjetoMemberRole: {
 export type ProjetoMemberRole = (typeof ProjetoMemberRole)[keyof typeof ProjetoMemberRole]
 
 
+export const TarefaStatus: {
+  backlog: 'backlog',
+  todo: 'todo',
+  in_progress: 'in_progress',
+  done: 'done',
+  cancelled: 'cancelled'
+};
+
+export type TarefaStatus = (typeof TarefaStatus)[keyof typeof TarefaStatus]
+
+
 export const TarefaPrioridade: {
-  baixa: 'baixa',
-  media: 'media',
-  alta: 'alta'
+  urgent: 'urgent',
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
+  none: 'none'
 };
 
 export type TarefaPrioridade = (typeof TarefaPrioridade)[keyof typeof TarefaPrioridade]
@@ -561,9 +587,17 @@ export type ProjetoStatus = $Enums.ProjetoStatus
 
 export const ProjetoStatus: typeof $Enums.ProjetoStatus
 
+export type ProjetoPriority = $Enums.ProjetoPriority
+
+export const ProjetoPriority: typeof $Enums.ProjetoPriority
+
 export type ProjetoMemberRole = $Enums.ProjetoMemberRole
 
 export const ProjetoMemberRole: typeof $Enums.ProjetoMemberRole
+
+export type TarefaStatus = $Enums.TarefaStatus
+
+export const TarefaStatus: typeof $Enums.TarefaStatus
 
 export type TarefaPrioridade = $Enums.TarefaPrioridade
 
@@ -5611,13 +5645,17 @@ export namespace Prisma {
   export type ProjetoMinAggregateOutputType = {
     id: number | null
     nome: string | null
+    projectId: string | null
     descricao: string | null
-    cor: string | null
+    icone: string | null
+    backgroundUrl: string | null
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number | null
     idempresa: number | null
     status: $Enums.ProjetoStatus | null
+    prioridade: $Enums.ProjetoPriority | null
+    acesso: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5625,13 +5663,17 @@ export namespace Prisma {
   export type ProjetoMaxAggregateOutputType = {
     id: number | null
     nome: string | null
+    projectId: string | null
     descricao: string | null
-    cor: string | null
+    icone: string | null
+    backgroundUrl: string | null
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number | null
     idempresa: number | null
     status: $Enums.ProjetoStatus | null
+    prioridade: $Enums.ProjetoPriority | null
+    acesso: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5639,13 +5681,17 @@ export namespace Prisma {
   export type ProjetoCountAggregateOutputType = {
     id: number
     nome: number
+    projectId: number
     descricao: number
-    cor: number
+    icone: number
+    backgroundUrl: number
     dataInicio: number
     dataFim: number
     ownerId: number
     idempresa: number
     status: number
+    prioridade: number
+    acesso: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5667,13 +5713,17 @@ export namespace Prisma {
   export type ProjetoMinAggregateInputType = {
     id?: true
     nome?: true
+    projectId?: true
     descricao?: true
-    cor?: true
+    icone?: true
+    backgroundUrl?: true
     dataInicio?: true
     dataFim?: true
     ownerId?: true
     idempresa?: true
     status?: true
+    prioridade?: true
+    acesso?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5681,13 +5731,17 @@ export namespace Prisma {
   export type ProjetoMaxAggregateInputType = {
     id?: true
     nome?: true
+    projectId?: true
     descricao?: true
-    cor?: true
+    icone?: true
+    backgroundUrl?: true
     dataInicio?: true
     dataFim?: true
     ownerId?: true
     idempresa?: true
     status?: true
+    prioridade?: true
+    acesso?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5695,13 +5749,17 @@ export namespace Prisma {
   export type ProjetoCountAggregateInputType = {
     id?: true
     nome?: true
+    projectId?: true
     descricao?: true
-    cor?: true
+    icone?: true
+    backgroundUrl?: true
     dataInicio?: true
     dataFim?: true
     ownerId?: true
     idempresa?: true
     status?: true
+    prioridade?: true
+    acesso?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5796,13 +5854,17 @@ export namespace Prisma {
   export type ProjetoGroupByOutputType = {
     id: number
     nome: string
+    projectId: string | null
     descricao: string | null
-    cor: string | null
+    icone: string | null
+    backgroundUrl: string | null
     dataInicio: Date | null
     dataFim: Date | null
     ownerId: number
     idempresa: number
     status: $Enums.ProjetoStatus | null
+    prioridade: $Enums.ProjetoPriority | null
+    acesso: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
     _count: ProjetoCountAggregateOutputType | null
@@ -5829,13 +5891,17 @@ export namespace Prisma {
   export type ProjetoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nome?: boolean
+    projectId?: boolean
     descricao?: boolean
-    cor?: boolean
+    icone?: boolean
+    backgroundUrl?: boolean
     dataInicio?: boolean
     dataFim?: boolean
     ownerId?: boolean
     idempresa?: boolean
     status?: boolean
+    prioridade?: boolean
+    acesso?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     atividades?: boolean | Projeto$atividadesArgs<ExtArgs>
@@ -5859,18 +5925,22 @@ export namespace Prisma {
   export type ProjetoSelectScalar = {
     id?: boolean
     nome?: boolean
+    projectId?: boolean
     descricao?: boolean
-    cor?: boolean
+    icone?: boolean
+    backgroundUrl?: boolean
     dataInicio?: boolean
     dataFim?: boolean
     ownerId?: boolean
     idempresa?: boolean
     status?: boolean
+    prioridade?: boolean
+    acesso?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjetoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "descricao" | "cor" | "dataInicio" | "dataFim" | "ownerId" | "idempresa" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["projeto"]>
+  export type ProjetoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "projectId" | "descricao" | "icone" | "backgroundUrl" | "dataInicio" | "dataFim" | "ownerId" | "idempresa" | "status" | "prioridade" | "acesso" | "createdAt" | "updatedAt", ExtArgs["result"]["projeto"]>
   export type ProjetoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     atividades?: boolean | Projeto$atividadesArgs<ExtArgs>
     capacidadeTime?: boolean | Projeto$capacidadeTimeArgs<ExtArgs>
@@ -5908,13 +5978,17 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       nome: string
+      projectId: string | null
       descricao: string | null
-      cor: string | null
+      icone: string | null
+      backgroundUrl: string | null
       dataInicio: Date | null
       dataFim: Date | null
       ownerId: number
       idempresa: number
       status: $Enums.ProjetoStatus | null
+      prioridade: $Enums.ProjetoPriority | null
+      acesso: boolean | null
       createdAt: Date | null
       updatedAt: Date | null
     }, ExtArgs["result"]["projeto"]>
@@ -6301,13 +6375,17 @@ export namespace Prisma {
   interface ProjetoFieldRefs {
     readonly id: FieldRef<"Projeto", 'Int'>
     readonly nome: FieldRef<"Projeto", 'String'>
+    readonly projectId: FieldRef<"Projeto", 'String'>
     readonly descricao: FieldRef<"Projeto", 'String'>
-    readonly cor: FieldRef<"Projeto", 'String'>
+    readonly icone: FieldRef<"Projeto", 'String'>
+    readonly backgroundUrl: FieldRef<"Projeto", 'String'>
     readonly dataInicio: FieldRef<"Projeto", 'DateTime'>
     readonly dataFim: FieldRef<"Projeto", 'DateTime'>
     readonly ownerId: FieldRef<"Projeto", 'Int'>
     readonly idempresa: FieldRef<"Projeto", 'Int'>
     readonly status: FieldRef<"Projeto", 'ProjetoStatus'>
+    readonly prioridade: FieldRef<"Projeto", 'ProjetoPriority'>
+    readonly acesso: FieldRef<"Projeto", 'Boolean'>
     readonly createdAt: FieldRef<"Projeto", 'DateTime'>
     readonly updatedAt: FieldRef<"Projeto", 'DateTime'>
   }
@@ -9015,7 +9093,9 @@ export namespace Prisma {
     id: number | null
     titulo: string | null
     descricao: string | null
-    prazo: Date | null
+    data_inicio: Date | null
+    data_fim: Date | null
+    status: $Enums.TarefaStatus | null
     prioridade: $Enums.TarefaPrioridade | null
     ordem: number | null
     estimativaHoras: Decimal | null
@@ -9034,7 +9114,9 @@ export namespace Prisma {
     id: number | null
     titulo: string | null
     descricao: string | null
-    prazo: Date | null
+    data_inicio: Date | null
+    data_fim: Date | null
+    status: $Enums.TarefaStatus | null
     prioridade: $Enums.TarefaPrioridade | null
     ordem: number | null
     estimativaHoras: Decimal | null
@@ -9053,7 +9135,9 @@ export namespace Prisma {
     id: number
     titulo: number
     descricao: number
-    prazo: number
+    data_inicio: number
+    data_fim: number
+    status: number
     prioridade: number
     ordem: number
     estimativaHoras: number
@@ -9096,7 +9180,9 @@ export namespace Prisma {
     id?: true
     titulo?: true
     descricao?: true
-    prazo?: true
+    data_inicio?: true
+    data_fim?: true
+    status?: true
     prioridade?: true
     ordem?: true
     estimativaHoras?: true
@@ -9115,7 +9201,9 @@ export namespace Prisma {
     id?: true
     titulo?: true
     descricao?: true
-    prazo?: true
+    data_inicio?: true
+    data_fim?: true
+    status?: true
     prioridade?: true
     ordem?: true
     estimativaHoras?: true
@@ -9134,7 +9222,9 @@ export namespace Prisma {
     id?: true
     titulo?: true
     descricao?: true
-    prazo?: true
+    data_inicio?: true
+    data_fim?: true
+    status?: true
     prioridade?: true
     ordem?: true
     estimativaHoras?: true
@@ -9240,7 +9330,9 @@ export namespace Prisma {
     id: number
     titulo: string
     descricao: string | null
-    prazo: Date | null
+    data_inicio: Date | null
+    data_fim: Date | null
+    status: $Enums.TarefaStatus | null
     prioridade: $Enums.TarefaPrioridade | null
     ordem: number
     estimativaHoras: Decimal | null
@@ -9278,7 +9370,9 @@ export namespace Prisma {
     id?: boolean
     titulo?: boolean
     descricao?: boolean
-    prazo?: boolean
+    data_inicio?: boolean
+    data_fim?: boolean
+    status?: boolean
     prioridade?: boolean
     ordem?: boolean
     estimativaHoras?: boolean
@@ -9308,7 +9402,9 @@ export namespace Prisma {
     id?: boolean
     titulo?: boolean
     descricao?: boolean
-    prazo?: boolean
+    data_inicio?: boolean
+    data_fim?: boolean
+    status?: boolean
     prioridade?: boolean
     ordem?: boolean
     estimativaHoras?: boolean
@@ -9323,7 +9419,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TarefaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titulo" | "descricao" | "prazo" | "prioridade" | "ordem" | "estimativaHoras" | "horasRealizadas" | "dataInicioReal" | "dataConclusaoReal" | "colunaId" | "projetoId" | "userStoryId" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["tarefa"]>
+  export type TarefaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titulo" | "descricao" | "data_inicio" | "data_fim" | "status" | "prioridade" | "ordem" | "estimativaHoras" | "horasRealizadas" | "dataInicioReal" | "dataConclusaoReal" | "colunaId" | "projetoId" | "userStoryId" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["tarefa"]>
   export type TarefaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     anexos?: boolean | Tarefa$anexosArgs<ExtArgs>
     comentarios?: boolean | Tarefa$comentariosArgs<ExtArgs>
@@ -9352,7 +9448,9 @@ export namespace Prisma {
       id: number
       titulo: string
       descricao: string | null
-      prazo: Date | null
+      data_inicio: Date | null
+      data_fim: Date | null
+      status: $Enums.TarefaStatus | null
       prioridade: $Enums.TarefaPrioridade | null
       ordem: number
       estimativaHoras: Prisma.Decimal | null
@@ -9745,7 +9843,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Tarefa", 'Int'>
     readonly titulo: FieldRef<"Tarefa", 'String'>
     readonly descricao: FieldRef<"Tarefa", 'String'>
-    readonly prazo: FieldRef<"Tarefa", 'DateTime'>
+    readonly data_inicio: FieldRef<"Tarefa", 'DateTime'>
+    readonly data_fim: FieldRef<"Tarefa", 'DateTime'>
+    readonly status: FieldRef<"Tarefa", 'TarefaStatus'>
     readonly prioridade: FieldRef<"Tarefa", 'TarefaPrioridade'>
     readonly ordem: FieldRef<"Tarefa", 'Int'>
     readonly estimativaHoras: FieldRef<"Tarefa", 'Decimal'>
@@ -48927,13 +49027,17 @@ export namespace Prisma {
   export const ProjetoScalarFieldEnum: {
     id: 'id',
     nome: 'nome',
+    projectId: 'projectId',
     descricao: 'descricao',
-    cor: 'cor',
+    icone: 'icone',
+    backgroundUrl: 'backgroundUrl',
     dataInicio: 'dataInicio',
     dataFim: 'dataFim',
     ownerId: 'ownerId',
     idempresa: 'idempresa',
     status: 'status',
+    prioridade: 'prioridade',
+    acesso: 'acesso',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -48969,7 +49073,9 @@ export namespace Prisma {
     id: 'id',
     titulo: 'titulo',
     descricao: 'descricao',
-    prazo: 'prazo',
+    data_inicio: 'data_inicio',
+    data_fim: 'data_fim',
+    status: 'status',
     prioridade: 'prioridade',
     ordem: 'ordem',
     estimativaHoras: 'estimativaHoras',
@@ -49560,8 +49666,10 @@ export namespace Prisma {
 
   export const ProjetoOrderByRelevanceFieldEnum: {
     nome: 'nome',
+    projectId: 'projectId',
     descricao: 'descricao',
-    cor: 'cor'
+    icone: 'icone',
+    backgroundUrl: 'backgroundUrl'
   };
 
   export type ProjetoOrderByRelevanceFieldEnum = (typeof ProjetoOrderByRelevanceFieldEnum)[keyof typeof ProjetoOrderByRelevanceFieldEnum]
@@ -49867,9 +49975,30 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ProjetoPriority'
+   */
+  export type EnumProjetoPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjetoPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'ProjetoMemberRole'
    */
   export type EnumProjetoMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjetoMemberRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'TarefaStatus'
+   */
+  export type EnumTarefaStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TarefaStatus'>
     
 
 
@@ -49884,13 +50013,6 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -50127,13 +50249,17 @@ export namespace Prisma {
     NOT?: ProjetoWhereInput | ProjetoWhereInput[]
     id?: IntFilter<"Projeto"> | number
     nome?: StringFilter<"Projeto"> | string
+    projectId?: StringNullableFilter<"Projeto"> | string | null
     descricao?: StringNullableFilter<"Projeto"> | string | null
-    cor?: StringNullableFilter<"Projeto"> | string | null
+    icone?: StringNullableFilter<"Projeto"> | string | null
+    backgroundUrl?: StringNullableFilter<"Projeto"> | string | null
     dataInicio?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     ownerId?: IntFilter<"Projeto"> | number
     idempresa?: IntFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableFilter<"Projeto"> | $Enums.ProjetoStatus | null
+    prioridade?: EnumProjetoPriorityNullableFilter<"Projeto"> | $Enums.ProjetoPriority | null
+    acesso?: BoolNullableFilter<"Projeto"> | boolean | null
     createdAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     atividades?: AtividadeListRelationFilter
@@ -50154,13 +50280,17 @@ export namespace Prisma {
   export type ProjetoOrderByWithRelationInput = {
     id?: SortOrder
     nome?: SortOrder
+    projectId?: SortOrderInput | SortOrder
     descricao?: SortOrderInput | SortOrder
-    cor?: SortOrderInput | SortOrder
+    icone?: SortOrderInput | SortOrder
+    backgroundUrl?: SortOrderInput | SortOrder
     dataInicio?: SortOrderInput | SortOrder
     dataFim?: SortOrderInput | SortOrder
     ownerId?: SortOrder
     idempresa?: SortOrder
     status?: SortOrderInput | SortOrder
+    prioridade?: SortOrderInput | SortOrder
+    acesso?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     atividades?: AtividadeOrderByRelationAggregateInput
@@ -50185,13 +50315,17 @@ export namespace Prisma {
     OR?: ProjetoWhereInput[]
     NOT?: ProjetoWhereInput | ProjetoWhereInput[]
     nome?: StringFilter<"Projeto"> | string
+    projectId?: StringNullableFilter<"Projeto"> | string | null
     descricao?: StringNullableFilter<"Projeto"> | string | null
-    cor?: StringNullableFilter<"Projeto"> | string | null
+    icone?: StringNullableFilter<"Projeto"> | string | null
+    backgroundUrl?: StringNullableFilter<"Projeto"> | string | null
     dataInicio?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     ownerId?: IntFilter<"Projeto"> | number
     idempresa?: IntFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableFilter<"Projeto"> | $Enums.ProjetoStatus | null
+    prioridade?: EnumProjetoPriorityNullableFilter<"Projeto"> | $Enums.ProjetoPriority | null
+    acesso?: BoolNullableFilter<"Projeto"> | boolean | null
     createdAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Projeto"> | Date | string | null
     atividades?: AtividadeListRelationFilter
@@ -50212,13 +50346,17 @@ export namespace Prisma {
   export type ProjetoOrderByWithAggregationInput = {
     id?: SortOrder
     nome?: SortOrder
+    projectId?: SortOrderInput | SortOrder
     descricao?: SortOrderInput | SortOrder
-    cor?: SortOrderInput | SortOrder
+    icone?: SortOrderInput | SortOrder
+    backgroundUrl?: SortOrderInput | SortOrder
     dataInicio?: SortOrderInput | SortOrder
     dataFim?: SortOrderInput | SortOrder
     ownerId?: SortOrder
     idempresa?: SortOrder
     status?: SortOrderInput | SortOrder
+    prioridade?: SortOrderInput | SortOrder
+    acesso?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     _count?: ProjetoCountOrderByAggregateInput
@@ -50234,13 +50372,17 @@ export namespace Prisma {
     NOT?: ProjetoScalarWhereWithAggregatesInput | ProjetoScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Projeto"> | number
     nome?: StringWithAggregatesFilter<"Projeto"> | string
+    projectId?: StringNullableWithAggregatesFilter<"Projeto"> | string | null
     descricao?: StringNullableWithAggregatesFilter<"Projeto"> | string | null
-    cor?: StringNullableWithAggregatesFilter<"Projeto"> | string | null
+    icone?: StringNullableWithAggregatesFilter<"Projeto"> | string | null
+    backgroundUrl?: StringNullableWithAggregatesFilter<"Projeto"> | string | null
     dataInicio?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     dataFim?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     ownerId?: IntWithAggregatesFilter<"Projeto"> | number
     idempresa?: IntWithAggregatesFilter<"Projeto"> | number
     status?: EnumProjetoStatusNullableWithAggregatesFilter<"Projeto"> | $Enums.ProjetoStatus | null
+    prioridade?: EnumProjetoPriorityNullableWithAggregatesFilter<"Projeto"> | $Enums.ProjetoPriority | null
+    acesso?: BoolNullableWithAggregatesFilter<"Projeto"> | boolean | null
     createdAt?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Projeto"> | Date | string | null
   }
@@ -50382,7 +50524,9 @@ export namespace Prisma {
     id?: IntFilter<"Tarefa"> | number
     titulo?: StringFilter<"Tarefa"> | string
     descricao?: StringNullableFilter<"Tarefa"> | string | null
-    prazo?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_inicio?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_fim?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    status?: EnumTarefaStatusNullableFilter<"Tarefa"> | $Enums.TarefaStatus | null
     prioridade?: EnumTarefaPrioridadeNullableFilter<"Tarefa"> | $Enums.TarefaPrioridade | null
     ordem?: IntFilter<"Tarefa"> | number
     estimativaHoras?: DecimalNullableFilter<"Tarefa"> | Decimal | DecimalJsLike | number | string | null
@@ -50409,7 +50553,9 @@ export namespace Prisma {
     id?: SortOrder
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
-    prazo?: SortOrderInput | SortOrder
+    data_inicio?: SortOrderInput | SortOrder
+    data_fim?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     prioridade?: SortOrderInput | SortOrder
     ordem?: SortOrder
     estimativaHoras?: SortOrderInput | SortOrder
@@ -50440,7 +50586,9 @@ export namespace Prisma {
     NOT?: TarefaWhereInput | TarefaWhereInput[]
     titulo?: StringFilter<"Tarefa"> | string
     descricao?: StringNullableFilter<"Tarefa"> | string | null
-    prazo?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_inicio?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_fim?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    status?: EnumTarefaStatusNullableFilter<"Tarefa"> | $Enums.TarefaStatus | null
     prioridade?: EnumTarefaPrioridadeNullableFilter<"Tarefa"> | $Enums.TarefaPrioridade | null
     ordem?: IntFilter<"Tarefa"> | number
     estimativaHoras?: DecimalNullableFilter<"Tarefa"> | Decimal | DecimalJsLike | number | string | null
@@ -50467,7 +50615,9 @@ export namespace Prisma {
     id?: SortOrder
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
-    prazo?: SortOrderInput | SortOrder
+    data_inicio?: SortOrderInput | SortOrder
+    data_fim?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     prioridade?: SortOrderInput | SortOrder
     ordem?: SortOrder
     estimativaHoras?: SortOrderInput | SortOrder
@@ -50494,7 +50644,9 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Tarefa"> | number
     titulo?: StringWithAggregatesFilter<"Tarefa"> | string
     descricao?: StringNullableWithAggregatesFilter<"Tarefa"> | string | null
-    prazo?: DateTimeNullableWithAggregatesFilter<"Tarefa"> | Date | string | null
+    data_inicio?: DateTimeNullableWithAggregatesFilter<"Tarefa"> | Date | string | null
+    data_fim?: DateTimeNullableWithAggregatesFilter<"Tarefa"> | Date | string | null
+    status?: EnumTarefaStatusNullableWithAggregatesFilter<"Tarefa"> | $Enums.TarefaStatus | null
     prioridade?: EnumTarefaPrioridadeNullableWithAggregatesFilter<"Tarefa"> | $Enums.TarefaPrioridade | null
     ordem?: IntWithAggregatesFilter<"Tarefa"> | number
     estimativaHoras?: DecimalNullableWithAggregatesFilter<"Tarefa"> | Decimal | DecimalJsLike | number | string | null
@@ -53587,13 +53739,17 @@ export namespace Prisma {
 
   export type ProjetoCreateInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -53614,13 +53770,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -53640,13 +53800,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -53667,13 +53831,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -53694,26 +53862,34 @@ export namespace Prisma {
   export type ProjetoCreateManyInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
 
   export type ProjetoUpdateManyMutationInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -53721,13 +53897,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -53857,7 +54037,9 @@ export namespace Prisma {
   export type TarefaCreateInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -53881,7 +54063,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -53904,7 +54088,9 @@ export namespace Prisma {
   export type TarefaUpdateInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53928,7 +54114,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53952,7 +54140,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -53970,7 +54160,9 @@ export namespace Prisma {
   export type TarefaUpdateManyMutationInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53986,7 +54178,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -57198,6 +57392,18 @@ export namespace Prisma {
     not?: NestedEnumProjetoStatusNullableFilter<$PrismaModel> | $Enums.ProjetoStatus | null
   }
 
+  export type EnumProjetoPriorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjetoPriority | EnumProjetoPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjetoPriority[] | null
+    notIn?: $Enums.ProjetoPriority[] | null
+    not?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel> | $Enums.ProjetoPriority | null
+  }
+
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type AtividadeListRelationFilter = {
     every?: AtividadeWhereInput
     some?: AtividadeWhereInput
@@ -57342,13 +57548,17 @@ export namespace Prisma {
   export type ProjetoCountOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
+    projectId?: SortOrder
     descricao?: SortOrder
-    cor?: SortOrder
+    icone?: SortOrder
+    backgroundUrl?: SortOrder
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
     idempresa?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    acesso?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57362,13 +57572,17 @@ export namespace Prisma {
   export type ProjetoMaxOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
+    projectId?: SortOrder
     descricao?: SortOrder
-    cor?: SortOrder
+    icone?: SortOrder
+    backgroundUrl?: SortOrder
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
     idempresa?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    acesso?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57376,13 +57590,17 @@ export namespace Prisma {
   export type ProjetoMinOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
+    projectId?: SortOrder
     descricao?: SortOrder
-    cor?: SortOrder
+    icone?: SortOrder
+    backgroundUrl?: SortOrder
     dataInicio?: SortOrder
     dataFim?: SortOrder
     ownerId?: SortOrder
     idempresa?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    acesso?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57467,6 +57685,24 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumProjetoStatusNullableFilter<$PrismaModel>
     _max?: NestedEnumProjetoStatusNullableFilter<$PrismaModel>
+  }
+
+  export type EnumProjetoPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjetoPriority | EnumProjetoPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjetoPriority[] | null
+    notIn?: $Enums.ProjetoPriority[] | null
+    not?: NestedEnumProjetoPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProjetoPriority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel>
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type EnumProjetoMemberRoleNullableFilter<$PrismaModel = never> = {
@@ -57587,6 +57823,13 @@ export namespace Prisma {
     projetoId?: SortOrder
   }
 
+  export type EnumTarefaStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TarefaStatus | EnumTarefaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TarefaStatus[] | null
+    notIn?: $Enums.TarefaStatus[] | null
+    not?: NestedEnumTarefaStatusNullableFilter<$PrismaModel> | $Enums.TarefaStatus | null
+  }
+
   export type EnumTarefaPrioridadeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.TarefaPrioridade | EnumTarefaPrioridadeFieldRefInput<$PrismaModel> | null
     in?: $Enums.TarefaPrioridade[] | null
@@ -57686,7 +57929,9 @@ export namespace Prisma {
     id?: SortOrder
     titulo?: SortOrder
     descricao?: SortOrder
-    prazo?: SortOrder
+    data_inicio?: SortOrder
+    data_fim?: SortOrder
+    status?: SortOrder
     prioridade?: SortOrder
     ordem?: SortOrder
     estimativaHoras?: SortOrder
@@ -57716,7 +57961,9 @@ export namespace Prisma {
     id?: SortOrder
     titulo?: SortOrder
     descricao?: SortOrder
-    prazo?: SortOrder
+    data_inicio?: SortOrder
+    data_fim?: SortOrder
+    status?: SortOrder
     prioridade?: SortOrder
     ordem?: SortOrder
     estimativaHoras?: SortOrder
@@ -57735,7 +57982,9 @@ export namespace Prisma {
     id?: SortOrder
     titulo?: SortOrder
     descricao?: SortOrder
-    prazo?: SortOrder
+    data_inicio?: SortOrder
+    data_fim?: SortOrder
+    status?: SortOrder
     prioridade?: SortOrder
     ordem?: SortOrder
     estimativaHoras?: SortOrder
@@ -57759,6 +58008,16 @@ export namespace Prisma {
     projetoId?: SortOrder
     userStoryId?: SortOrder
     createdBy?: SortOrder
+  }
+
+  export type EnumTarefaStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TarefaStatus | EnumTarefaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TarefaStatus[] | null
+    notIn?: $Enums.TarefaStatus[] | null
+    not?: NestedEnumTarefaStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.TarefaStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTarefaStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumTarefaStatusNullableFilter<$PrismaModel>
   }
 
   export type EnumTarefaPrioridadeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -57846,11 +58105,6 @@ export namespace Prisma {
     usuarioId?: SortOrder
   }
 
-  export type BoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
   export type SubtarefaOrderByRelevanceInput = {
     fields: SubtarefaOrderByRelevanceFieldEnum | SubtarefaOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -57894,14 +58148,6 @@ export namespace Prisma {
     id?: SortOrder
     ordem?: SortOrder
     tarefaId?: SortOrder
-  }
-
-  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type TagOrderByRelevanceInput = {
@@ -61040,6 +61286,14 @@ export namespace Prisma {
     set?: $Enums.ProjetoStatus | null
   }
 
+  export type NullableEnumProjetoPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.ProjetoPriority | null
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type AtividadeUpdateManyWithoutProjetoNestedInput = {
     create?: XOR<AtividadeCreateWithoutProjetoInput, AtividadeUncheckedCreateWithoutProjetoInput> | AtividadeCreateWithoutProjetoInput[] | AtividadeUncheckedCreateWithoutProjetoInput[]
     connectOrCreate?: AtividadeCreateOrConnectWithoutProjetoInput | AtividadeCreateOrConnectWithoutProjetoInput[]
@@ -61566,6 +61820,10 @@ export namespace Prisma {
     connect?: TarefaTagWhereUniqueInput | TarefaTagWhereUniqueInput[]
   }
 
+  export type NullableEnumTarefaStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TarefaStatus | null
+  }
+
   export type NullableEnumTarefaPrioridadeFieldUpdateOperationsInput = {
     set?: $Enums.TarefaPrioridade | null
   }
@@ -61770,10 +62028,6 @@ export namespace Prisma {
     create?: XOR<TarefaCreateWithoutSubtarefasInput, TarefaUncheckedCreateWithoutSubtarefasInput>
     connectOrCreate?: TarefaCreateOrConnectWithoutSubtarefasInput
     connect?: TarefaWhereUniqueInput
-  }
-
-  export type NullableBoolFieldUpdateOperationsInput = {
-    set?: boolean | null
   }
 
   export type TarefaUpdateOneRequiredWithoutSubtarefasNestedInput = {
@@ -64601,6 +64855,18 @@ export namespace Prisma {
     not?: NestedEnumProjetoStatusNullableFilter<$PrismaModel> | $Enums.ProjetoStatus | null
   }
 
+  export type NestedEnumProjetoPriorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjetoPriority | EnumProjetoPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjetoPriority[] | null
+    notIn?: $Enums.ProjetoPriority[] | null
+    not?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel> | $Enums.ProjetoPriority | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -64699,6 +64965,24 @@ export namespace Prisma {
     _max?: NestedEnumProjetoStatusNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumProjetoPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjetoPriority | EnumProjetoPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjetoPriority[] | null
+    notIn?: $Enums.ProjetoPriority[] | null
+    not?: NestedEnumProjetoPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProjetoPriority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumProjetoPriorityNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumProjetoMemberRoleNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjetoMemberRole | EnumProjetoMemberRoleFieldRefInput<$PrismaModel> | null
     in?: $Enums.ProjetoMemberRole[] | null
@@ -64714,6 +64998,13 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumProjetoMemberRoleNullableFilter<$PrismaModel>
     _max?: NestedEnumProjetoMemberRoleNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTarefaStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TarefaStatus | EnumTarefaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TarefaStatus[] | null
+    notIn?: $Enums.TarefaStatus[] | null
+    not?: NestedEnumTarefaStatusNullableFilter<$PrismaModel> | $Enums.TarefaStatus | null
   }
 
   export type NestedEnumTarefaPrioridadeNullableFilter<$PrismaModel = never> = {
@@ -64732,6 +65023,16 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumTarefaStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TarefaStatus | EnumTarefaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TarefaStatus[] | null
+    notIn?: $Enums.TarefaStatus[] | null
+    not?: NestedEnumTarefaStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.TarefaStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTarefaStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumTarefaStatusNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumTarefaPrioridadeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -64785,19 +65086,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedBigIntNullableFilter<$PrismaModel = never> = {
@@ -65781,7 +66069,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutProjetoInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -65804,7 +66094,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -66258,7 +66550,9 @@ export namespace Prisma {
     id?: IntFilter<"Tarefa"> | number
     titulo?: StringFilter<"Tarefa"> | string
     descricao?: StringNullableFilter<"Tarefa"> | string | null
-    prazo?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_inicio?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    data_fim?: DateTimeNullableFilter<"Tarefa"> | Date | string | null
+    status?: EnumTarefaStatusNullableFilter<"Tarefa"> | $Enums.TarefaStatus | null
     prioridade?: EnumTarefaPrioridadeNullableFilter<"Tarefa"> | $Enums.TarefaPrioridade | null
     ordem?: IntFilter<"Tarefa"> | number
     estimativaHoras?: DecimalNullableFilter<"Tarefa"> | Decimal | DecimalJsLike | number | string | null
@@ -66313,13 +66607,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutMembrosInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -66339,13 +66637,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutMembrosInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -66380,13 +66682,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutMembrosInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -66406,13 +66712,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutMembrosInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -66431,13 +66741,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutColunasInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -66457,13 +66771,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutColunasInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -66488,7 +66806,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutColunaInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -66511,7 +66831,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -66553,13 +66875,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutColunasInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -66579,13 +66905,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutColunasInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -66765,13 +67095,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutTarefasInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -66791,13 +67125,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutTarefasInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -67042,13 +67380,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutTarefasInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -67068,13 +67410,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutTarefasInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -67144,7 +67490,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutResponsaveisInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67167,7 +67515,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67205,7 +67555,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutResponsaveisInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67228,7 +67580,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67250,7 +67604,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutSubtarefasInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67273,7 +67629,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67311,7 +67669,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutSubtarefasInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67334,7 +67694,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67355,13 +67717,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutTagsInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -67381,13 +67747,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutTagsInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -67441,13 +67811,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutTagsInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -67467,13 +67841,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutTagsInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -67529,7 +67907,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutTagsInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67552,7 +67932,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67616,7 +67998,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutTagsInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67639,7 +68023,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67714,7 +68100,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutComentariosInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67737,7 +68125,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67821,7 +68211,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutComentariosInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67844,7 +68236,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67866,7 +68260,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutAnexosInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67889,7 +68285,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -67927,7 +68325,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutAnexosInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67950,7 +68350,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67999,7 +68401,9 @@ export namespace Prisma {
   export type TarefaCreateWithoutUserStoryInput = {
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -68022,7 +68426,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -68101,13 +68507,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutUserStoriesInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -68127,13 +68537,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutUserStoriesInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -68307,13 +68721,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutUserStoriesInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -68333,13 +68751,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutUserStoriesInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -68509,13 +68931,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutSprintsInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -68535,13 +68961,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutSprintsInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -68704,13 +69134,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutSprintsInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -68730,13 +69164,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutSprintsInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -68857,13 +69295,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutDefinitionOfDoneInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -68883,13 +69325,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutDefinitionOfDoneInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -68951,13 +69397,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutDefinitionOfDoneInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -68977,13 +69427,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutDefinitionOfDoneInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -69228,13 +69682,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutCapacidadeTimeInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -69254,13 +69712,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutCapacidadeTimeInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -69395,13 +69857,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutCapacidadeTimeInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -69421,13 +69887,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutCapacidadeTimeInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -70265,13 +70735,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutArtsInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -70291,13 +70765,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutArtsInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -70372,13 +70850,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutArtsInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -70398,13 +70880,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutArtsInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -71220,13 +71706,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutPiObjectivesInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -71246,13 +71736,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutPiObjectivesInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -71372,13 +71866,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutPiObjectivesInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -71398,13 +71896,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutPiObjectivesInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -73210,13 +73712,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutRiscosInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -73236,13 +73742,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutRiscosInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -73391,13 +73901,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutRiscosInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -73417,13 +73931,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutRiscosInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -74171,13 +74689,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutDocumentosInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeCreateNestedManyWithoutProjetoInput
@@ -74197,13 +74719,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutDocumentosInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     atividades?: AtividadeUncheckedCreateNestedManyWithoutProjetoInput
@@ -74326,13 +74852,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutDocumentosInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUpdateManyWithoutProjetoNestedInput
@@ -74352,13 +74882,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutDocumentosInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     atividades?: AtividadeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -74509,13 +75043,17 @@ export namespace Prisma {
 
   export type ProjetoCreateWithoutAtividadesInput = {
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     capacidadeTime?: CapacidadeTimeCreateNestedManyWithoutProjetoInput
@@ -74535,13 +75073,17 @@ export namespace Prisma {
   export type ProjetoUncheckedCreateWithoutAtividadesInput = {
     id?: number
     nome: string
+    projectId?: string | null
     descricao?: string | null
-    cor?: string | null
+    icone?: string | null
+    backgroundUrl?: string | null
     dataInicio?: Date | string | null
     dataFim?: Date | string | null
     ownerId: number
     idempresa: number
     status?: $Enums.ProjetoStatus | null
+    prioridade?: $Enums.ProjetoPriority | null
+    acesso?: boolean | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     capacidadeTime?: CapacidadeTimeUncheckedCreateNestedManyWithoutProjetoInput
@@ -74634,13 +75176,17 @@ export namespace Prisma {
 
   export type ProjetoUpdateWithoutAtividadesInput = {
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     capacidadeTime?: CapacidadeTimeUpdateManyWithoutProjetoNestedInput
@@ -74660,13 +75206,17 @@ export namespace Prisma {
   export type ProjetoUncheckedUpdateWithoutAtividadesInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    cor?: NullableStringFieldUpdateOperationsInput | string | null
+    icone?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
     dataInicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownerId?: IntFieldUpdateOperationsInput | number
     idempresa?: IntFieldUpdateOperationsInput | number
     status?: NullableEnumProjetoStatusFieldUpdateOperationsInput | $Enums.ProjetoStatus | null
+    prioridade?: NullableEnumProjetoPriorityFieldUpdateOperationsInput | $Enums.ProjetoPriority | null
+    acesso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     capacidadeTime?: CapacidadeTimeUncheckedUpdateManyWithoutProjetoNestedInput
@@ -75232,7 +75782,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -75679,7 +76231,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutProjetoInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -75702,7 +76256,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -75725,7 +76281,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -75800,7 +76358,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -75817,7 +76377,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutColunaInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -75840,7 +76402,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -75863,7 +76427,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -76095,7 +76661,9 @@ export namespace Prisma {
     id?: number
     titulo: string
     descricao?: string | null
-    prazo?: Date | string | null
+    data_inicio?: Date | string | null
+    data_fim?: Date | string | null
+    status?: $Enums.TarefaStatus | null
     prioridade?: $Enums.TarefaPrioridade | null
     ordem?: number
     estimativaHoras?: Decimal | DecimalJsLike | number | string | null
@@ -76138,7 +76706,9 @@ export namespace Prisma {
   export type TarefaUpdateWithoutUserStoryInput = {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -76161,7 +76731,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -76184,7 +76756,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
-    prazo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    data_fim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTarefaStatusFieldUpdateOperationsInput | $Enums.TarefaStatus | null
     prioridade?: NullableEnumTarefaPrioridadeFieldUpdateOperationsInput | $Enums.TarefaPrioridade | null
     ordem?: IntFieldUpdateOperationsInput | number
     estimativaHoras?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

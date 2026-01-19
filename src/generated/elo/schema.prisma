@@ -10,17 +10,21 @@ datasource db {
 }
 
 model Projeto {
-  id         Int            @id @default(autoincrement())
-  nome       String         @db.VarChar(255)
-  descricao  String?        @db.Text
-  cor        String?        @default("#6366f1") @db.VarChar(7)
-  dataInicio DateTime?      @map("data_inicio") @db.Date
-  dataFim    DateTime?      @map("data_fim") @db.Date
-  ownerId    Int            @map("owner_id")
-  idempresa  Int            @map("id_empresa")
-  status     ProjetoStatus? @default(ativo)
-  createdAt  DateTime?      @default(now()) @map("created_at") @db.DateTime(0)
-  updatedAt  DateTime?      @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  id            Int              @id @default(autoincrement())
+  nome          String           @db.VarChar(255)
+  projectId     String?          @db.VarChar(10)
+  descricao     String?          @db.Text
+  icone         String?          @db.VarChar(50)
+  backgroundUrl String?          @db.VarChar(255)
+  dataInicio    DateTime?        @map("data_inicio") @db.Date
+  dataFim       DateTime?        @map("data_fim") @db.Date
+  ownerId       Int              @map("owner_id")
+  idempresa     Int              @map("id_empresa")
+  status        ProjetoStatus?   @default(draft)
+  prioridade    ProjetoPriority? @default(none)
+  acesso        Boolean?         @default(true)
+  createdAt     DateTime?        @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt     DateTime?        @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
 
   atividades       Atividade[]
   capacidadeTime   CapacidadeTime[]
@@ -76,8 +80,10 @@ model Tarefa {
   id                Int                 @id @default(autoincrement())
   titulo            String              @db.VarChar(255)
   descricao         String?             @db.Text
-  prazo             DateTime?           @db.Date
-  prioridade        TarefaPrioridade?   @default(media)
+  data_inicio       DateTime?           @db.Date
+  data_fim          DateTime?           @db.Date
+  status            TarefaStatus?       @default(backlog)
+  prioridade        TarefaPrioridade?   @default(none)
   ordem             Int                 @default(0)
   estimativaHoras   Decimal?            @map("estimativa_horas") @db.Decimal(8, 2)
   horasRealizadas   Decimal?            @map("horas_realizadas") @db.Decimal(8, 2)
@@ -101,10 +107,8 @@ model Tarefa {
   @@index([colunaId], map: "idx_coluna")
   @@index([projetoId], map: "idx_projeto")
   @@index([userStoryId], map: "idx_story")
-  @@index([prazo], map: "idx_prazo")
   @@index([createdBy], map: "idx_created_by")
   @@index([projetoId, colunaId], map: "idx_projeto_coluna")
-  @@index([prazo, prioridade], map: "idx_prazo_prioridade")
   @@map("tarefas")
 }
 
@@ -836,10 +840,20 @@ model ComentarioLike {
 }
 
 enum ProjetoStatus {
-  ativo
-  pausado
-  concluido
-  cancelado
+  draft
+  planning
+  execution
+  monitoring
+  completed
+  cancelled
+}
+
+enum ProjetoPriority {
+  urgent
+  high
+  medium
+  low
+  none
 }
 
 enum ProjetoMemberRole {
@@ -849,10 +863,20 @@ enum ProjetoMemberRole {
   viewer
 }
 
+enum TarefaStatus {
+  backlog
+  todo
+  in_progress
+  done
+  cancelled
+}
+
 enum TarefaPrioridade {
-  baixa
-  media
-  alta
+  urgent
+  high
+  medium
+  low
+  none
 }
 
 enum UserStoryStatus {
