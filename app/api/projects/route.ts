@@ -7,8 +7,8 @@ import { standardError, successResponse } from '@/src/utils/http-response';
 
 const filtersSchema = z.object({
   search: z.string().optional(),
-  status: z.array(z.enum(ProjetoStatus)).optional(),
-  prioridade: z.array(z.enum(ProjetoPriority)).optional(),
+  status: z.array(z.nativeEnum(ProjetoStatus)).optional(),
+  prioridade: z.array(z.nativeEnum(ProjetoPriority)).optional(),
   ownerId: z.coerce.number().optional(),
   memberId: z.coerce.number().optional(),
   orderBy: z.enum(['nome', 'createdAt', 'updatedAt']).optional(),
@@ -28,7 +28,17 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     // Parse query params
-    const rawFilters: any = {
+    const rawFilters: {
+      search?: string;
+      status?: string[];
+      prioridade?: string[];
+      ownerId?: string;
+      memberId?: string;
+      orderBy?: string;
+      orderDirection?: string;
+      page?: string;
+      limit?: string;
+    } = {
       search: searchParams.get('search') || undefined,
       status: searchParams.getAll('status') || undefined,
       prioridade: searchParams.getAll('prioridade') || undefined,
@@ -41,9 +51,12 @@ export async function GET(req: NextRequest) {
     };
 
     // Remove undefined values
-    Object.keys(rawFilters).forEach(
-      (key) => rawFilters[key] === undefined && delete rawFilters[key],
-    );
+    Object.keys(rawFilters).forEach((key) => {
+      const typedKey = key as keyof typeof rawFilters;
+      if (rawFilters[typedKey] === undefined) {
+        delete rawFilters[typedKey];
+      }
+    });
 
     const validatedFilters = filtersSchema.parse(rawFilters);
 
