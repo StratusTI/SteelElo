@@ -12,6 +12,10 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding"
   ],
   "framework": "@storybook/nextjs-vite",
+  viteFinal: (config) => {
+    config.cacheDir = 'node_modules/.vite-storybook'
+    return config
+  },
   "staticDirs": [
     "..\\public"
   ]
