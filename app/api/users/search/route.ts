@@ -43,17 +43,17 @@ export async function GET(req: NextRequest) {
           nomeCompleto: `${u.nome} ${u.sobrenome}`.trim(),
           email: u.email,
           foto: u.foto,
-          departamento: u.departamento
-        }))
+          departamento: u.departamento,
+        })),
       },
-      200
-    )
+      200,
+    );
   } catch (err) {
     if (err instanceof ZodError) {
-      return standardError('VALIDATION_ERROR', 'Invalid parameters')
+      return standardError('VALIDATION_ERROR', 'Invalid parameters');
     }
 
     console.error('[GET /api/users/search] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to search users')
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to search users');
   }
 }
