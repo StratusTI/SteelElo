@@ -1,11 +1,11 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import type { ComponentProps } from "react";
+import { HugeiconsIcon } from '@hugeicons/react';
+import type { ComponentProps } from 'react';
 
 type IconProps = ComponentProps<typeof HugeiconsIcon>;
 
 export function Icon({
   size = 24,
-  color = "currentColor",
+  color = 'currentColor',
   strokeWidth = 1.5,
   ...props
 }: IconProps) {
@@ -16,5 +16,5 @@ export function Icon({
       strokeWidth={strokeWidth}
       {...props}
     />
-  )
+  );
 }

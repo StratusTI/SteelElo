@@ -70,7 +70,14 @@ export const CustomStroke: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: '24px',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+      }}
+    >
       <div style={{ textAlign: 'center' }}>
         <Icon icon={Notification03Icon} size={24} />
         <p style={{ fontSize: '12px', marginTop: '8px' }}>Notification</p>
@@ -129,11 +136,11 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-      <Icon icon={Home01Icon} size={32} color="#ef4444" />
-      <Icon icon={Home01Icon} size={32} color="#3b82f6" />
-      <Icon icon={Home01Icon} size={32} color="#10b981" />
-      <Icon icon={Home01Icon} size={32} color="#f59e0b" />
-      <Icon icon={Home01Icon} size={32} color="#8b5cf6" />
+      <Icon icon={Home01Icon} size={32} color='#ef4444' />
+      <Icon icon={Home01Icon} size={32} color='#3b82f6' />
+      <Icon icon={Home01Icon} size={32} color='#10b981' />
+      <Icon icon={Home01Icon} size={32} color='#f59e0b' />
+      <Icon icon={Home01Icon} size={32} color='#8b5cf6' />
     </div>
   ),
 };
