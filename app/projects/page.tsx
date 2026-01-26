@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
+import { SearchPages } from '../components/input/searchPages';
 
 interface Project {
   id: number;
@@ -160,6 +161,8 @@ export default function ProjectsPage() {
           <p className='mt-2 text-sm text-gray-600'>
             Gerencie todos os seus projetos em um só lugar
           </p>
+
+          <SearchPages />
         </div>
 
         {/* Filters and Actions */}

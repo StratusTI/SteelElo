@@ -7,7 +7,7 @@ export function Header() {
 
       <SearchPages />
 
-      <div></div>
+      <div />
     </div>
   );
 }

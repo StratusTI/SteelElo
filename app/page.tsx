@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { redirect } from 'next/navigation';
 import { getAuthUser } from '@/src/http/middlewares/verify-jwt';
 import {
@@ -6,12 +6,11 @@ import {
   isUserAdmin,
   isUserSuperAdmin,
 } from '@/src/utils/user';
-import { SearchPages } from './components/input/searchPages';
 
 export default async function ProfilePage() {
   const user = await getAuthUser();
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient()
 
   if (!user) {
     redirect('https://painel.stratustelecom.com.br/main/login.php');
@@ -28,8 +27,6 @@ export default async function ProfilePage() {
         <p>Name: {fullName}</p>
         <p>Admin: {isAdmin ? 'Yes' : 'No'}</p>
         <p>Super Admin: {isSuperAdmin ? 'Yes' : 'No'}</p>
-
-        <SearchPages />
       </div>
     </QueryClientProvider>
   );
