@@ -3,9 +3,5 @@ interface LeadProps {
 }
 
 export function Lead({ children }: LeadProps) {
-  return (
-    <p className="text-muted-foreground text-xl">
-      { children }
-    </p>
-  )
+  return <p className='text-muted-foreground text-xl'>{children}</p>;
 }

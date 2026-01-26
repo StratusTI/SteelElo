@@ -13,37 +13,25 @@ export function Table({ children }: TableProps) {
 }
 
 export function TableHead({ children }: TableProps) {
-  return (
-    <thead>
-      {children}
-    </thead>
-  );
+  return <thead>{children}</thead>;
 }
 
 export function TableBody({ children }: TableProps) {
-  return (
-    <tbody>
-      {children}
-    </tbody>
-  );
+  return <tbody>{children}</tbody>;
 }
 
 export function TableRow({ children }: TableProps) {
-  return (
-    <tr className="even:bg-muted m-0 border-t p-0">
-      {children}
-    </tr>
-  );
+  return <tr className='even:bg-muted m-0 border-t p-0'>{children}</tr>;
 }
 
 export function TableData({ children }: TableProps) {
-  return (
-    <td className='px-4 py-2'>{children}</td>
-  );
+  return <td className='px-4 py-2'>{children}</td>;
 }
 
 export function TableHeader({ children }: TableProps) {
   return (
-    <th className="border px-4 py-2 text-left font-bold [[align=center]]:text-cente [[align=right]]:text-right">{children}</th>
+    <th className='border px-4 py-2 text-left font-bold [[align=center]]:text-cente [[align=right]]:text-right'>
+      {children}
+    </th>
   );
 }

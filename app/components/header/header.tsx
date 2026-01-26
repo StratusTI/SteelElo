@@ -1,4 +1,4 @@
-import { SearchPages } from "../input/searchPages"
+import { SearchPages } from '../input/searchPages';
 
 export function Header() {
   return (
@@ -7,9 +7,7 @@ export function Header() {
 
       <SearchPages />
 
-      <div>
-
-      </div>
+      <div></div>
     </div>
-  )
+  );
 }

@@ -3,7 +3,5 @@ interface SmallProps {
 }
 
 export function Small({ children }: SmallProps) {
-  return (
-    <small className="text-sm leading-none font-medium">{children}</small>
-  )
+  return <small className='text-sm leading-none font-medium'>{children}</small>;
 }

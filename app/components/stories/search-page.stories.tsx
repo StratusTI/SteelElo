@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SearchPages } from '../input/searchPages'
+import { SearchPages } from '../input/searchPages';
 
 const queryClient = new QueryClient();
 
@@ -18,16 +18,15 @@ const meta = {
       </QueryClientProvider>
     ),
   ],
-} satisfies Meta<typeof SearchPages>
+} satisfies Meta<typeof SearchPages>;
 
-export default meta
-type Story = StoryObj<typeof meta>
-
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="w-100 dark">
+    <div className='w-100 dark'>
       <SearchPages />
     </div>
   ),
-}
+};

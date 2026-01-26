@@ -3,5 +3,5 @@ interface LargeProps {
 }
 
 export function Large({ children }: LargeProps) {
-  return <div className="text-lg font-semibold">{children}</div>
+  return <div className='text-lg font-semibold'>{children}</div>;
 }

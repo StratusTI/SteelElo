@@ -3,7 +3,5 @@ interface MutedProps {
 }
 
 export function Muted({ children }: MutedProps) {
-  return (
-    <p className="text-muted-foreground text-sm">{children}</p>
-  )
+  return <p className='text-muted-foreground text-sm'>{children}</p>;
 }
