@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { QueryProvider } from './provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`root ${geistSans.variable} ${geistMono.variable} antialiased bg-black p-2.5 gap-2 h-screen`}
       >
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
