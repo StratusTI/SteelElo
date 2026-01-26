@@ -11,7 +11,7 @@ import {
   VideoIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Icon } from '../ui/icon';
+import { Icon } from '../HugeIcons';
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
