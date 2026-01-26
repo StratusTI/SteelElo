@@ -1,4 +1,3 @@
-# Dockerfile
 FROM node:20-alpine AS base
 
 # Instalar dependências apenas quando necessário
@@ -8,11 +7,13 @@ WORKDIR /app
 
 # Copiar arquivos de dependências
 COPY package.json pnpm-lock.yaml* ./
-RUN --mount=type=secret,id=npmtoken \
+
+# USE O SECRET PARA CONFIGURAR O REGISTRY CUSTOMIZADO
+RUN --mount=type=secret,id=hugeicons_token \
     corepack enable pnpm && \
-    if [ -f /run/secrets/npmtoken ]; then \
-      echo "@hugeicons-pro:registry=https://registry.npmjs.org/" > .npmrc && \
-      echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npmtoken)" >> .npmrc; \
+    if [ -f /run/secrets/hugeicons_token ]; then \
+      echo "@hugeicons-pro:registry=https://npm.hugeicons.com" > .npmrc && \
+      echo "//npm.hugeicons.com/:_authToken=$(cat /run/secrets/hugeicons_token)" >> .npmrc; \
     fi && \
     pnpm install --frozen-lockfile && \
     rm -f .npmrc
@@ -51,9 +52,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/src/generated ./src/generated
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 
 USER nextjs
-
 EXPOSE 3000
-
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 

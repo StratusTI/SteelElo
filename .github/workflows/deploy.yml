@@ -24,15 +24,14 @@ jobs:
           cache: 'pnpm'
       - name: Configure npm authentication
         run: |
-          echo "@hugeicons-pro:registry=https://registry.npmjs.org/" > .npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+          echo "@hugeicons-pro:registry=https://npm.hugeicons.com" > .npmrc
+          echo "//npm.hugeicons.com/:_authToken=${{ secrets.HUGEICONS_TOKEN }}" >> .npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run unit tests
         run: pnpm test:unit
       - name: Run integration tests
         run: pnpm test:integration
-
   build-and-push:
     needs: tests
     runs-on: self-hosted
@@ -63,8 +62,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          secrets:
-            npmtoken=${{ secrets.NPM_TOKEN }}
+          secrets: |
+            hugeicons_token=${{ secrets.HUGEICONS_TOKEN }}
   deploy:
     needs: build-and-push
     runs-on: self-hosted
