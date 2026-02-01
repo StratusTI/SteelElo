@@ -55,5 +55,3 @@ storybook-static
 
 nul
 NUL
-src/generated/**/query_engine-*.tmp*
-src/generated/**
