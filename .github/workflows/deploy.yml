@@ -28,6 +28,8 @@ jobs:
           echo "//npm.hugeicons.com/:_authToken=${{ secrets.HUGEICONS_TOKEN }}" >> .npmrc
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
       - name: Run unit tests
         run: pnpm test:unit
       - name: Run integration tests

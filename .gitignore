@@ -55,3 +55,5 @@ storybook-static
 
 nul
 NUL
+src/generated
+.prisma
