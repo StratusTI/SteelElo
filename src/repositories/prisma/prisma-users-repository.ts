@@ -1,52 +1,77 @@
 import { User } from "@/src/@types/user";
 import { prismaSteel } from "@/src/lib/prisma";
-import { SearchUsersParams, UsersRepository } from "../users-repository";
+import { SearchUsersParams, UpdateUserProfileParams, UsersRepository } from "../users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
-  async findById(id: number): Promise<User | null> {
-    const user = await prismaSteel.usuario.findUnique({
-        where: { id }
-      })
-
-    if (!user || !user.email) return null
-
+  private mapToUser(user: any): User {
     return {
       id: user.id,
       nome: user.nome ?? '',
       sobrenome: user.sobrenome ?? '',
-      email: user.email,
+      username: user.username ?? '',
+      email: user.email ?? '',
       foto: user.foto ?? '',
       telefone: user.telefone ?? '',
       admin: user.admin ?? false,
       superadmin: user.superadmin ?? false,
       idempresa: user.idempresa ?? null,
+      empresa: user.empresa?.nome ?? '',
       departamento: user.departamento ?? null,
       time: user.time ?? '',
       online: user.online
     }
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     const user = await prismaSteel.usuario.findUnique({
-        where: { email }
-      })
+      where: { id },
+      include: { empresa: { select: { nome: true } } }
+    })
 
     if (!user || !user.email) return null
 
-    return {
-      id: user.id,
-      nome: user.nome ?? '',
-      sobrenome: user.sobrenome ?? '',
-      email: user.email,
-      foto: user.foto ?? '',
-      telefone: user.telefone ?? '',
-      admin: user.admin ?? false,
-      superadmin: user.superadmin ?? false,
-      idempresa: user.idempresa ?? null,
-      departamento: user.departamento ?? null,
-      time: user.time ?? '',
-      online: user.online
-    }
+    return this.mapToUser(user)
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await prismaSteel.usuario.findUnique({
+      where: { email },
+      include: { empresa: { select: { nome: true } } }
+    })
+
+    if (!user || !user.email) return null
+
+    return this.mapToUser(user)
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    const user = await prismaSteel.usuario.findUnique({
+      where: { username },
+      include: { empresa: { select: { nome: true } } }
+    })
+
+    if (!user || !user.email) return null
+
+    return this.mapToUser(user)
+  }
+
+  async updateProfile(params: UpdateUserProfileParams): Promise<User | null> {
+    const { userId, ...data } = params
+
+    const updateData: any = {}
+    if (data.nome !== undefined) updateData.nome = data.nome
+    if (data.sobrenome !== undefined) updateData.sobrenome = data.sobrenome
+    if (data.username !== undefined) updateData.username = data.username
+
+    const user = await prismaSteel.usuario.update({
+      where: { id: userId },
+      data: updateData,
+      include: { empresa: { select: { nome: true } } }
+    })
+
+    if (!user || !user.email) return null
+
+    return this.mapToUser(user)
   }
 
   async searchByCompany(params: SearchUsersParams): Promise<User[]> {
@@ -61,7 +86,8 @@ export class PrismaUsersRepository implements UsersRepository {
       where.OR = [
         { nome: { contains: params.query } },
         { sobrenome: { contains: params.query } },
-        { email: { contains: params.query } }
+        { email: { contains: params.query } },
+        { username: { contains: params.query } }
       ]
     }
 
@@ -71,7 +97,8 @@ export class PrismaUsersRepository implements UsersRepository {
       orderBy: [
         { nome: 'asc' },
         { sobrenome: 'asc'}
-      ]
+      ],
+      include: { empresa: { select: { nome: true } } }
     })
 
     let filteredUsers = users
@@ -88,19 +115,15 @@ export class PrismaUsersRepository implements UsersRepository {
       filteredUsers = filteredUsers.filter(u => !memberIds.includes(u.id))
     }
 
-    return filteredUsers.map(user => ({
-      id: user.id,
-      nome: user.nome ?? '',
-      sobrenome: user.sobrenome ?? '',
-      email: user.email ?? '',
-      foto: user.foto ?? '',
-      telefone: user.telefone ?? '',
-      admin: user.admin ?? false,
-      superadmin: user.superadmin ?? false,
-      idempresa: user.idempresa ?? null,
-      departamento: user.departamento ?? null,
-      time: user.time ?? '',
-      online: user.online
-    }))
+    return filteredUsers.map(user => this.mapToUser(user))
+  }
+
+  async countByCompany(companyId: number): Promise<number> {
+    return prismaSteel.usuario.count({
+      where: {
+        idempresa: companyId,
+        email: { not: null }
+      }
+    })
   }
 }

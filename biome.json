@@ -43,12 +43,16 @@
 				"noForEach": "off",
 				"noUselessConstructor": "off"
 			},
+			"performance": {
+				"noImgElement": "off"
+			},
 			"suspicious": {
 				"noDebugger": "off",
 				"noAssignInExpressions": "off",
 				"noArrayIndexKey": "off",
 				"useIterableCallbackReturn": "off",
 				"noUnknownAtRules": "off",
+				"noExplicitAny": "off",
 				"noConsole": {
 					"level": "off",
 					"options": {
@@ -71,7 +75,8 @@
 				"noUselessElse": "error"
 			},
 			"correctness": {
-				"useExhaustiveDependencies": "off"
+				"useExhaustiveDependencies": "off",
+				"useUniqueElementIds": "off"
 			}
 		}
 	},

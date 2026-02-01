@@ -127,6 +127,7 @@ exports.Prisma.UsuarioScalarFieldEnum = {
   senha: 'senha',
   permissoes: 'permissoes',
   sobrenome: 'sobrenome',
+  username: 'username',
   foto: 'foto',
   telefone: 'telefone',
   admin: 'admin',
@@ -150,6 +151,20 @@ exports.Prisma.UsuarioScalarFieldEnum = {
   departamento: 'departamento',
   time: 'time',
   dispositivos: 'dispositivos'
+};
+
+exports.Prisma.Integracao_usuarioScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  provider: 'provider',
+  provider_id: 'provider_id',
+  provider_login: 'provider_login',
+  access_token: 'access_token',
+  refresh_token: 'refresh_token',
+  token_expires: 'token_expires',
+  scopes: 'scopes',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.EmpresaScalarFieldEnum = {
@@ -588,6 +603,7 @@ exports.Prisma.UsuarioOrderByRelevanceFieldEnum = {
   senha: 'senha',
   permissoes: 'permissoes',
   sobrenome: 'sobrenome',
+  username: 'username',
   foto: 'foto',
   telefone: 'telefone',
   ramal: 'ramal',
@@ -597,6 +613,15 @@ exports.Prisma.UsuarioOrderByRelevanceFieldEnum = {
   departamento: 'departamento',
   time: 'time',
   dispositivos: 'dispositivos'
+};
+
+exports.Prisma.integracao_usuarioOrderByRelevanceFieldEnum = {
+  provider: 'provider',
+  provider_id: 'provider_id',
+  provider_login: 'provider_login',
+  access_token: 'access_token',
+  refresh_token: 'refresh_token',
+  scopes: 'scopes'
 };
 
 exports.Prisma.EmpresaOrderByRelevanceFieldEnum = {
@@ -890,6 +915,7 @@ exports.paginas_tipo = exports.$Enums.paginas_tipo = {
 
 exports.Prisma.ModelName = {
   Usuario: 'Usuario',
+  integracao_usuario: 'integracao_usuario',
   Empresa: 'Empresa',
   acessos_usuarios: 'acessos_usuarios',
   api: 'api',

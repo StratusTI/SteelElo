@@ -10,43 +10,64 @@ datasource db {
 }
 
 model Usuario {
-  id                  Int                @id @default(autoincrement())
-  nome                String?            @default("") @db.VarChar(100)
-  email               String?            @unique(map: "email") @default("") @db.VarChar(100)
-  senha               String?            @default("") @db.VarChar(255)
-  permissoes          String?            @db.Text
-  sobrenome           String?            @default("") @db.VarChar(100)
-  foto                String?            @default("") @db.VarChar(100)
-  telefone            String?            @default("") @db.VarChar(30)
-  admin               Boolean?           @default(false)
+  id                  Int                  @id @default(autoincrement())
+  nome                String?              @default("") @db.VarChar(100)
+  email               String?              @unique(map: "email") @default("") @db.VarChar(100)
+  senha               String?              @default("") @db.VarChar(255)
+  permissoes          String?              @db.Text
+  sobrenome           String?              @default("") @db.VarChar(100)
+  username            String?              @unique @db.VarChar(50)
+  foto                String?              @default("") @db.VarChar(100)
+  telefone            String?              @default("") @db.VarChar(30)
+  admin               Boolean?             @default(false)
   idempresa           Int?
   idconfiguracao      Int?
-  ramal               String?            @default("") @db.VarChar(6)
-  queue_penalty       Int?               @default(5)
-  session_token       String?            @default("") @db.VarChar(255)
-  sigame              Boolean?           @default(false)
-  superadmin          Boolean?           @default(false)
-  iddevice            String?            @db.VarChar(11)
-  last_seen           DateTime?          @db.DateTime(0)
-  online              Boolean            @default(false)
-  agente_dinamico     Boolean?           @default(false)
-  senha_api_md5       String?            @db.Char(32)
-  vpn                 Boolean?           @default(false)
-  microsip_singlemode Boolean?           @default(false)
-  microsip_aa         Boolean?           @default(false)
-  lgpd                Boolean?           @default(false)
-  lgpd_date           DateTime?          @db.DateTime(0)
-  departamento        String?            @default("") @db.VarChar(100)
-  time                String?            @default("") @db.VarChar(100)
-  dispositivos        String?            @db.LongText
+  ramal               String?              @default("") @db.VarChar(6)
+  queue_penalty       Int?                 @default(5)
+  session_token       String?              @default("") @db.VarChar(255)
+  sigame              Boolean?             @default(false)
+  superadmin          Boolean?             @default(false)
+  iddevice            String?              @db.VarChar(11)
+  last_seen           DateTime?            @db.DateTime(0)
+  online              Boolean              @default(false)
+  agente_dinamico     Boolean?             @default(false)
+  senha_api_md5       String?              @db.Char(32)
+  vpn                 Boolean?             @default(false)
+  microsip_singlemode Boolean?             @default(false)
+  microsip_aa         Boolean?             @default(false)
+  lgpd                Boolean?             @default(false)
+  lgpd_date           DateTime?            @db.DateTime(0)
+  departamento        String?              @default("") @db.VarChar(100)
+  time                String?              @default("") @db.VarChar(100)
+  dispositivos        String?              @db.LongText
   acessos_usuarios    acessos_usuarios[]
   horarios_padrao     horarios_padrao[]
   ponto               ponto[]
-  empresa             Empresa?           @relation(fields: [idempresa], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "usuarios_ibfk_1")
+  integracoes         integracao_usuario[]
+  empresa             Empresa?             @relation(fields: [idempresa], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "usuarios_ibfk_1")
 
   @@index([iddevice, online, last_seen], map: "idx_usuarios_dev_online_seen")
   @@index([idempresa], map: "idempresa")
   @@map("usuarios")
+}
+
+model integracao_usuario {
+  id             Int       @id @default(autoincrement())
+  usuario_id     Int
+  provider       String    @db.VarChar(50)
+  provider_id    String    @db.VarChar(100)
+  provider_login String?   @db.VarChar(100)
+  access_token   String    @db.Text
+  refresh_token  String?   @db.Text
+  token_expires  DateTime? @db.DateTime(0)
+  scopes         String?   @db.Text
+  created_at     DateTime  @default(now()) @db.DateTime(0)
+  updated_at     DateTime  @default(now()) @updatedAt @db.DateTime(0)
+  usuario        Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@unique([usuario_id, provider])
+  @@index([usuario_id], map: "idx_integracao_usuario")
+  @@index([provider], map: "idx_integracao_provider")
 }
 
 model Empresa {

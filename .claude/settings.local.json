@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(pnpm prisma:generate:*)",
+      "Bash(pnpm prisma generate:*)"
+    ]
+  }
+}
