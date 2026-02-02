@@ -65,7 +65,9 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   });
 
   if (!storedState || storedState !== state) {
-    console.error(`[OAuth ${provider}] State mismatch - stored: ${storedState?.substring(0, 20)}..., received: ${state?.substring(0, 20)}...`);
+    console.error(
+      `[OAuth ${provider}] State mismatch - stored: ${storedState?.substring(0, 20)}..., received: ${state?.substring(0, 20)}...`,
+    );
     return createErrorRedirect('Estado inválido. Tente novamente.');
   }
 
