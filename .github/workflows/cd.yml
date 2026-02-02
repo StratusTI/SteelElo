@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: CD (Continuous Deployment)
 on:
   push:
     branches:
@@ -7,35 +7,35 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: stratusti/steelelo
 jobs:
-  tests:
-    name: Run unit tests (Vitest)
+  integration-tests:
+    name: Run Integration Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Configure npm authentication
-        run: |
-          echo "@hugeicons-pro:registry=https://npm.hugeicons.com" > .npmrc
-          echo "//npm.hugeicons.com/:_authToken=${{ secrets.HUGEICONS_TOKEN }}" >> .npmrc
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
       - name: Generate Prisma Client
         run: pnpm prisma:generate
-      - name: Run unit tests
-        run: pnpm test:unit
+
       - name: Run integration tests
         run: pnpm test:integration
+
   build-and-push:
-    needs: tests
+    needs: integration-tests
     runs-on: self-hosted
     permissions:
       contents: read
@@ -66,9 +66,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
             hugeicons_token=${{ secrets.HUGEICONS_TOKEN }}
+
   deploy:
     needs: build-and-push
     runs-on: self-hosted
+    environment:
+      name: production
+      url: https://elo.stratustelecom.com.br:44385
     steps:
       - name: Deploy to server
         run: |

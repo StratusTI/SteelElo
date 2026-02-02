@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useEnterprise } from '@/app/providers/enterprise-provider';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { Small } from '../../components/typography/text/small';
-import { useEnterprise } from '../../providers/enterprise-provider';
 
 interface Project {
   id: number;
@@ -56,7 +54,7 @@ const PRIORITY_COLORS: Record<ProjetoPriority, string> = {
 
 export default function ProjectsPage() {
   const router = useRouter();
-  const params = useParams();
+  const _params = useParams();
   const { enterpriseId } = useEnterprise();
 
   const [projects, setProjects] = useState<Project[]>([]);

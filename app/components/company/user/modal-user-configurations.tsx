@@ -4,8 +4,6 @@ import {
   ArrowDown01Icon,
   ArrowReloadHorizontalIcon,
   GithubIcon,
-  type GitlabIcon,
-  MicrosoftIcon,
   Moon02Icon,
   SlackIcon,
   SlidersHorizontalIcon,
@@ -435,7 +433,7 @@ export function ModalUserProfile({
   );
 }
 
-type IntegrationIcon = typeof GithubIcon | typeof GitlabIcon;
+type IntegrationIcon = typeof GithubIcon | typeof SlackIcon;
 
 interface IntegrationConfig {
   id: string;

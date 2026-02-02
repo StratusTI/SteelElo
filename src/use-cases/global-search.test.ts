@@ -54,12 +54,14 @@ const mockUser: User = {
   id: 1,
   nome: 'Test',
   sobrenome: 'User',
+  username: 'testuser',
   email: 'test@example.com',
   foto: '',
   telefone: '',
   admin: false,
   superadmin: false,
   idempresa: 1,
+  empresa: 'Test Company',
   departamento: 'Engineering',
   time: 'Backend',
   online: true,
@@ -192,7 +194,7 @@ describe('GlobalSearchUseCase', () => {
   })
 
   it('should throw error if user has no company', async () => {
-    const userWithoutCompany = { ...mockUser, idempresa: undefined }
+    const userWithoutCompany = { ...mockUser, idempresa: undefined } as unknown as User
 
     await expect(
       sut.execute({

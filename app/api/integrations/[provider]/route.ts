@@ -1,8 +1,8 @@
 import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import {
   isValidProvider,
-  revokeToken,
   type OAuthProvider,
+  revokeToken,
 } from '@/src/lib/oauth/providers';
 import { PrismaIntegrationsRepository } from '@/src/repositories/prisma/prisma-integrations-repository';
 import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';
@@ -13,7 +13,7 @@ interface RouteParams {
   params: Promise<{ provider: string }>;
 }
 
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(_req: Request, { params }: RouteParams) {
   const { provider } = await params;
 
   if (!isValidProvider(provider)) {

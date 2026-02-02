@@ -123,7 +123,7 @@ export async function PATCH(req: NextRequest) {
     );
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return standardError('VALIDATION_ERROR', 'Dados inválidos', err.errors);
+      return standardError('VALIDATION_ERROR', 'Dados inválidos', err.issues);
     }
 
     if (err instanceof ResourceNotFoundError) {

@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+import { type NextRequest, NextResponse } from 'next/server';
 import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import {
   generateAuthUrl,
@@ -5,14 +7,12 @@ import {
   isValidProvider,
 } from '@/src/lib/oauth/providers';
 import { standardError } from '@/src/utils/http-response';
-import { cookies } from 'next/headers';
-import { type NextRequest, NextResponse } from 'next/server';
 
 interface RouteParams {
   params: Promise<{ provider: string }>;
 }
 
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(_req: NextRequest, { params }: RouteParams) {
   const { provider } = await params;
 
   if (!isValidProvider(provider)) {
