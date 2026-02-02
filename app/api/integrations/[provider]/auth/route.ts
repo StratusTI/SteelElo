@@ -45,8 +45,8 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   const cookieStore = await cookies();
   cookieStore.set(`oauth_state_${provider}`, state, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true, // Required for sameSite: 'none'
+    sameSite: 'none', // Required for cross-site OAuth flow
     maxAge: 60 * 10, // 10 minutes
     path: '/',
   });

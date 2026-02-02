@@ -22,13 +22,13 @@ interface OAuthState {
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 function createErrorRedirect(message: string): NextResponse {
-  const url = new URL('/settings', APP_URL);
+  const url = new URL('/', APP_URL);
   url.searchParams.set('integration_error', message);
   return NextResponse.redirect(url);
 }
 
 function createSuccessRedirect(provider: string): NextResponse {
-  const url = new URL('/settings', APP_URL);
+  const url = new URL('/', APP_URL);
   url.searchParams.set('integration_success', provider);
   return NextResponse.redirect(url);
 }
@@ -58,7 +58,14 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   const cookieStore = await cookies();
   const storedState = cookieStore.get(`oauth_state_${provider}`)?.value;
 
+  console.log(`[OAuth ${provider}] State validation:`, {
+    hasStoredState: !!storedState,
+    statesMatch: storedState === state,
+    cookieName: `oauth_state_${provider}`,
+  });
+
   if (!storedState || storedState !== state) {
+    console.error(`[OAuth ${provider}] State mismatch - stored: ${storedState?.substring(0, 20)}..., received: ${state?.substring(0, 20)}...`);
     return createErrorRedirect('Estado inválido. Tente novamente.');
   }
 
@@ -107,7 +114,9 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
         : undefined,
       scopes: tokenResponse.scope,
     });
-    console.log(`[OAuth ${provider}] Integration saved for user ${parsedState.userId}`);
+    console.log(
+      `[OAuth ${provider}] Integration saved for user ${parsedState.userId}`,
+    );
 
     // Envia mensagem de boas-vindas para Slack ou Teams
     if (provider === 'slack' || provider === 'teams') {
@@ -127,7 +136,8 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     return createSuccessRedirect(provider);
   } catch (err) {
     console.error(`[OAuth ${provider}] Callback error:`, err);
-    const errorMessage = err instanceof Error ? err.message : 'Erro ao conectar. Tente novamente.';
+    const errorMessage =
+      err instanceof Error ? err.message : 'Erro ao conectar. Tente novamente.';
     return createErrorRedirect(errorMessage);
   }
 }
