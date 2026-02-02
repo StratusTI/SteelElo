@@ -77,14 +77,22 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   }
 
   try {
+    console.log(`[OAuth ${provider}] Exchanging code for token...`);
     const tokenResponse = await exchangeCodeForToken(
       provider as OAuthProvider,
       code,
     );
+    console.log(`[OAuth ${provider}] Token received, fetching user info...`);
+
     const userInfo = await getUserInfo(
       provider as OAuthProvider,
       tokenResponse.accessToken,
+      tokenResponse,
     );
+    console.log(`[OAuth ${provider}] User info:`, {
+      id: userInfo.id,
+      login: userInfo.login,
+    });
 
     const connectIntegration = makeConnectIntegrationUseCase();
     await connectIntegration.execute({
@@ -99,19 +107,27 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
         : undefined,
       scopes: tokenResponse.scope,
     });
+    console.log(`[OAuth ${provider}] Integration saved for user ${parsedState.userId}`);
 
     // Envia mensagem de boas-vindas para Slack ou Teams
     if (provider === 'slack' || provider === 'teams') {
-      await sendWelcomeNotification(
-        provider,
-        tokenResponse.accessToken,
-        userInfo,
-      );
+      try {
+        await sendWelcomeNotification(
+          provider,
+          tokenResponse.accessToken,
+          userInfo,
+        );
+        console.log(`[OAuth ${provider}] Welcome message sent`);
+      } catch (msgErr) {
+        // Não falhar a integração se a mensagem falhar
+        console.error(`[OAuth ${provider}] Welcome message failed:`, msgErr);
+      }
     }
 
     return createSuccessRedirect(provider);
   } catch (err) {
     console.error(`[OAuth ${provider}] Callback error:`, err);
-    return createErrorRedirect('Erro ao conectar. Tente novamente.');
+    const errorMessage = err instanceof Error ? err.message : 'Erro ao conectar. Tente novamente.';
+    return createErrorRedirect(errorMessage);
   }
 }

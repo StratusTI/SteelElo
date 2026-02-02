@@ -16,6 +16,11 @@ export interface OAuthTokenResponse {
   expiresIn?: number;
   tokenType: string;
   scope?: string;
+  // Slack specific
+  userAccessToken?: string;
+  userId?: string;
+  teamId?: string;
+  teamName?: string;
 }
 
 export interface OAuthUserInfo {
@@ -59,7 +64,16 @@ export function getOAuthConfig(provider: OAuthProvider): OAuthConfig {
         authorizeUrl: 'https://slack.com/oauth/v2/authorize',
         tokenUrl: 'https://slack.com/api/oauth.v2.access',
         userInfoUrl: 'https://slack.com/api/users.identity',
-        scopes: ['chat:write', 'channels:read', 'users:read', 'identity.basic'],
+        scopes: [
+          // Bot scopes
+          'chat:write',
+          'channels:read',
+          'users:read',
+          // User scopes (prefixed with identity.)
+          'identity.basic',
+          'identity.email',
+          'identity.avatar',
+        ],
         redirectUri: `${BASE_URL}/api/integrations/slack/callback`,
       };
 
@@ -151,7 +165,11 @@ export async function exchangeCodeForToken(
       throw new Error(data.error || 'Slack OAuth failed');
     }
     return {
-      accessToken: data.access_token,
+      accessToken: data.access_token, // Bot token
+      userAccessToken: data.authed_user?.access_token, // User token
+      userId: data.authed_user?.id,
+      teamId: data.team?.id,
+      teamName: data.team?.name,
       refreshToken: data.refresh_token,
       expiresIn: data.expires_in,
       tokenType: 'Bearer',
@@ -171,9 +189,46 @@ export async function exchangeCodeForToken(
 
 export async function getUserInfo(
   provider: OAuthProvider,
-  accessToken: string
+  accessToken: string,
+  tokenResponse?: OAuthTokenResponse
 ): Promise<OAuthUserInfo> {
   const config = getOAuthConfig(provider);
+
+  // Para Slack, podemos usar os dados já retornados no token response
+  // ou usar o user token para buscar mais informações
+  if (provider === 'slack' && tokenResponse) {
+    // Se temos userAccessToken, buscar info completa do usuário
+    if (tokenResponse.userAccessToken) {
+      const response = await fetch(config.userInfoUrl, {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.userAccessToken}`,
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.ok) {
+          return {
+            id: data.user?.id || tokenResponse.userId || 'unknown',
+            login: data.user?.name || data.user?.email?.split('@')[0] || 'slack_user',
+            name: data.user?.name,
+            email: data.user?.email,
+            avatarUrl: data.user?.image_72,
+          };
+        }
+      }
+    }
+
+    // Fallback: usar dados do token response
+    return {
+      id: tokenResponse.userId || 'unknown',
+      login: `slack_user_${tokenResponse.userId}`,
+      name: tokenResponse.teamName,
+      email: undefined,
+      avatarUrl: undefined,
+    };
+  }
 
   const response = await fetch(config.userInfoUrl, {
     headers: {
@@ -195,19 +250,6 @@ export async function getUserInfo(
       name: data.name,
       email: data.email,
       avatarUrl: data.avatar_url,
-    };
-  }
-
-  if (provider === 'slack') {
-    if (!data.ok) {
-      throw new Error(data.error || 'Failed to fetch Slack user info');
-    }
-    return {
-      id: data.user?.id || data.user_id,
-      login: data.user?.name || data.user?.email?.split('@')[0] || 'slack_user',
-      name: data.user?.name,
-      email: data.user?.email,
-      avatarUrl: data.user?.image_72,
     };
   }
 
