@@ -29,7 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # MODIFICAÇÃO CRÍTICA: Gerar Prisma Client antes do build
 RUN corepack enable pnpm && \
-    pnpm prisma generate && \
+    pnpm prisma:generate && \
     pnpm build
 
 # Imagem de produção
