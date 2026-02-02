@@ -7,7 +7,7 @@ interface TableProps extends ComponentProps<'table'> {
 export function Table({ children }: TableProps) {
   return (
     <div className='my-6 w-full overflow-y-auto'>
-      <table className='w-full'>{children}</table>
+      <table className='w-full text-primary'>{children}</table>
     </div>
   );
 }

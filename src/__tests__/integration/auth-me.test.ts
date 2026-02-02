@@ -1,10 +1,15 @@
 import { GET } from "@/app/api/auth/me/route";
 import { User } from "@/src/@types/user";
 import { verifyJWT } from "@/src/http/middlewares/verify-jwt";
+import { makeGetUserProfileUseCase } from "@/src/use-cases/factories/make-get-user-profile";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock('@/src/http/middlewares/verify-jwt', () => ({
   verifyJWT: vi.fn()
+}))
+
+vi.mock('@/src/use-cases/factories/make-get-user-profile', () => ({
+  makeGetUserProfileUseCase: vi.fn()
 }))
 
 describe('GET /api/auth/me', () => {
@@ -12,19 +17,26 @@ describe('GET /api/auth/me', () => {
     id: 1,
     nome: 'John',
     sobrenome: 'Doe',
+    username: 'johndoe',
     email: 'john.doe@example.com',
     foto: 'https://example.com/photo.jpg',
     telefone: '11999999999',
     admin: false,
     superadmin: false,
     idempresa: 1,
+    empresa: 'Acme Inc',
     departamento: 'Engineering',
     time: 'Backend',
     online: true
   }
 
+  const mockGetUserProfileUseCase = {
+    execute: vi.fn()
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(makeGetUserProfileUseCase).mockReturnValue(mockGetUserProfileUseCase as any)
   })
 
   it('should return 401 when token is not provided', async () => {
@@ -85,6 +97,7 @@ describe('GET /api/auth/me', () => {
     vi.mocked(verifyJWT).mockResolvedValue({
       user: mockUser,
     })
+    mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
     const response = await GET()
     const data = await response?.json()
@@ -98,6 +111,7 @@ describe('GET /api/auth/me', () => {
         id: mockUser.id,
         nome: mockUser.nome,
         sobrenome: mockUser.sobrenome,
+        username: mockUser.username,
         nomeCompleto: 'John Doe',
         email: mockUser.email,
         foto: mockUser.foto,
@@ -105,6 +119,7 @@ describe('GET /api/auth/me', () => {
         admin: mockUser.admin,
         superadmin: mockUser.superadmin,
         idempresa: mockUser.idempresa,
+        empresa: mockUser.empresa,
         departamento: mockUser.departamento,
         time: mockUser.time,
         online: mockUser.online,
@@ -116,6 +131,7 @@ describe('GET /api/auth/me', () => {
     vi.mocked(verifyJWT).mockResolvedValue({
       user: mockUser,
     })
+    mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
     const response = await GET()
     const data = await response?.json()
@@ -132,6 +148,7 @@ describe('GET /api/auth/me', () => {
     vi.mocked(verifyJWT).mockResolvedValue({
       user: userWithoutLastName,
     })
+    mockGetUserProfileUseCase.execute.mockResolvedValue({ user: userWithoutLastName })
 
     const response = await GET()
     const data = await response?.json()
@@ -143,6 +160,7 @@ describe('GET /api/auth/me', () => {
     vi.mocked(verifyJWT).mockResolvedValue({
       user: mockUser,
     })
+    mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
     const response = await GET()
     const data = await response?.json()
@@ -150,6 +168,7 @@ describe('GET /api/auth/me', () => {
     expect(data.data).toHaveProperty('id')
     expect(data.data).toHaveProperty('nome')
     expect(data.data).toHaveProperty('sobrenome')
+    expect(data.data).toHaveProperty('username')
     expect(data.data).toHaveProperty('nomeCompleto')
     expect(data.data).toHaveProperty('email')
     expect(data.data).toHaveProperty('foto')
@@ -157,6 +176,7 @@ describe('GET /api/auth/me', () => {
     expect(data.data).toHaveProperty('admin')
     expect(data.data).toHaveProperty('superadmin')
     expect(data.data).toHaveProperty('idempresa')
+    expect(data.data).toHaveProperty('empresa')
     expect(data.data).toHaveProperty('departamento')
     expect(data.data).toHaveProperty('time')
     expect(data.data).toHaveProperty('online')
@@ -166,6 +186,7 @@ describe('GET /api/auth/me', () => {
     vi.mocked(verifyJWT).mockResolvedValue({
       user: mockUser,
     })
+    mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
     const response = await GET()
     const data = await response?.json()
