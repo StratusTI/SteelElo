@@ -4,6 +4,7 @@ version: '3.8'
 services:
   nextjs:
     image: ghcr.io/stratusti/steelelo:latest
+    env_file: .env
     container_name: nextjs-app
     restart: unless-stopped
     ports:
