@@ -120,6 +120,14 @@ export async function exchangeCodeForToken(
 ): Promise<OAuthTokenResponse> {
   const config = getOAuthConfig(provider);
 
+  // Debug: log credentials (apenas primeiros caracteres por segurança)
+  console.log(`[OAuth ${provider}] Token exchange config:`, {
+    clientId: config.clientId ? `${config.clientId.substring(0, 8)}...` : 'EMPTY',
+    clientSecretLength: config.clientSecret?.length || 0,
+    clientSecretStart: config.clientSecret ? `${config.clientSecret.substring(0, 4)}...` : 'EMPTY',
+    redirectUri: config.redirectUri,
+  });
+
   const params = new URLSearchParams({
     client_id: config.clientId,
     client_secret: config.clientSecret,
