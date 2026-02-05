@@ -11,12 +11,5 @@ export function Icon({
 }: IconProps) {
   if (!icon) return null;
 
-  return (
-    <HugeiconsIcon
-      size={size}
-      color={color}
-      icon={icon}
-      {...props}
-    />
-  );
+  return <HugeiconsIcon size={size} color={color} icon={icon} {...props} />;
 }

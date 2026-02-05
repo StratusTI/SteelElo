@@ -9,8 +9,8 @@ import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 
 export default function ProjectPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className='flex flex-col items-center justify-center h-screen'>
       <ValidateRoutePage />
     </div>
-  )
+  );
 }

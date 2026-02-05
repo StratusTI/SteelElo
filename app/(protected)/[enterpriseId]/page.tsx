@@ -14,9 +14,5 @@ export default async function HomePage({ params }: HomePageProps) {
     return <div>User not found</div>;
   }
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      Teste
-    </Suspense>
-  );
+  return <Suspense fallback={<div>Loading...</div>}>Teste</Suspense>;
 }

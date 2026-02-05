@@ -1,7 +1,3 @@
 export default function WikiPage() {
-  return (
-    <h1>
-      Hello, AI!
-    </h1>
-  )
+  return <h1>Hello, AI!</h1>;
 }

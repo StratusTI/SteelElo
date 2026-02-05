@@ -1,8 +1,6 @@
-'use client'
+'use client';
 
-import {
-  DashedLineCircleIcon,
-} from '@hugeicons-pro/core-stroke-rounded';
+import { DashedLineCircleIcon } from '@hugeicons-pro/core-stroke-rounded';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useMatchesPath } from '@/lib/matchesPath';
@@ -12,7 +10,13 @@ import { Large } from '../../typography/text/large';
 import { Smaller } from '../../typography/text/smaller';
 
 type PageTreeItem =
-  | { name: string; label: string; icon?: IconSvgObject; path?: string; defaultOpen?: boolean }
+  | {
+      name: string;
+      label: string;
+      icon?: IconSvgObject;
+      path?: string;
+      defaultOpen?: boolean;
+    }
   | {
       name: string;
       label: string;
@@ -32,10 +36,25 @@ export function SideBarSettings() {
       label: 'Administração',
       defaultOpen: true,
       items: [
-        { name: 'imports', label: 'Importações', path: '/settings/imports', icon: DashedLineCircleIcon },
-        { name: 'exports', label: 'Exportações', path: '/settings/exports', icon: DashedLineCircleIcon },
-        { name: 'registry-at-work', label: 'Registro de Trabalho', path: '/settings/registry-at-work', icon: DashedLineCircleIcon },
-      ]
+        {
+          name: 'imports',
+          label: 'Importações',
+          path: '/settings/imports',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'exports',
+          label: 'Exportações',
+          path: '/settings/exports',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'registry-at-work',
+          label: 'Registro de Trabalho',
+          path: '/settings/registry-at-work',
+          icon: DashedLineCircleIcon,
+        },
+      ],
     },
 
     {
@@ -43,11 +62,31 @@ export function SideBarSettings() {
       label: 'Features',
       defaultOpen: true,
       items: [
-        { name: 'project-state', label: 'Importações', path: '/settings/imports', icon: DashedLineCircleIcon },
-        { name: 'flags', label: 'Iniciativas', path: '/settings/flags', icon: DashedLineCircleIcon },
-        { name: 'models', label: 'Modelos', path: '/settings/models', icon: DashedLineCircleIcon },
-        { name: 'ai', label: 'Elo AI', path: '/settings/ai', icon: DashedLineCircleIcon },
-      ]
+        {
+          name: 'project-state',
+          label: 'Importações',
+          path: '/settings/imports',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'flags',
+          label: 'Iniciativas',
+          path: '/settings/flags',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'models',
+          label: 'Modelos',
+          path: '/settings/models',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'ai',
+          label: 'Elo AI',
+          path: '/settings/ai',
+          icon: DashedLineCircleIcon,
+        },
+      ],
     },
 
     {
@@ -55,9 +94,19 @@ export function SideBarSettings() {
       label: 'Desenvolvedor',
       defaultOpen: true,
       items: [
-        { name: 'integrations', label: 'Integrações', path: '/settings/integrations', icon: DashedLineCircleIcon },
-        { name: 'connections', label: 'Conexões', path: '/settings/connections', icon: DashedLineCircleIcon },
-      ]
+        {
+          name: 'integrations',
+          label: 'Integrações',
+          path: '/settings/integrations',
+          icon: DashedLineCircleIcon,
+        },
+        {
+          name: 'connections',
+          label: 'Conexões',
+          path: '/settings/connections',
+          icon: DashedLineCircleIcon,
+        },
+      ],
     },
   ];
 
@@ -65,14 +114,10 @@ export function SideBarSettings() {
     if ('items' in pageItem) {
       return (
         <>
-          <Smaller className='text-muted-foreground'>
-            {pageItem.label}
-          </Smaller>
-          <div>
-            {pageItem.items.map((child) => renderItem(child))}
-          </div>
+          <Smaller className='text-muted-foreground'>{pageItem.label}</Smaller>
+          <div>{pageItem.items.map((child) => renderItem(child))}</div>
         </>
-      )
+      );
     }
 
     return (
@@ -86,8 +131,8 @@ export function SideBarSettings() {
         <Icon icon={pageItem.icon ?? []} strokeWidth={2} />
         {pageItem.label}
       </Button>
-    )
-  }
+    );
+  };
 
   return (
     <>
