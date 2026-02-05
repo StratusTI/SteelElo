@@ -19,7 +19,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' className={cn('dark', inter.variable)}>
-      <head></head>
       <body className='root antialiased bg-background h-screen'>
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
