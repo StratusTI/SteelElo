@@ -1,26 +1,30 @@
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
-import { ConflictError } from '@/src/use-cases/errors/conflict-error';
-import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';
-import { makeGetUserProfileUseCase } from '@/src/use-cases/factories/make-get-user-profile';
-import { makeUpdateUserProfileUseCase } from '@/src/use-cases/factories/make-update-user-profile';
-import { standardError, successResponse } from '@/src/utils/http-response';
-import { generateToken } from '@/src/utils/jwt';
-import { cookies } from 'next/headers';
-import type { NextRequest } from 'next/server';
-import { z } from 'zod';
+import type { NextRequest } from 'next/server'
+import { z } from 'zod'
+import {
+  verifyAuth,
+  getFullUserProfile,
+  generateAccessToken,
+  generateRefreshToken,
+  setAuthCookies,
+} from '@/src/auth'
+import { ConflictError } from '@/src/use-cases/errors/conflict-error'
+import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error'
+import { makeGetUserProfileUseCase } from '@/src/use-cases/factories/make-get-user-profile'
+import { makeUpdateUserProfileUseCase } from '@/src/use-cases/factories/make-update-user-profile'
+import { standardError, successResponse } from '@/src/utils/http-response'
 
 export async function GET() {
-  const { user: tokenUser, error } = await verifyJWT();
+  const { user: authUser, error } = await verifyAuth()
 
-  if (error || !tokenUser) {
-    return error;
+  if (error || !authUser) {
+    return error
   }
 
   try {
-    const getUserProfile = makeGetUserProfileUseCase();
-    const { user } = await getUserProfile.execute({ userId: tokenUser.id });
+    const getUserProfile = makeGetUserProfileUseCase()
+    const { user } = await getUserProfile.execute({ userId: authUser.id })
 
-    const nomeCompleto = `${user.nome} ${user.sobrenome}`.trim();
+    const nomeCompleto = `${user.nome} ${user.sobrenome}`.trim()
 
     return successResponse(
       {
@@ -41,15 +45,15 @@ export async function GET() {
         online: user.online,
       },
       200,
-      'User data retrieved successfully',
-    );
+      'User data retrieved successfully'
+    )
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Usuário não encontrado');
+      return standardError('RESOURCE_NOT_FOUND', 'Usuario nao encontrado')
     }
 
-    console.error('[GET /api/auth/me] Error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao buscar perfil');
+    console.error('[GET /api/auth/me] Error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao buscar perfil')
   }
 }
 
@@ -60,46 +64,44 @@ const updateProfileSchema = z.object({
     .string()
     .min(3)
     .max(50)
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      'Username deve conter apenas letras, números e underscore',
-    )
+    .regex(/^[a-zA-Z0-9_]+$/, 'Username deve conter apenas letras, numeros e underscore')
     .optional(),
-});
+})
 
 export async function PATCH(req: NextRequest) {
-  const { user, error } = await verifyJWT();
+  const { user: authUser, error } = await verifyAuth()
 
-  if (error || !user) {
-    return error;
+  if (error || !authUser) {
+    return error
   }
 
   try {
-    const body = await req.json();
-    const validatedData = updateProfileSchema.parse(body);
+    const body = await req.json()
+    const validatedData = updateProfileSchema.parse(body)
 
     if (Object.keys(validatedData).length === 0) {
-      return standardError('BAD_REQUEST', 'Nenhum campo para atualizar');
+      return standardError('BAD_REQUEST', 'Nenhum campo para atualizar')
     }
 
-    const updateUseCase = makeUpdateUserProfileUseCase();
+    const updateUseCase = makeUpdateUserProfileUseCase()
     const { user: updatedUser } = await updateUseCase.execute({
-      userId: user.id,
+      userId: authUser.id,
       ...validatedData,
-    });
+    })
 
-    const newToken = await generateToken(updatedUser);
+    const newAuthUser = {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      admin: updatedUser.admin,
+      superadmin: updatedUser.superadmin,
+      enterpriseId: updatedUser.idempresa,
+    }
 
-    const cookieStore = await cookies();
-    cookieStore.set('auth_token', newToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60,
-      path: '/',
-    });
+    const newAccessToken = await generateAccessToken(newAuthUser)
+    const { token: newRefreshToken } = await generateRefreshToken(authUser.id)
+    await setAuthCookies(newAccessToken, newRefreshToken)
 
-    const nomeCompleto = `${updatedUser.nome} ${updatedUser.sobrenome}`.trim();
+    const nomeCompleto = `${updatedUser.nome} ${updatedUser.sobrenome}`.trim()
 
     return successResponse(
       {
@@ -119,22 +121,22 @@ export async function PATCH(req: NextRequest) {
         online: updatedUser.online,
       },
       200,
-      'Perfil atualizado com sucesso',
-    );
+      'Perfil atualizado com sucesso'
+    )
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return standardError('VALIDATION_ERROR', 'Dados inválidos', err.issues);
+      return standardError('VALIDATION_ERROR', 'Dados invalidos', err.issues)
     }
 
     if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Usuário não encontrado');
+      return standardError('RESOURCE_NOT_FOUND', 'Usuario nao encontrado')
     }
 
     if (err instanceof ConflictError) {
-      return standardError('CONFLICT', err.message);
+      return standardError('CONFLICT', err.message)
     }
 
-    console.error('[PATCH /api/auth/me] Error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao atualizar perfil');
+    console.error('[PATCH /api/auth/me] Error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao atualizar perfil')
   }
 }

@@ -1,17 +1,20 @@
-import type { NextRequest } from 'next/server';
-import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
+import type { NextRequest } from 'next/server'
+import { revalidateTag, unstable_cache } from 'next/cache'
+import { z } from 'zod'
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo'
+import { requireProjectRole } from '@/src/http/middlewares/require-project-role'
+import type { User } from '@/src/@types/user'
+import type { AuthUser } from '@/src/auth'
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,
   ProjectNameAlreadyExistsError,
-} from '@/src/use-cases/errors/project-errors';
-import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';
-import { makeArchiveProjectUseCase } from '@/src/use-cases/factories/make-archive-project';
-import { makeGetProjectDetailsUseCase } from '@/src/use-cases/factories/make-get-project-details';
-import { makeUpdateProjectUseCase } from '@/src/use-cases/factories/make-update-project';
-import { standardError, successResponse } from '@/src/utils/http-response';
+} from '@/src/use-cases/errors/project-errors'
+import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error'
+import { makeArchiveProjectUseCase } from '@/src/use-cases/factories/make-archive-project'
+import { makeGetProjectDetailsUseCase } from '@/src/use-cases/factories/make-get-project-details'
+import { makeUpdateProjectUseCase } from '@/src/use-cases/factories/make-update-project'
+import { standardError, successResponse } from '@/src/utils/http-response'
 
 const updateProjectSchema = z.object({
   nome: z.string().min(3).max(255).optional(),
@@ -24,166 +27,199 @@ const updateProjectSchema = z.object({
   status: z.enum(ProjetoStatus).optional(),
   prioridade: z.enum(ProjetoPriority).optional(),
   acesso: z.boolean().optional(),
-});
+})
 
-// GET /api/projects/[id] - Detalhes do projeto
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
-
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  // Validar apenas autenticação (permissão será checada no use case)
-  const { user, error } = await requireProjectRole({
-    projectId,
-    minimumRole: 'viewer',
-  });
-
-  if (error || !user) {
-    return error;
-  }
-
-  try {
-    const getProjectDetails = makeGetProjectDetailsUseCase();
-
-    const { project } = await getProjectDetails.execute({
-      user,
-      projectId,
-    });
-
-    return successResponse({ project }, 200);
-  } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Project not found');
-    }
-
-    console.error('[GET /api/projects/[id]] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch project');
+function authUserToUser(authUser: AuthUser): User {
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    admin: authUser.admin,
+    superadmin: authUser.superadmin,
+    idempresa: authUser.enterpriseId,
+    nome: '',
+    sobrenome: '',
+    username: '',
+    foto: '',
+    telefone: '',
+    empresa: '',
+    departamento: null,
+    time: null,
+    online: false,
   }
 }
 
-// PATCH /api/projects/[id] - Atualizar projeto
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id } = await params
+  const projectId = Number.parseInt(id, 10)
 
   if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
+    return standardError('BAD_REQUEST', 'Invalid project ID')
   }
 
-  // Validar permissão de admin
-  const { user, userRole, error } = await requireProjectRole({
+  const { user: authUser, error } = await requireProjectRole({
     projectId,
-    minimumRole: 'admin',
-  });
+    minimumRole: 'viewer',
+  })
 
-  if (error || !user || !userRole) {
-    return error;
+  if (error || !authUser) {
+    return error
   }
 
   try {
-    const body = await req.json();
-    const validatedData = updateProjectSchema.parse(body);
+    const user = authUserToUser(authUser)
 
-    // Converter strings de data para Date objects
+    const getCachedProjectDetails = unstable_cache(
+      async (userJson: string, projId: number) => {
+        const parsedUser = JSON.parse(userJson) as User
+        const getProjectDetails = makeGetProjectDetailsUseCase()
+        return getProjectDetails.execute({
+          user: parsedUser,
+          projectId: projId,
+        })
+      },
+      [`project-${projectId}`],
+      {
+        revalidate: 60,
+        tags: ['projects', `project-${projectId}`],
+      }
+    )
+
+    const { project } = await getCachedProjectDetails(JSON.stringify(user), projectId)
+
+    return successResponse({ project }, 200, undefined, {
+      maxAge: 60,
+      staleWhileRevalidate: 120,
+      private: true,
+    })
+  } catch (err) {
+    if (err instanceof ResourceNotFoundError) {
+      return standardError('RESOURCE_NOT_FOUND', 'Project not found')
+    }
+
+    console.error('[GET /api/projects/[id]] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch project')
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+  const projectId = Number.parseInt(id, 10)
+
+  if (Number.isNaN(projectId)) {
+    return standardError('BAD_REQUEST', 'Invalid project ID')
+  }
+
+  const { user: authUser, userRole, error } = await requireProjectRole({
+    projectId,
+    minimumRole: 'admin',
+  })
+
+  if (error || !authUser || !userRole) {
+    return error
+  }
+
+  try {
+    const body = await req.json()
+    const validatedData = updateProjectSchema.parse(body)
+
     const data = {
       ...validatedData,
       dataInicio: validatedData.dataInicio
         ? new Date(validatedData.dataInicio)
         : undefined,
-      dataFim: validatedData.dataFim
-        ? new Date(validatedData.dataFim)
-        : undefined,
-    };
+      dataFim: validatedData.dataFim ? new Date(validatedData.dataFim) : undefined,
+    }
 
-    const updateProject = makeUpdateProjectUseCase();
+    const user = authUserToUser(authUser)
+    const updateProject = makeUpdateProjectUseCase()
 
     const { project } = await updateProject.execute({
       user,
       userRole,
       projectId,
       data,
-    });
+    })
 
-    return successResponse({ project }, 200, 'Project updated successfully');
+    revalidateTag('projects', 'max')
+    revalidateTag(`project-${projectId}`, 'max')
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max')
+
+    return successResponse({ project }, 200, 'Project updated successfully')
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
         errors: err.message,
-      });
+      })
     }
 
     if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Project not found');
+      return standardError('RESOURCE_NOT_FOUND', 'Project not found')
     }
 
     if (err instanceof ProjectNameAlreadyExistsError) {
-      return standardError('CONFLICT', err.message);
+      return standardError('CONFLICT', err.message)
     }
 
     if (err instanceof InvalidDateRangeError) {
-      return standardError('VALIDATION_ERROR', err.message);
+      return standardError('VALIDATION_ERROR', err.message)
     }
 
     if (err instanceof InvalidColorFormatError) {
-      return standardError('VALIDATION_ERROR', err.message);
+      return standardError('VALIDATION_ERROR', err.message)
     }
 
-    console.error('[PATCH /api/projects/[id]] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to update project');
+    console.error('[PATCH /api/projects/[id]] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to update project')
   }
 }
 
-// DELETE /api/projects/[id] - Arquivar projeto
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id } = await params
+  const projectId = Number.parseInt(id, 10)
 
   if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
+    return standardError('BAD_REQUEST', 'Invalid project ID')
   }
 
-  // Validar permissão de owner
-  const { user, userRole, error } = await requireProjectRole({
+  const { user: authUser, userRole, error } = await requireProjectRole({
     projectId,
     permission: 'delete_project',
-  });
+  })
 
-  if (error || !user || !userRole) {
-    return error;
+  if (error || !authUser || !userRole) {
+    return error
   }
 
   try {
-    const archiveProject = makeArchiveProjectUseCase();
+    const user = authUserToUser(authUser)
+    const archiveProject = makeArchiveProjectUseCase()
 
     await archiveProject.execute({
       user,
       userRole,
       projectId,
-    });
+    })
 
-    return successResponse(
-      { success: true },
-      200,
-      'Project archived successfully',
-    );
+    revalidateTag('projects', 'max')
+    revalidateTag(`project-${projectId}`, 'max')
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max')
+
+    return successResponse({ success: true }, 200, 'Project archived successfully')
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Project not found');
+      return standardError('RESOURCE_NOT_FOUND', 'Project not found')
     }
 
-    console.error('[DELETE /api/projects/[id]] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to archive project');
+    console.error('[DELETE /api/projects/[id]] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to archive project')
   }
 }

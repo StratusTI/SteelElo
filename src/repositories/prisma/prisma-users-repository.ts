@@ -1,5 +1,5 @@
 import { User } from "@/src/@types/user";
-import { prismaSteel } from "@/src/lib/prisma";
+import { prismaSteel, prismaElo } from "@/src/lib/prisma";
 import { SearchUsersParams, UpdateUserProfileParams, UsersRepository } from "../users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
@@ -75,12 +75,23 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async searchByCompany(params: SearchUsersParams): Promise<User[]> {
+    // Pre-fetch member IDs if we need to exclude project members
+    let excludeUserIds: number[] = [];
+
+    if (params.excludeProjectId) {
+      const projectMembers = await prismaElo.projetoMembro.findMany({
+        where: { projetoId: params.excludeProjectId },
+        select: { usuarioId: true }
+      });
+      excludeUserIds = projectMembers.map(m => m.usuarioId);
+    }
+
+    // Build where clause with exclusion filter
     const where: any = {
       idempresa: params.companyId,
-      email: {
-        not: null
-      }
-    }
+      email: { not: null },
+      ...(excludeUserIds.length > 0 && { id: { notIn: excludeUserIds } })
+    };
 
     if (params.query && params.query.length >= 2) {
       where.OR = [
@@ -88,7 +99,7 @@ export class PrismaUsersRepository implements UsersRepository {
         { sobrenome: { contains: params.query } },
         { email: { contains: params.query } },
         { username: { contains: params.query } }
-      ]
+      ];
     }
 
     const users = await prismaSteel.usuario.findMany({
@@ -96,26 +107,12 @@ export class PrismaUsersRepository implements UsersRepository {
       take: params.limit || 10,
       orderBy: [
         { nome: 'asc' },
-        { sobrenome: 'asc'}
+        { sobrenome: 'asc' }
       ],
       include: { empresa: { select: { nome: true } } }
-    })
+    });
 
-    let filteredUsers = users
-
-    if (params.excludeProjectId) {
-      const { prismaElo } = await import('@/src/lib/prisma')
-
-      const projectMember = await prismaElo.projetoMembro.findMany({
-        where: { projetoId: params.excludeProjectId },
-        select: { usuarioId: true }
-      })
-
-      const memberIds = projectMember.map(m => m.usuarioId)
-      filteredUsers = filteredUsers.filter(u => !memberIds.includes(u.id))
-    }
-
-    return filteredUsers.map(user => this.mapToUser(user))
+    return users.map(user => this.mapToUser(user));
   }
 
   async countByCompany(companyId: number): Promise<number> {

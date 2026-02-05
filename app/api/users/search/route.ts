@@ -1,38 +1,55 @@
-import type { NextRequest } from 'next/server';
-import { ZodError } from 'zod';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
-import { makeSearchUsersUseCase } from '@/src/use-cases/factories/make-search-users';
-import { standardError, successResponse } from '@/src/utils/http-response';
-import { searchUsersSchema } from '@/src/utils/zod-schemas/search-users-schema';
+import type { NextRequest } from 'next/server'
+import { ZodError } from 'zod'
+import { verifyAuth } from '@/src/auth'
+import { makeSearchUsersUseCase } from '@/src/use-cases/factories/make-search-users'
+import { standardError, successResponse } from '@/src/utils/http-response'
+import { searchUsersSchema } from '@/src/utils/zod-schemas/search-users-schema'
+import type { User } from '@/src/@types/user'
 
 export async function GET(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth()
 
-  if (authError) return authError;
+  if (authError || !authUser) {
+    return authError
+  }
 
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.url)
 
     const rawParams = {
       q: searchParams.get('q') || undefined,
       excludeProjectId: searchParams.get('excludeProjectId') || undefined,
       limit: searchParams.get('limit') || undefined,
-    };
-
-    const validatedParams = searchUsersSchema.parse(rawParams);
-
-    const searchUsers = makeSearchUsersUseCase();
-
-    if (!user) {
-      return standardError('UNAUTHORIZED', 'User not found');
     }
 
+    const validatedParams = searchUsersSchema.parse(rawParams)
+
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    }
+
+    const searchUsers = makeSearchUsersUseCase()
+
     const { users } = await searchUsers.execute({
-      user: user,
+      user,
       query: validatedParams.q,
       excludeProjectId: validatedParams.excludeProjectId,
       limit: validatedParams.limit,
-    });
+    })
 
     return successResponse(
       {
@@ -46,14 +63,14 @@ export async function GET(req: NextRequest) {
           departamento: u.departamento,
         })),
       },
-      200,
-    );
+      200
+    )
   } catch (err) {
     if (err instanceof ZodError) {
-      return standardError('VALIDATION_ERROR', 'Invalid parameters');
+      return standardError('VALIDATION_ERROR', 'Invalid parameters')
     }
 
-    console.error('[GET /api/users/search] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to search users');
+    console.error('[GET /api/users/search] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to search users')
   }
 }

@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { Header } from '@/app/components/header/header';
 import { getAuthUser } from '@/src/lib/helpers/auth-helper';
 
 interface HomePageProps {
@@ -17,7 +16,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Header enterpriseId={enterpriseId} />
+      Teste
     </Suspense>
   );
 }

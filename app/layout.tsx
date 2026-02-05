@@ -18,12 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      className={cn('dark', inter.variable)}
-      suppressHydrationWarning
-    >
-      <body className='root antialiased bg-background p-2.5 gap-2 h-screen'>
+    <html lang='en' className={cn('dark', inter.variable)}>
+      <head>
+      </head>
+      <body className='root antialiased bg-background h-screen'>
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>

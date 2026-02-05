@@ -43,6 +43,8 @@ model Projeto {
   @@index([idempresa, status], map: "idx_empresa")
   @@index([ownerId], map: "idx_owner")
   @@index([status], map: "idx_status")
+  @@index([idempresa, ownerId], map: "idx_empresa_owner")
+  @@index([status, createdAt], map: "idx_status_created")
   @@map("projetos")
 }
 
@@ -109,6 +111,7 @@ model Tarefa {
   @@index([userStoryId], map: "idx_story")
   @@index([createdBy], map: "idx_created_by")
   @@index([projetoId, colunaId], map: "idx_projeto_coluna")
+  @@index([colunaId, status, ordem], map: "idx_kanban_view")
   @@map("tarefas")
 }
 
@@ -252,6 +255,7 @@ model Sprint {
   @@index([projetoId], map: "idx_projeto")
   @@index([status], map: "idx_status")
   @@index([dataInicio, dataFim], map: "idx_datas")
+  @@index([projetoId, status], map: "idx_projeto_status")
   @@map("sprints")
 }
 
@@ -738,6 +742,7 @@ model Documento {
   @@index([parentId], map: "idx_parent")
   @@index([createdBy], map: "idx_created_by")
   @@index([ordem], map: "idx_ordem")
+  @@index([parentId, ordem], map: "idx_hierarchy")
   @@map("documentos")
 }
 

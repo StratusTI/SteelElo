@@ -9,5 +9,5 @@ export default async function RootPage() {
     ? user.idempresa[0]
     : user.idempresa;
 
-  redirect(`/${defaultEnterpriseId}`);
+  redirect(`/${defaultEnterpriseId}/projects`);
 }

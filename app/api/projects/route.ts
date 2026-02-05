@@ -1,9 +1,11 @@
-import type { NextRequest } from 'next/server';
-import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
-import { makeGetProjectsUseCase } from '@/src/use-cases/factories/make-get-projects';
-import { standardError, successResponse } from '@/src/utils/http-response';
+import type { NextRequest } from 'next/server'
+import { unstable_cache } from 'next/cache'
+import { z } from 'zod'
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo'
+import { verifyAuth } from '@/src/auth'
+import { makeGetProjectsUseCase } from '@/src/use-cases/factories/make-get-projects'
+import { standardError, successResponse } from '@/src/utils/http-response'
+import type { User } from '@/src/@types/user'
 
 const filtersSchema = z.object({
   search: z.string().optional(),
@@ -15,29 +17,28 @@ const filtersSchema = z.object({
   orderDirection: z.enum(['asc', 'desc']).optional(),
   page: z.coerce.number().min(1).optional(),
   limit: z.coerce.number().min(1).max(100).optional(),
-});
+})
 
 export async function GET(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth()
 
-  if (authError || !user) {
-    return authError;
+  if (authError || !authUser) {
+    return authError
   }
 
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.url)
 
-    // Parse query params
     const rawFilters: {
-      search?: string;
-      status?: string[];
-      prioridade?: string[];
-      ownerId?: string;
-      memberId?: string;
-      orderBy?: string;
-      orderDirection?: string;
-      page?: string;
-      limit?: string;
+      search?: string
+      status?: string[]
+      prioridade?: string[]
+      ownerId?: string
+      memberId?: string
+      orderBy?: string
+      orderDirection?: string
+      page?: string
+      limit?: string
     } = {
       search: searchParams.get('search') || undefined,
       status: searchParams.getAll('status') || undefined,
@@ -48,34 +49,70 @@ export async function GET(req: NextRequest) {
       orderDirection: searchParams.get('orderDirection') || undefined,
       page: searchParams.get('page') || undefined,
       limit: searchParams.get('limit') || undefined,
-    };
+    }
 
-    // Remove undefined values
     Object.keys(rawFilters).forEach((key) => {
-      const typedKey = key as keyof typeof rawFilters;
+      const typedKey = key as keyof typeof rawFilters
       if (rawFilters[typedKey] === undefined) {
-        delete rawFilters[typedKey];
+        delete rawFilters[typedKey]
       }
-    });
+    })
 
-    const validatedFilters = filtersSchema.parse(rawFilters);
+    const validatedFilters = filtersSchema.parse(rawFilters)
 
-    const getProjects = makeGetProjectsUseCase();
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    }
 
-    const result = await getProjects.execute({
-      user,
-      filters: validatedFilters,
-    });
+    const cacheKey = `projects-${user.id}-${user.idempresa}`
+    const filtersCacheKey = JSON.stringify(validatedFilters)
 
-    return successResponse(result, 200);
+    const getCachedProjects = unstable_cache(
+      async (userJson: string, filtersJson: string) => {
+        const parsedUser = JSON.parse(userJson) as User
+        const parsedFilters = JSON.parse(filtersJson)
+        const getProjects = makeGetProjectsUseCase()
+        return getProjects.execute({
+          user: parsedUser,
+          filters: parsedFilters,
+        })
+      },
+      [cacheKey, filtersCacheKey],
+      {
+        revalidate: 30,
+        tags: ['projects', `projects-enterprise-${user.idempresa}`],
+      }
+    )
+
+    const result = await getCachedProjects(JSON.stringify(user), filtersCacheKey)
+
+    return successResponse(result, 200, undefined, {
+      maxAge: 30,
+      staleWhileRevalidate: 60,
+      private: true,
+    })
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid query parameters', {
         errors: err.message,
-      });
+      })
     }
 
-    console.error('[GET /api/projects] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch projects');
+    console.error('[GET /api/projects] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch projects')
   }
 }

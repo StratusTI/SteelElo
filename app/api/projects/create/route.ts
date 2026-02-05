@@ -1,14 +1,16 @@
-import type { NextRequest } from 'next/server';
-import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import type { NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
+import { z } from 'zod'
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo'
+import { verifyAuth } from '@/src/auth'
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,
   ProjectNameAlreadyExistsError,
-} from '@/src/use-cases/errors/project-errors';
-import { makeCreateProjectUseCase } from '@/src/use-cases/factories/make-create-project';
-import { standardError, successResponse } from '@/src/utils/http-response';
+} from '@/src/use-cases/errors/project-errors'
+import { makeCreateProjectUseCase } from '@/src/use-cases/factories/make-create-project'
+import { standardError, successResponse } from '@/src/utils/http-response'
+import type { User } from '@/src/@types/user'
 
 const createProjectSchema = z.object({
   nome: z.string().min(3).max(255),
@@ -21,64 +23,83 @@ const createProjectSchema = z.object({
   status: z.enum(ProjetoStatus).optional(),
   prioridade: z.enum(ProjetoPriority).optional(),
   acesso: z.boolean().optional(),
-});
+})
 
 export async function POST(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth()
 
-  if (authError || !user) {
-    return authError;
+  if (authError || !authUser) {
+    return authError
   }
 
-  if (!user.idempresa) {
+  if (!authUser.enterpriseId) {
     return standardError(
       'BAD_REQUEST',
-      'User must belong to a company to create projects',
-    );
+      'User must belong to a company to create projects'
+    )
   }
 
   try {
-    const body = await req.json();
-    const validateData = createProjectSchema.parse(body);
+    const body = await req.json()
+    const validateData = createProjectSchema.parse(body)
 
     const data = {
       ...validateData,
       dataInicio: validateData.dataInicio
         ? new Date(validateData.dataInicio)
         : undefined,
-      dataFim: validateData.dataFim
-        ? new Date(validateData.dataFim)
-        : undefined,
-    };
+      dataFim: validateData.dataFim ? new Date(validateData.dataFim) : undefined,
+    }
 
-    const createProject = makeCreateProjectUseCase();
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    }
+
+    const createProject = makeCreateProjectUseCase()
 
     const { project } = await createProject.execute({
       user,
       data,
-    });
+    })
 
-    return successResponse({ project }, 201, 'Project created successfully');
+    revalidateTag('projects', 'max')
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max')
+
+    return successResponse({ project }, 201, 'Project created successfully')
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
         errors: err.message,
-      });
+      })
     }
 
     if (err instanceof ProjectNameAlreadyExistsError) {
-      return standardError('CONFLICT', err.message);
+      return standardError('CONFLICT', err.message)
     }
 
     if (err instanceof InvalidDateRangeError) {
-      return standardError('VALIDATION_ERROR', err.message);
+      return standardError('VALIDATION_ERROR', err.message)
     }
 
     if (err instanceof InvalidColorFormatError) {
-      return standardError('VALIDATION_ERROR', err.message);
+      return standardError('VALIDATION_ERROR', err.message)
     }
 
-    console.error('[POST /api/projects] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to create project');
+    console.error('[POST /api/projects] Unexpected error:', err)
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to create project')
   }
 }

@@ -88,7 +88,6 @@ export function ProjectMembersClient({
 
       if (data.success) {
         alert('Role atualizada com sucesso!');
-        router.refresh();
         fetchMembers();
       } else {
         alert(data.error?.details || 'Erro ao atualizar role');
@@ -111,7 +110,6 @@ export function ProjectMembersClient({
 
       if (data.success) {
         alert('Membro removido com sucesso!');
-        router.refresh();
         fetchMembers();
       } else {
         alert(data.error?.details || data.message || 'Erro ao remover membro');
@@ -283,7 +281,6 @@ export function ProjectMembersClient({
             onSuccess={() => {
               setShowAddModal(false);
               fetchMembers();
-              router.refresh();
             }}
           />
         )}

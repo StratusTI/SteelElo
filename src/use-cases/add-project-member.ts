@@ -44,27 +44,27 @@ export class AddProjectMemberUseCase {
     userId,
     role
   }: AddProjectMemberUseCaseRequest): Promise<AddProjectMemberUseCaseResponse> {
-    const project = await this.projectRepository.findById(projectId)
+    // Parallel fetch of independent data for better performance
+    const [project, userToAdd, existingMembership] = await Promise.all([
+      this.projectRepository.findById(projectId),
+      this.usersRepository.findById(userId),
+      this.projectMembersRepository.findMembership(projectId, userId, 'direct'),
+    ]);
 
-    if (!project) throw new ResourceNotFoundError()
+    if (!project) throw new ResourceNotFoundError();
+    if (!userToAdd) throw new ResourceNotFoundError();
 
     if (project.idempresa !== user.idempresa && !user.superadmin) {
-      throw new InsufficientPermissionsError()
+      throw new InsufficientPermissionsError();
     }
 
-    const userToAdd = await this.usersRepository.findById(userId)
+    if (userToAdd.idempresa !== project.idempresa) {
+      throw new InsufficientPermissionsError();
+    }
 
-    if (!userToAdd) throw new ResourceNotFoundError()
-
-    if (userToAdd.idempresa !== project.idempresa) throw new InsufficientPermissionsError()
-
-    const existingMembership = await this.projectMembersRepository.findMembership(
-      projectId,
-      userId,
-      'direct'
-    )
-
-    if (existingMembership) throw new ConflictError('User is already a member of this project')
+    if (existingMembership) {
+      throw new ConflictError('User is already a member of this project');
+    }
 
     const member = await this.projectMembersRepository.create({
       projectId,
