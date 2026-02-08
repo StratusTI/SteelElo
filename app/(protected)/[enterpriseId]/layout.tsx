@@ -16,7 +16,8 @@ export default async function EnterpriseLayout({
   params,
 }: EnterpriseLayoutProps) {
   // Busca os dados do usuário uma única vez (cacheado por requisição)
-  const { user, fullName, initials, isAdmin, isSuperAdmin } = await requireAuth();
+  const { user, fullName, initials, isAdmin, isSuperAdmin } =
+    await requireAuth();
   const { enterpriseId } = await params;
 
   const enterpriseIdNum = Number.parseInt(enterpriseId, 10);
@@ -53,9 +54,7 @@ export default async function EnterpriseLayout({
           <GlobalSideBar />
           <div className='flex-1 mr-1 mb-1 overflow-hidden bg-card rounded-lg border-2 border-border flex'>
             <SideBar />
-            <Suspense fallback={<div>Carregando...</div>}>
-              {children}
-            </Suspense>
+            <Suspense fallback={<div>Carregando...</div>}>{children}</Suspense>
           </div>
         </div>
       </div>

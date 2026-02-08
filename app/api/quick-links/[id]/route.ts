@@ -45,7 +45,11 @@ export async function PATCH(
       data: validatedData,
     });
 
-    return successResponse({ quickLink }, 200, 'Quick link updated successfully');
+    return successResponse(
+      { quickLink },
+      200,
+      'Quick link updated successfully',
+    );
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
@@ -70,7 +74,10 @@ export async function PATCH(
     }
 
     console.error('[PATCH /api/quick-links/[id]] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to update quick link');
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to update quick link',
+    );
   }
 }
 
@@ -99,7 +106,11 @@ export async function DELETE(
       quickLinkId,
     });
 
-    return successResponse({ success: true }, 200, 'Quick link deleted successfully');
+    return successResponse(
+      { success: true },
+      200,
+      'Quick link deleted successfully',
+    );
   } catch (err) {
     if (err instanceof QuickLinkNotFoundError) {
       return standardError('RESOURCE_NOT_FOUND', err.message);
@@ -110,6 +121,9 @@ export async function DELETE(
     }
 
     console.error('[DELETE /api/quick-links/[id]] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to delete quick link');
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to delete quick link',
+    );
   }
 }

@@ -37,7 +37,9 @@ export default async function ProjectsPage() {
       <div className='flex-1 w-full overflow-x-hidden overflow-y-auto'>
         <div className='max-w-200 mx-auto w-full flex flex-col items-center justify-center gap-7 p-8'>
           <div className='flex flex-col items-center justify-center gap-2'>
-            <H4>{helloForUser()}, {fullName}</H4>
+            <H4>
+              {helloForUser()}, {fullName}
+            </H4>
             <Clock />
           </div>
           <AIInitialChat />

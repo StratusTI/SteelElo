@@ -1,20 +1,27 @@
-'use client'
+'use client';
 
-import { Add01Icon, CheckListIcon, Delete02Icon, PaintBoardIcon, TextBoldIcon, TextItalicIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { useState } from "react";
-import { toast } from "sonner"
-import { AlertDelete } from "@/app/components/alert-delete";
-import { Icon } from "@/app/components/HugeIcons";
-import { Small } from "@/app/components/typography/text/small"
-import { Button } from "@/components/ui/button";
+import {
+  Add01Icon,
+  CheckListIcon,
+  Delete02Icon,
+  PaintBoardIcon,
+  TextBoldIcon,
+  TextItalicIcon,
+} from '@hugeicons-pro/core-stroke-rounded';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { AlertDelete } from '@/app/components/alert-delete';
+import { Icon } from '@/app/components/HugeIcons';
+import { Small } from '@/app/components/typography/text/small';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const STICKY_COLORS = {
   gray: '#404144',
@@ -41,13 +48,16 @@ export function UserStickies() {
 
   return (
     <div className='flex flex-col gap-4 w-full'>
-      <div className="flex justify-between items-center">
-        <Small>
-          Seus post-its
-        </Small>
+      <div className='flex justify-between items-center'>
+        <Small>Seus post-its</Small>
 
         <div className='gap-1 flex items-center'>
-          <Input className='h-8' placeholder="Pesquisar por título" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <Input
+            className='h-8'
+            placeholder='Pesquisar por título'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <AddStickies />
         </div>
       </div>
@@ -57,23 +67,29 @@ export function UserStickies() {
         <StickyNote backgroundColor='purple' />
       </div>
     </div>
-  )
+  );
 }
 
 export function AddStickies() {
   return (
-    <Button variant='link' className='text-branding hover:text-branding' onClick={() => toast('Toast')}>
+    <Button
+      variant='link'
+      className='text-branding hover:text-branding'
+      onClick={() => toast('Toast')}
+    >
       <Icon icon={Add01Icon} />
       Adicionar post-it
     </Button>
-  )
+  );
 }
 
 interface BackgroundColorDropdownProps {
   onColorChange: (color: ColorKey) => void;
 }
 
-export function BackgroundColorDropdown({ onColorChange }: BackgroundColorDropdownProps) {
+export function BackgroundColorDropdown({
+  onColorChange,
+}: BackgroundColorDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -83,27 +99,26 @@ export function BackgroundColorDropdown({ onColorChange }: BackgroundColorDropdo
           </Button>
         }
       />
-        <DropdownMenuContent className='w-auto p-2'>
+      <DropdownMenuContent className='w-auto p-2'>
         <div className='flex gap-2 flex-wrap max-w-50'>
-          {(Object.keys(STICKY_COLORS) as ColorKey[]).map(colorKey => (
+          {(Object.keys(STICKY_COLORS) as ColorKey[]).map((colorKey) => (
             <DropdownMenuItem
               key={colorKey}
               className='rounded-full size-8 cursor-pointer border-2 border-transparent hover:border-white/50 transition-all p-0'
               style={{ backgroundColor: STICKY_COLORS[colorKey] }}
               onClick={() => onColorChange(colorKey)}
-            >
-            </DropdownMenuItem>
+              />
           ))}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 export function StickyNote({
   content = '',
   backgroundColor = 'gray',
-  onDelete
+  onDelete,
 }: StickyProps) {
   const [stickyContent, setStickyContent] = useState(content);
   const [currentColor, setCurrentColor] = useState<ColorKey>(backgroundColor);
@@ -116,10 +131,12 @@ export function StickyNote({
   };
 
   return (
-    <div className='flex flex-col p-2 w-58 rounded-sm h-min min-h-81.25'
-      style={{ backgroundColor: STICKY_COLORS[currentColor] }}>
+    <div
+      className='flex flex-col p-2 w-58 rounded-sm h-min min-h-81.25'
+      style={{ backgroundColor: STICKY_COLORS[currentColor] }}
+    >
       <Textarea
-        placeholder="Qual a sua ideia?"
+        placeholder='Qual a sua ideia?'
         className='w-full resize-none overflow-y-auto bg-transparent! border-none focus-visible:border-none focus-visible:ring-0 focus-visible:outline-none flex-1 shadow-none'
         value={stickyContent}
         onChange={(e) => setStickyContent(e.target.value)}
@@ -127,9 +144,7 @@ export function StickyNote({
       />
       <div className='max-h-15 flex items-center justify-between w-full'>
         <div>
-          <BackgroundColorDropdown
-            onColorChange={setCurrentColor}
-          />
+          <BackgroundColorDropdown onColorChange={setCurrentColor} />
           <Button
             variant='ghost'
             onClick={() => setIsBold(!isBold)}
@@ -150,8 +165,8 @@ export function StickyNote({
         </div>
         <div>
           <AlertDelete
-            title="Excluir post-it"
-            description="Tem certeza de que deseja excluir esse post-it?"
+            title='Excluir post-it'
+            description='Tem certeza de que deseja excluir esse post-it?'
             trigger={
               <Button variant='destructive' size='icon-sm' onClick={onDelete}>
                 <Icon icon={Delete02Icon} />
@@ -162,5 +177,5 @@ export function StickyNote({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -132,7 +132,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setSmoothCursor,
       toggleTheme,
     }),
-    [preferences.theme, preferences.smoothCursor, setTheme, setSmoothCursor, toggleTheme]
+    [
+      preferences.theme,
+      preferences.smoothCursor,
+      setTheme,
+      setSmoothCursor,
+      toggleTheme,
+    ],
   );
 
   // Value estático para antes do mount (SSR)
@@ -144,7 +150,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setSmoothCursor: () => {},
       toggleTheme: () => {},
     }),
-    []
+    [],
   );
 
   if (!mounted) {
@@ -156,9 +162,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 

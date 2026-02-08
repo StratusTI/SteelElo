@@ -6,7 +6,7 @@ import {
   MessageMultiple01Icon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import { Icon } from '@/app/components/HugeIcons';
-import { A } from '@/app/components/typography/text/a'
+import { A } from '@/app/components/typography/text/a';
 import { Smaller } from '@/app/components/typography/text/smaller';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,7 +37,9 @@ export function InfoDropdown() {
             <Icon icon={File02Icon} size={24} />
             <A
               className='text-xs leading-none font-medium text-primary'
-              href={"https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0"}
+              href={
+                'https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0'
+              }
             >
               Documentação
             </A>
@@ -46,7 +48,9 @@ export function InfoDropdown() {
             <Icon icon={MessageMultiple01Icon} size={24} />
             <A
               className='text-xs leading-none font-medium text-primary'
-              href={"https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0"}
+              href={
+                'https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0'
+              }
             >
               Conversar com o suporte
             </A>

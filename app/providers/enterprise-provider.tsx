@@ -43,7 +43,7 @@ export function EnterpriseProvider({
       isAdmin,
       isSuperAdmin,
     }),
-    [enterpriseId, user, fullName, initials, isAdmin, isSuperAdmin]
+    [enterpriseId, user, fullName, initials, isAdmin, isSuperAdmin],
   );
 
   return (

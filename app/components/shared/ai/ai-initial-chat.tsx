@@ -1,9 +1,15 @@
-'use client'
+'use client';
 
-import { AiEditingIcon, AiSearch02Icon, FullScreenIcon,Link04Icon, Navigation03Icon } from '@hugeicons-pro/core-stroke-rounded';
+import {
+  AiEditingIcon,
+  AiSearch02Icon,
+  FullScreenIcon,
+  Link04Icon,
+  Navigation03Icon,
+} from '@hugeicons-pro/core-stroke-rounded';
 import Link from 'next/link';
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +17,19 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Textarea } from "@/components/ui/textarea"
+} from '@/components/ui/dropdown-menu';
+import { Textarea } from '@/components/ui/textarea';
 import { Icon } from '../../HugeIcons';
 import { Small } from '../../typography/text/small';
 import { Smaller } from '../../typography/text/smaller';
-
 
 export function AIInitialChat() {
   return (
     <div className='flex flex-col gap-1.5 w-full'>
       <div className='flex items-center justify-between w-full gap-2'>
         <div className='flex items-center gap-2'>
-          <Small>
-            Ask AI
-          </Small>
-          <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300 rounded-sm">
+          <Small>Ask AI</Small>
+          <Badge className='bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300 rounded-sm'>
             Beta
           </Badge>
         </div>
@@ -50,7 +53,7 @@ export function AIInitialChat() {
           }}
           style={{
             minHeight: '3rem',
-            maxHeight: '11.5rem'
+            maxHeight: '11.5rem',
           }}
         />
 
@@ -63,7 +66,10 @@ export function AIInitialChat() {
             <Button variant='ghost' size='icon-sm'>
               <Icon icon={Link04Icon} />
             </Button>
-            <Button size='icon-lg' className='bg-branding hover:bg-branding/90 text-white'>
+            <Button
+              size='icon-lg'
+              className='bg-branding hover:bg-branding/90 text-white'
+            >
               <Icon icon={Navigation03Icon} size={32} />
             </Button>
           </div>
@@ -87,9 +93,7 @@ function DropdownProjectContext() {
             className='p-2 gap-1.5 flex items-center'
           >
             <div className='size-4 bg-branding rounded-md flex items-center justify-center'>
-              <Smaller>
-                S
-              </Smaller>
+              <Smaller>S</Smaller>
             </div>
             <Smaller>stratus</Smaller>
           </Button>
@@ -105,7 +109,7 @@ function DropdownProjectContext() {
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 function DropdownAIOptions() {
@@ -136,5 +140,5 @@ function DropdownAIOptions() {
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

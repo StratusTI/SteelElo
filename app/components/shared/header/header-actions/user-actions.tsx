@@ -17,7 +17,11 @@ export function UserActions({ user }: UserActionsProps) {
       <Button variant='outline' size='sm' onClick={() => console.log('start')}>
         Comece agora
       </Button>
-      <Button variant='ghost' size='icon-sm' onClick={() => console.log('notification')}>
+      <Button
+        variant='ghost'
+        size='icon-sm'
+        onClick={() => console.log('notification')}
+      >
         <Icon icon={InboxIcon} strokeWidth={2} />
       </Button>
       <InfoDropdown />

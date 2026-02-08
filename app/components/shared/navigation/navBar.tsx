@@ -37,17 +37,20 @@ export function BreadCrumb({ items }: BreadCrumbProps) {
             <Tooltip>
               <TooltipTrigger>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={item.href} className='flex gap-1.5 items-center'>
+                  <BreadcrumbLink
+                    href={item.href}
+                    className='flex gap-1.5 items-center'
+                  >
                     <Icon icon={item.icon} size={18} />
                     {item.name}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </TooltipTrigger>
-              <TooltipContent side="bottom">{item.name}</TooltipContent>
+              <TooltipContent side='bottom'>{item.name}</TooltipContent>
             </Tooltip>
-            {
-              items.length > 1 && index !== items.length - 1 && <BreadcrumbSeparator />
-            }
+            {items.length > 1 && index !== items.length - 1 && (
+              <BreadcrumbSeparator />
+            )}
           </React.Fragment>
         ))}
       </BreadcrumbList>

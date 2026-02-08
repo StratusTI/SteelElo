@@ -23,36 +23,26 @@ interface ModalProps {
 export function AlertDelete({ title, description, trigger, icon }: ModalProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        render={trigger}
-      />
+      <AlertDialogTrigger render={trigger} />
       <AlertDialogContent className='bg-background p-0 gap-0'>
         <AlertDialogHeader className='bg-muted/20 p-6 flex gap-4'>
-          <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+          <AlertDialogMedia className='bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive'>
             <Icon icon={icon} size={16} />
           </AlertDialogMedia>
           <div>
             <AlertDialogTitle>{title}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {description}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter className='bg-muted/50 p-3'>
-          <AlertDialogCancel
-            variant="outline"
-            size='sm'
-          >
+          <AlertDialogCancel variant='outline' size='sm'>
             Cancelar
           </AlertDialogCancel>
-          <AlertDialogAction
-            variant="destructive"
-            size='sm'
-          >
+          <AlertDialogAction variant='destructive' size='sm'>
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

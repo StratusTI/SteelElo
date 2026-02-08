@@ -31,7 +31,10 @@ export async function GET() {
     return successResponse({ quickLinks }, 200);
   } catch (err) {
     console.error('[GET /api/quick-links] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch quick links');
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to fetch quick links',
+    );
   }
 }
 
@@ -53,7 +56,11 @@ export async function POST(req: NextRequest) {
       data: validatedData,
     });
 
-    return successResponse({ quickLink }, 201, 'Quick link created successfully');
+    return successResponse(
+      { quickLink },
+      201,
+      'Quick link created successfully',
+    );
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
@@ -70,6 +77,9 @@ export async function POST(req: NextRequest) {
     }
 
     console.error('[POST /api/quick-links] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to create quick link');
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to create quick link',
+    );
   }
 }
