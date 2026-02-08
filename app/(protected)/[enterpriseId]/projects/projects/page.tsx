@@ -1,7 +1,7 @@
-export default function BacklogPage() {
+export default function ProjectsListPage() {
   return (
     <div className='flex flex-col items-center justify-center h-screen'>
-      BacklogPage
+      Projects List
     </div>
   );
 }

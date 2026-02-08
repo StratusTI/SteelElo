@@ -1,11 +1,11 @@
-import type { NextRequest } from 'next/server';
 import { unstable_cache } from 'next/cache';
+import type { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
+import type { User } from '@/src/@types/user';
 import { verifyAuth } from '@/src/auth';
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 import { makeGetProjectsUseCase } from '@/src/use-cases/factories/make-get-projects';
 import { standardError, successResponse } from '@/src/utils/http-response';
-import type { User } from '@/src/@types/user';
 
 const filtersSchema = z.object({
   search: z.string().optional(),

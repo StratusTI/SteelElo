@@ -46,7 +46,7 @@ export default function LoginPage() {
 
       // Login bem-sucedido - cookie foi setado pela API
       // Redirecionar para dashboard
-      router.push('/dashboard');
+      router.push('/');
       router.refresh(); // Forçar refresh para atualizar o middleware
     } catch (err) {
       console.error('Login error:', err);

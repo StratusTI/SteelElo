@@ -57,13 +57,17 @@ export function SideBarProjects() {
   const router = useRouter();
   const { buildPath, enterpriseId } = useMatchesPath();
 
-  const { data: projectsData } = useProjects({
+  const {
+    data: projectsData,
+    isLoading,
+    error,
+  } = useProjects({
     enterpriseId: Number(enterpriseId),
     limit: 20,
   });
 
   const pageTree: PageTreeItem[] = [
-    { name: 'home', label: 'Início', path: '/', icon: Home03Icon },
+    { name: 'home', label: 'Início', path: '/projects', icon: Home03Icon },
     {
       name: 'your-work',
       label: 'Seu trabalho',
@@ -73,7 +77,7 @@ export function SideBarProjects() {
     {
       name: 'your-projects',
       label: 'Projetos',
-      path: '/projects',
+      path: '/projects/projects',
       icon: WorkIcon,
     },
     {
@@ -204,29 +208,33 @@ export function SideBarProjects() {
           />
           <CollapsibleContent>
             <div>
-              {projects.map((project) => {
-                const iconData = project.icone as
-                  | [string, { [key: string]: string | number }][]
-                  | undefined;
-                const hasValidIcon =
-                  iconData && Array.isArray(iconData) && iconData.length > 0;
+              {isLoading && (
+                <Muted className='pl-4 text-xs'>Carregando...</Muted>
+              )}
+              {!isLoading &&
+                projects.map((project) => {
+                  const iconData = project.icone as
+                    | [string, { [key: string]: string | number }][]
+                    | undefined;
+                  const hasValidIcon =
+                    iconData && Array.isArray(iconData) && iconData.length > 0;
 
-                return (
-                  <Button
-                    key={project.id}
-                    variant='ghost'
-                    size='sm'
-                    className='text-secondary-foreground/90 hover:text-primary w-full justify-start gap-2 pl-4'
-                    onClick={() =>
-                      router.push(buildPath(`/project/${project.id}`))
-                    }
-                  >
-                    {hasValidIcon && <Icon icon={iconData} strokeWidth={2} />}
-                    <span className='truncate'>{project.nome}</span>
-                  </Button>
-                );
-              })}
-              {projects.length === 0 && (
+                  return (
+                    <Button
+                      key={project.id}
+                      variant='ghost'
+                      size='sm'
+                      className='text-secondary-foreground/90 hover:text-primary w-full justify-start gap-2 pl-4'
+                      onClick={() =>
+                        router.push(buildPath(`/projects/${project.id}`))
+                      }
+                    >
+                      {hasValidIcon && <Icon icon={iconData} strokeWidth={2} />}
+                      <span className='truncate'>{project.nome}</span>
+                    </Button>
+                  );
+                })}
+              {!isLoading && projects.length === 0 && (
                 <Muted className='pl-4 text-xs'>Nenhum projeto</Muted>
               )}
             </div>

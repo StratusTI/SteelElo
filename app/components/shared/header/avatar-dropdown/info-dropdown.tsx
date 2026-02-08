@@ -6,6 +6,7 @@ import {
   MessageMultiple01Icon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import { Icon } from '@/app/components/HugeIcons';
+import { A } from '@/app/components/typography/text/a'
 import { Smaller } from '@/app/components/typography/text/smaller';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,7 @@ export function InfoDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant='ghost'>
+          <Button variant='ghost' size='icon-sm'>
             <Icon icon={HelpCircleIcon} strokeWidth={1.5} />
           </Button>
         }
@@ -34,11 +35,21 @@ export function InfoDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuItem className='gap-2 h-7'>
             <Icon icon={File02Icon} size={24} />
-            <Smaller>Documentação</Smaller>
+            <A
+              className='text-xs leading-none font-medium text-primary'
+              href={"https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0"}
+            >
+              Documentação
+            </A>
           </DropdownMenuItem>
           <DropdownMenuItem className='gap-2 h-7'>
             <Icon icon={MessageMultiple01Icon} size={24} />
-            <Smaller>Conversar com o suporte</Smaller>
+            <A
+              className='text-xs leading-none font-medium text-primary'
+              href={"https://api.whatsapp.com/send/?phone=5511918930104&text=Ol%C3%A1%21+Preciso+de+suporte%2C+por+favor.&type=phone_number&app_absent=0"}
+            >
+              Conversar com o suporte
+            </A>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

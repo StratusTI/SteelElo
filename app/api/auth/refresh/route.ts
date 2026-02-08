@@ -7,7 +7,7 @@ import {
 import { generateNewTokensFromRefresh } from '@/src/auth/middleware';
 import { verifyRefreshToken } from '@/src/auth/tokens';
 
-const LOGIN_URL = 'https://painel.stratustelecom.com.br/main/login.php';
+const LOGIN_URL = '/login';
 
 export async function GET(request: NextRequest) {
   const returnTo = request.nextUrl.searchParams.get('returnTo') || '/';

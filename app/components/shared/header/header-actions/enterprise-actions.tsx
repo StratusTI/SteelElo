@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { User } from '@/src/@types/user';
-import { useMembersCounts } from '@/src/hooks/use-members-count';
 
 interface EnterpriseActionsProps {
   user: User;
@@ -37,10 +36,6 @@ export function EnterpriseActions({
   const [position, setPosition] = useState<string>(
     currentEnterpriseId?.toString() || enterprises?.[0]?.id?.toString() || '',
   );
-
-  // Pega os IDs e passa para o hook
-  const enterpriseIds = enterprises?.map((e) => e.id) ?? [];
-  const { counts, isLoading } = useMembersCounts(enterpriseIds);
 
   useEffect(() => {
     if (currentEnterpriseId) {
@@ -106,13 +101,6 @@ export function EnterpriseActions({
                     </div>
                     <div className='flex flex-col gap-1'>
                       <Small>{enterprise.name}</Small>
-                      <Small className='text-muted-foreground'>
-                        {isLoading
-                          ? 'Carregando...'
-                          : counts[enterprise.id] != null
-                            ? `${counts[enterprise.id]} membros`
-                            : 'Erro ao carregar'}
-                      </Small>
                     </div>
                   </div>
                 </div>

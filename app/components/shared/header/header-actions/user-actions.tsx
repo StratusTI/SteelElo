@@ -14,7 +14,10 @@ interface UserActionsProps {
 export function UserActions({ user }: UserActionsProps) {
   return (
     <div className='flex items-center gap-0.5'>
-      <Button variant='ghost' onClick={() => console.log('notification')}>
+      <Button variant='outline' size='sm' onClick={() => console.log('start')}>
+        Comece agora
+      </Button>
+      <Button variant='ghost' size='icon-sm' onClick={() => console.log('notification')}>
         <Icon icon={InboxIcon} strokeWidth={2} />
       </Button>
       <InfoDropdown />

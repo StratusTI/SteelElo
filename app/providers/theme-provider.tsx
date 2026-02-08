@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -122,32 +123,40 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme(preferences.theme === 'dark' ? 'light' : 'dark');
   }, [preferences.theme, setTheme]);
 
+  // Memoizar o value para evitar re-renders desnecessários
+  const value = useMemo(
+    () => ({
+      theme: preferences.theme,
+      smoothCursor: preferences.smoothCursor,
+      setTheme,
+      setSmoothCursor,
+      toggleTheme,
+    }),
+    [preferences.theme, preferences.smoothCursor, setTheme, setSmoothCursor, toggleTheme]
+  );
+
+  // Value estático para antes do mount (SSR)
+  const unmountedValue = useMemo(
+    () => ({
+      theme: 'dark' as Theme,
+      smoothCursor: false,
+      setTheme: () => {},
+      setSmoothCursor: () => {},
+      toggleTheme: () => {},
+    }),
+    []
+  );
+
   if (!mounted) {
     return (
-      <ThemeContext.Provider
-        value={{
-          theme: 'dark',
-          smoothCursor: false,
-          setTheme: () => {},
-          setSmoothCursor: () => {},
-          toggleTheme: () => {},
-        }}
-      >
+      <ThemeContext.Provider value={unmountedValue}>
         {children}
       </ThemeContext.Provider>
     );
   }
 
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: preferences.theme,
-        smoothCursor: preferences.smoothCursor,
-        setTheme,
-        setSmoothCursor,
-        toggleTheme,
-      }}
-    >
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );

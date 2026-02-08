@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { cache } from 'react'
 import {
   getAuthUser as getAuthUserFromModule,
   getFullUserProfile,
@@ -12,7 +13,7 @@ import {
   getUserInitials,
 } from '@/src/utils/user'
 
-const LOGIN_URL = 'https://painel.stratustelecom.com.br/main/login.php'
+const LOGIN_URL = '/login'
 
 export interface AuthContext {
   user: User
@@ -23,17 +24,25 @@ export interface AuthContext {
   initials: string
 }
 
-export async function getAuthUser(): Promise<AuthUser | null> {
+// Cache getAuthUser para deduplicar chamadas durante uma requisição
+const getAuthUserCached = cache(async (): Promise<AuthUser | null> => {
   try {
     return await getAuthUserFromModule()
   } catch (error) {
     console.error('[getAuthUser] Error:', error)
     return null
   }
+})
+
+export async function getAuthUser(): Promise<AuthUser | null> {
+  return getAuthUserCached()
 }
 
-export async function requireAuth(): Promise<AuthContext> {
-  const authUser = await getAuthUser()
+// Cache toda a função requireAuth para deduplicar chamadas durante uma requisição
+// Isso garante que múltiplas chamadas a requireAuth() na mesma requisição
+// retornem o mesmo resultado sem fazer queries duplicadas ao banco
+export const requireAuth = cache(async (): Promise<AuthContext> => {
+  const authUser = await getAuthUserCached()
 
   if (!authUser) {
     // Verifica se tem refresh token para tentar renovar
@@ -63,7 +72,7 @@ export async function requireAuth(): Promise<AuthContext> {
     isSuperAdmin: isUserSuperAdmin(user),
     initials: getUserInitials(user),
   }
-}
+})
 
 export async function requireAdminAuth(): Promise<AuthContext> {
   const auth = await requireAuth()
