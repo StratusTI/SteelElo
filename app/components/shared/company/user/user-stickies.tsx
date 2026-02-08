@@ -107,7 +107,7 @@ export function BackgroundColorDropdown({
               className='rounded-full size-8 cursor-pointer border-2 border-transparent hover:border-white/50 transition-all p-0'
               style={{ backgroundColor: STICKY_COLORS[colorKey] }}
               onClick={() => onColorChange(colorKey)}
-              />
+            />
           ))}
         </div>
       </DropdownMenuContent>
