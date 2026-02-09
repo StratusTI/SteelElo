@@ -1,6 +1,9 @@
-'use client'
+'use client';
 
-import { AddQuickLinkDialog, LinkItem } from '@/app/components/shared/company/user/quick-link';
+import {
+  AddQuickLinkDialog,
+  LinkItem,
+} from '@/app/components/shared/company/user/quick-link';
 import { Small } from '@/app/components/typography/text/small';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useQuickLinks } from '@/src/hooks/use-quick-links';

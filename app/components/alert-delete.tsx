@@ -21,7 +21,13 @@ interface ModalProps {
   onConfirm?: () => void;
 }
 
-export function AlertDelete({ title, description, trigger, icon, onConfirm }: ModalProps) {
+export function AlertDelete({
+  title,
+  description,
+  trigger,
+  icon,
+  onConfirm,
+}: ModalProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger render={trigger} />
@@ -39,7 +45,11 @@ export function AlertDelete({ title, description, trigger, icon, onConfirm }: Mo
           <AlertDialogCancel variant='outline' size='sm'>
             Cancelar
           </AlertDialogCancel>
-          <AlertDialogAction variant='destructive' size='sm' onClick={onConfirm}>
+          <AlertDialogAction
+            variant='destructive'
+            size='sm'
+            onClick={onConfirm}
+          >
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>

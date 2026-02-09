@@ -1,15 +1,16 @@
-'use client'
+'use client';
 
+import { NoteIcon } from '@hugeicons-pro/core-stroke-rounded';
+import { useState } from 'react';
 import {
-  NoteIcon,
-} from '@hugeicons-pro/core-stroke-rounded';
-import { useState } from "react";
-import { AddStickies, StickyNote } from "@/app/components/shared/company/user/stickies";
+  AddStickies,
+  StickyNote,
+} from '@/app/components/shared/company/user/stickies';
 import { BreadCrumb, NavBar } from '@/app/components/shared/navigation/navBar';
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { BreadCrumbItem } from '@/lib/@types/breadcrumb';
-import { useStickies } from "@/src/hooks/use-stickies";
+import { useStickies } from '@/src/hooks/use-stickies';
 
 const breadCrumbTree: BreadCrumbItem[] = [
   {
@@ -39,7 +40,7 @@ export default function StickiesPage() {
         <div className='gap-2 flex items-center justify-end'>
           <Input
             className='h-8 max-w-xs'
-            placeholder="Pesquisar por conteúdo"
+            placeholder='Pesquisar por conteúdo'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -60,7 +61,9 @@ export default function StickiesPage() {
             </div>
           ) : stickies.length === 0 ? (
             <div className='text-muted-foreground text-sm py-8 text-center'>
-              {searchTerm ? 'Nenhum post-it encontrado' : 'Você ainda não tem post-its. Clique em "Adicionar post-it" para criar o primeiro.'}
+              {searchTerm
+                ? 'Nenhum post-it encontrado'
+                : 'Você ainda não tem post-its. Clique em "Adicionar post-it" para criar o primeiro.'}
             </div>
           ) : (
             <div className='flex flex-wrap gap-4 w-full'>

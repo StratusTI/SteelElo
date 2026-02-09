@@ -58,11 +58,7 @@ export async function PATCH(
       data: validatedData,
     });
 
-    return successResponse(
-      { sticky },
-      200,
-      'Sticky updated successfully',
-    );
+    return successResponse({ sticky }, 200, 'Sticky updated successfully');
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
@@ -87,10 +83,7 @@ export async function PATCH(
     }
 
     console.error('[PATCH /api/stickies/[id]] Unexpected error:', err);
-    return standardError(
-      'INTERNAL_SERVER_ERROR',
-      'Failed to update sticky',
-    );
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to update sticky');
   }
 }
 
@@ -134,9 +127,6 @@ export async function DELETE(
     }
 
     console.error('[DELETE /api/stickies/[id]] Unexpected error:', err);
-    return standardError(
-      'INTERNAL_SERVER_ERROR',
-      'Failed to delete sticky',
-    );
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to delete sticky');
   }
 }

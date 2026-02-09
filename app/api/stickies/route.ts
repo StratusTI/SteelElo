@@ -48,10 +48,7 @@ export async function GET(req: NextRequest) {
     return successResponse({ stickies }, 200);
   } catch (err) {
     console.error('[GET /api/stickies] Unexpected error:', err);
-    return standardError(
-      'INTERNAL_SERVER_ERROR',
-      'Failed to fetch stickies',
-    );
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch stickies');
   }
 }
 
@@ -73,11 +70,7 @@ export async function POST(req: NextRequest) {
       data: validatedData,
     });
 
-    return successResponse(
-      { sticky },
-      201,
-      'Sticky created successfully',
-    );
+    return successResponse({ sticky }, 201, 'Sticky created successfully');
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
@@ -94,9 +87,6 @@ export async function POST(req: NextRequest) {
     }
 
     console.error('[POST /api/stickies] Unexpected error:', err);
-    return standardError(
-      'INTERNAL_SERVER_ERROR',
-      'Failed to create sticky',
-    );
+    return standardError('INTERNAL_SERVER_ERROR', 'Failed to create sticky');
   }
 }
