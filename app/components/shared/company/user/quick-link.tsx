@@ -13,7 +13,6 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Icon } from '@/app/components/HugeIcons';
-import { Small } from '@/app/components/typography/text/small';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -33,48 +32,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   type QuickLink,
   useCreateQuickLink,
   useDeleteQuickLink,
-  useQuickLinks,
   useUpdateQuickLink,
 } from '@/src/hooks/use-quick-links';
-
-export function UserQuickLinks() {
-  const { data, isLoading } = useQuickLinks();
-  const quickLinks = data?.data?.quickLinks ?? [];
-
-  return (
-    <div className='flex flex-col gap-4 w-full'>
-      <div className='flex justify-between items-center'>
-        <Small>Links rápidos</Small>
-        <AddQuickLinkDialog />
-      </div>
-      <div className='flex flex-wrap gap-4 flex-1 h-auto'>
-        {isLoading ? (
-          <>
-            <Skeleton className='h-14 w-48 rounded-md' />
-            <Skeleton className='h-14 w-48 rounded-md' />
-          </>
-        ) : quickLinks.length === 0 ? (
-          <p className='text-muted-foreground text-sm'>
-            Nenhum link rápido adicionado
-          </p>
-        ) : (
-          quickLinks.map((link) => <LinkItem key={link.id} quickLink={link} />)
-        )}
-      </div>
-    </div>
-  );
-}
 
 interface LinkItemProps {
   quickLink: QuickLink;
 }
 
-function LinkItem({ quickLink }: LinkItemProps) {
+export function LinkItem({ quickLink }: LinkItemProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -120,7 +89,7 @@ function LinkItem({ quickLink }: LinkItemProps) {
   );
 }
 
-function AddQuickLinkDialog() {
+export function AddQuickLinkDialog() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');
   const [titulo, setTitulo] = useState('');
@@ -232,7 +201,7 @@ interface EditQuickLinkDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function EditQuickLinkDialog({
+export function EditQuickLinkDialog({
   quickLink,
   open,
   onOpenChange,
@@ -340,7 +309,7 @@ interface DeleteQuickLinkDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function DeleteQuickLinkDialog({
+export function DeleteQuickLinkDialog({
   quickLink,
   open,
   onOpenChange,
@@ -410,7 +379,7 @@ interface LinkFunctionsDropdownProps {
   onDelete: () => void;
 }
 
-function LinkFunctionsDropdown({
+export function LinkFunctionsDropdown({
   quickLink,
   onEdit,
   onDelete,

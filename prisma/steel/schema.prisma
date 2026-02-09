@@ -45,6 +45,7 @@ model Usuario {
   ponto               ponto[]
   integracoes         integracao_usuario[]
   quickLinks          QuickLink[]
+  stickies            Sticky[]
   empresa             Empresa?                @relation(fields: [idempresa], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "usuarios_ibfk_1")
 
   @@index([iddevice, online, last_seen], map: "idx_usuarios_dev_online_seen")
@@ -64,6 +65,33 @@ model QuickLink {
   @@unique([usuarioId, url])
   @@index([usuarioId], map: "idx_quick_link_usuario")
   @@map("quick_links")
+}
+
+model Sticky {
+  id              Int         @id @default(autoincrement())
+  usuarioId       Int
+  content         String      @db.Text
+  backgroundColor StickyColor @default(gray)
+  isBold          Boolean     @default(false)
+  isItalic        Boolean     @default(false)
+  createdAt       DateTime    @default(now()) @db.DateTime(0)
+  updatedAt       DateTime    @default(now()) @updatedAt @db.DateTime(0)
+  usuario         Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId], map: "idx_sticky_usuario")
+  @@index([content(length: 100)], map: "idx_sticky_content")
+  @@map("stickies")
+}
+
+enum StickyColor {
+  gray
+  peach
+  pink
+  orange
+  green
+  lightblue
+  darkblue
+  purple
 }
 
 model integracao_usuario {

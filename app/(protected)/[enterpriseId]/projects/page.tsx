@@ -5,15 +5,15 @@ import {
 import { Icon } from '@/app/components/HugeIcons';
 import { AIInitialChat } from '@/app/components/shared/ai/ai-initial-chat';
 import Clock from '@/app/components/shared/clock';
-import { UserQuickLinks } from '@/app/components/shared/company/user/user-quick-link';
 import { UserQuickStart } from '@/app/components/shared/company/user/user-quick-start';
-import { UserStickies } from '@/app/components/shared/company/user/user-stickies';
 import { BreadCrumb, NavBar } from '@/app/components/shared/navigation/navBar';
 import { H4 } from '@/app/components/typography/heading/h4';
 import { Button } from '@/components/ui/button';
 import type { BreadCrumbItem } from '@/lib/@types/breadcrumb';
 import { helloForUser } from '@/lib/helloForUser';
 import { requireAuth } from '@/src/lib/helpers/auth-helper';
+import { UserQuickLinks } from './_components/user-quick-links';
+import { UserStickies } from './_components/user-stickies';
 
 const breadCrumbTree: BreadCrumbItem[] = [
   {
