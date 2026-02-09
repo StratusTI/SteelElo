@@ -1,23 +1,10 @@
-import { Suspense } from 'react';
-import { Header } from '@/app/components/header/header';
-import { getAuthUser } from '@/src/lib/helpers/auth-helper';
+import { redirect } from 'next/navigation';
 
-interface HomePageProps {
+interface EnterprisePageProps {
   params: Promise<{ enterpriseId: string }>;
 }
 
-export default async function HomePage({ params }: HomePageProps) {
+export default async function EnterprisePage({ params }: EnterprisePageProps) {
   const { enterpriseId } = await params;
-
-  const user = await getAuthUser();
-
-  if (!user) {
-    return <div>User not found</div>;
-  }
-
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Header enterpriseId={enterpriseId} />
-    </Suspense>
-  );
+  redirect(`/${enterpriseId}/projects`);
 }

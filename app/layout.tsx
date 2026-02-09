@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { QueryProvider } from './providers/query-provider';
 import { ThemeProvider } from './providers/theme-provider';
@@ -18,14 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      className={cn('dark', inter.variable)}
-      suppressHydrationWarning
-    >
-      <body className='root antialiased bg-background p-2.5 gap-2 h-screen'>
+    <html lang='en' className={cn('dark', inter.variable)}>
+      <body className='root antialiased bg-background h-screen'>
         <ThemeProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

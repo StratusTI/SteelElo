@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
 import type { ErrorResponse, SuccessResponse } from "../@types/http-response";
 
+export interface CacheOptions {
+  maxAge?: number;
+  staleWhileRevalidate?: number;
+  private?: boolean;
+}
+
 /**
  * Cria uma resposta HTTP de sucesso padronizada
  *
  * @example
  * return successResponse({ user: { id: 1, name: 'John' } }, 200)
  * // { success: true, statusCode: 200, data: { user: { id: 1, name: 'John' } } }
+ *
+ * @example com cache
+ * return successResponse(data, 200, undefined, { maxAge: 60, staleWhileRevalidate: 120 })
 */
 export function successResponse<T>(
   data: T,
   statusCode: number = 200,
-  message?: string
+  message?: string,
+  cacheOptions?: CacheOptions
 ): NextResponse<SuccessResponse<T>> {
   const response: SuccessResponse<T> = {
     success: true,
@@ -23,9 +33,17 @@ export function successResponse<T>(
     response.message = message;
   }
 
+  const headers: HeadersInit = {};
+
+  if (cacheOptions) {
+    const { maxAge = 0, staleWhileRevalidate = 0, private: isPrivate = false } = cacheOptions;
+    const scope = isPrivate ? 'private' : 'public';
+    headers['Cache-Control'] = `${scope}, max-age=${maxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
+  }
+
   return NextResponse.json(
     response,
-    { status: statusCode }
+    { status: statusCode, headers }
   )
 }
 

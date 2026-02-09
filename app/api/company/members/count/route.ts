@@ -1,14 +1,14 @@
 import { unstable_cache } from 'next/cache';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import { verifyAuth } from '@/src/auth';
 import { makeGetCompanyMembersCountUseCase } from '@/src/use-cases/factories/make-get-company-members-count';
 import { standardError, successResponse } from '@/src/utils/http-response';
+import type { User } from '@/src/@types/user';
 
 export async function GET(request: Request) {
-  const { user, error: authError } = await verifyJWT();
-  if (authError) return authError;
+  const { user: authUser, error: authError } = await verifyAuth();
 
-  if (!user) {
-    return standardError('UNAUTHORIZED', 'User not found');
+  if (authError || !authUser) {
+    return authError;
   }
 
   const { searchParams } = new URL(request.url);
@@ -19,24 +19,42 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Função cacheada - a query key é baseada no enterpriseId
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    };
+
     const getCachedCount = unstable_cache(
-      async (entId: string) => {
+      async (entId: string, userJson: string) => {
+        const parsedUser = JSON.parse(userJson) as User;
         const getCompanyMembersCount = makeGetCompanyMembersCountUseCase();
         const result = await getCompanyMembersCount.execute({
-          user,
+          user: parsedUser,
           enterpriseId: Number(entId),
         });
         return result.count;
       },
-      [`members-count-${enterpriseId}`], // cache key
+      [`members-count-${enterpriseId}`],
       {
-        revalidate: 60, // revalida a cada 60 segundos
-        tags: [`enterprise-${enterpriseId}-members`], // para invalidação manual
+        revalidate: 60,
+        tags: [`enterprise-${enterpriseId}-members`],
       },
     );
 
-    const count = await getCachedCount(enterpriseId);
+    const count = await getCachedCount(enterpriseId, JSON.stringify(user));
 
     return successResponse({ count }, 200);
   } catch (err) {

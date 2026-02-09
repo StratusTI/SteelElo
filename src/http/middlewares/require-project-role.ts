@@ -1,7 +1,9 @@
-import { ProjectPermission, ProjectRole } from "@/src/@types/project-role"
-import { makeCheckUserPermissionUseCase } from "@/src/use-cases/factories/make-check-user-permission"
-import { standardError } from "@/src/utils/http-response"
-import { verifyJWT, VerifyJWTResult } from "./verify-jwt"
+import type { ErrorResponse } from '@/src/@types/http-response'
+import { ProjectPermission, ProjectRole } from '@/src/@types/project-role'
+import { verifyAuth, type AuthUser } from '@/src/auth'
+import { makeCheckUserPermissionUseCase } from '@/src/use-cases/factories/make-check-user-permission'
+import { standardError } from '@/src/utils/http-response'
+import type { NextResponse } from 'next/server'
 
 interface RequireProjectRoleOptions {
   projectId: number
@@ -9,48 +11,56 @@ interface RequireProjectRoleOptions {
   permission?: ProjectPermission
 }
 
-interface RequireProjectRoleResult extends VerifyJWTResult{
+interface RequireProjectRoleResult {
+  user: AuthUser | null
   userRole: ProjectRole | null
+  error?: NextResponse<ErrorResponse>
 }
 
 /**
- * Middleware: Valida se usuário tem permissão para acessar projeto
- *
- * @param options.projectId - ID do projeto
- * @param options.minimumRole - Role mínima necessária (hierárquico)
- * @param options.permission - Permissão específica necessária
- *
- * @example
- * // Requer no mínimo role 'member'
- * const { user, error } = await requireProjectRole({ projectId: 1, minimumRole: 'member' })
- *
- * @example
- * // Requer permissão específica 'edit_any_task'
- * const { user, error } = await requireProjectRole({ projectId: 1, permission: 'edit_any_task' })
+ * Middleware: Valida se usuario tem permissao para acessar projeto
  */
 export async function requireProjectRole(
-   options: RequireProjectRoleOptions
+  options: RequireProjectRoleOptions
 ): Promise<RequireProjectRoleResult> {
   const { projectId, minimumRole, permission } = options
 
-  const { user, error: authError } = await verifyJWT()
+  const { user: authUser, error: authError } = await verifyAuth()
 
-  if (authError || !user) {
+  if (authError || !authUser) {
     return {
       user: null,
       userRole: null,
-      error: authError
+      error: authError,
     }
   }
 
   try {
     const checkPermission = makeCheckUserPermissionUseCase()
 
+    // Criar objeto User parcial com campos necessarios para o use case
+    const userForPermission = {
+      id: authUser.id,
+      superadmin: authUser.superadmin,
+      admin: authUser.admin,
+      email: authUser.email,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      idempresa: authUser.enterpriseId,
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    }
+
     const result = await checkPermission.execute({
-      user,
+      user: userForPermission,
       projectId,
       minimumRole,
-      permission
+      permission,
     })
 
     if (!result.hasPermission) {
@@ -64,22 +74,22 @@ export async function requireProjectRole(
             projectId,
             userRole: result.userRole,
             requiredRole: minimumRole,
-            requiredPermission: permission
+            requiredPermission: permission,
           }
-        )
+        ),
       }
     }
 
     return {
-      user,
-      userRole: result.userRole
+      user: authUser,
+      userRole: result.userRole,
     }
   } catch (err) {
     console.error('[requireProjectRole] Unexpected error:', err)
     return {
       user: null,
       userRole: null,
-      error: standardError('INTERNAL_SERVER_ERROR', 'Failed to check permissions')
+      error: standardError('INTERNAL_SERVER_ERROR', 'Failed to check permissions'),
     }
   }
- }
+}

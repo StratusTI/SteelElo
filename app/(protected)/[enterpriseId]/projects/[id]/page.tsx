@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 import { useEnterprise } from '@/app/providers/enterprise-provider';
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 
 interface Project {
   id: number;

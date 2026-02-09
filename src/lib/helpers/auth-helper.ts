@@ -1,6 +1,10 @@
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { verifyToken } from '@/src/utils/jwt'
+import { cache } from 'react'
+import {
+  getAuthUser as getAuthUserFromModule,
+  getFullUserProfile,
+  type AuthUser,
+} from '@/src/auth'
 import type { User } from '@/src/@types/user'
 import {
   getUserFullName,
@@ -9,45 +13,52 @@ import {
   getUserInitials,
 } from '@/src/utils/user'
 
-const LOGIN_URL = 'https://painel.stratustelecom.com.br/main/login.php'
+const LOGIN_URL = '/login'
 
 export interface AuthContext {
   user: User
+  authUser: AuthUser
   fullName: string
   isAdmin: boolean
   isSuperAdmin: boolean
   initials: string
 }
 
-/**
- * Helper para obter usuário autenticado em Server Components/Pages
- *
- * Use este ao invés de importar verify-jwt.ts diretamente
- */
-export async function getAuthUser(): Promise<User | null> {
+// Cache getAuthUser para deduplicar chamadas durante uma requisição
+const getAuthUserCached = cache(async (): Promise<AuthUser | null> => {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get('auth_token')?.value
-
-    if (!token) return null
-
-    const user = await verifyToken(token)
-    return user
+    return await getAuthUserFromModule()
   } catch (error) {
     console.error('[getAuthUser] Error:', error)
     return null
   }
+})
+
+export async function getAuthUser(): Promise<AuthUser | null> {
+  return getAuthUserCached()
 }
 
-/**
- * Verifica autenticação e retorna dados do usuário com valores computados.
- * Redireciona para login se não autenticado.
- *
- * @example
- * const { user, fullName, isAdmin } = await requireAuth()
- */
-export async function requireAuth(): Promise<AuthContext> {
-  const user = await getAuthUser()
+// Cache toda a função requireAuth para deduplicar chamadas durante uma requisição
+// Isso garante que múltiplas chamadas a requireAuth() na mesma requisição
+// retornem o mesmo resultado sem fazer queries duplicadas ao banco
+export const requireAuth = cache(async (): Promise<AuthContext> => {
+  const authUser = await getAuthUserCached()
+
+  if (!authUser) {
+    // Verifica se tem refresh token para tentar renovar
+    const { getAuthTokens } = await import('@/src/auth/cookies')
+    const { refreshToken } = await getAuthTokens()
+
+    if (refreshToken) {
+      // Redireciona para endpoint de refresh
+      redirect('/api/auth/refresh?returnTo=/')
+    }
+
+    // Não tem token válido, vai para login
+    redirect(LOGIN_URL)
+  }
+
+  const user = await getFullUserProfile(authUser)
 
   if (!user) {
     redirect(LOGIN_URL)
@@ -55,36 +66,35 @@ export async function requireAuth(): Promise<AuthContext> {
 
   return {
     user,
+    authUser,
     fullName: getUserFullName(user),
     isAdmin: isUserAdmin(user),
     isSuperAdmin: isUserSuperAdmin(user),
     initials: getUserInitials(user),
   }
-}
+})
 
-/**
- * Verifica se o usuário é admin.
- * Redireciona para home se não for admin.
- */
 export async function requireAdminAuth(): Promise<AuthContext> {
   const auth = await requireAuth()
 
   if (!auth.isAdmin) {
-    redirect('/')
+    const defaultEnterpriseId = Array.isArray(auth.user.idempresa)
+      ? auth.user.idempresa[0]
+      : auth.user.idempresa
+    redirect(`/${defaultEnterpriseId}/projects`)
   }
 
   return auth
 }
 
-/**
- * Verifica se o usuário é super admin.
- * Redireciona para home se não for super admin.
- */
 export async function requireSuperAdminAuth(): Promise<AuthContext> {
   const auth = await requireAuth()
 
   if (!auth.isSuperAdmin) {
-    redirect('/')
+    const defaultEnterpriseId = Array.isArray(auth.user.idempresa)
+      ? auth.user.idempresa[0]
+      : auth.user.idempresa
+    redirect(`/${defaultEnterpriseId}/projects`)
   }
 
   return auth

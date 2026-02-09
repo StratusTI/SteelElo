@@ -1,9 +1,9 @@
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import { verifyAuth } from '@/src/auth';
 import { makeGetUserIntegrationsUseCase } from '@/src/use-cases/factories/make-get-user-integrations';
 import { standardError, successResponse } from '@/src/utils/http-response';
 
 export async function GET() {
-  const { user, error } = await verifyJWT();
+  const { user, error } = await verifyAuth();
 
   if (error || !user) {
     return error;
@@ -25,10 +25,10 @@ export async function GET() {
     return successResponse(
       { integrations: formattedIntegrations },
       200,
-      'Integrações recuperadas com sucesso',
+      'Integracoes recuperadas com sucesso',
     );
   } catch (err) {
     console.error('[GET /api/integrations] Error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao buscar integrações');
+    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao buscar integracoes');
   }
 }

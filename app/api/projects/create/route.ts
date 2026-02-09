@@ -1,7 +1,8 @@
 import type { NextRequest } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import { verifyAuth } from '@/src/auth';
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,
@@ -9,6 +10,7 @@ import {
 } from '@/src/use-cases/errors/project-errors';
 import { makeCreateProjectUseCase } from '@/src/use-cases/factories/make-create-project';
 import { standardError, successResponse } from '@/src/utils/http-response';
+import type { User } from '@/src/@types/user';
 
 const createProjectSchema = z.object({
   nome: z.string().min(3).max(255),
@@ -24,13 +26,13 @@ const createProjectSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth();
 
-  if (authError || !user) {
+  if (authError || !authUser) {
     return authError;
   }
 
-  if (!user.idempresa) {
+  if (!authUser.enterpriseId) {
     return standardError(
       'BAD_REQUEST',
       'User must belong to a company to create projects',
@@ -51,12 +53,33 @@ export async function POST(req: NextRequest) {
         : undefined,
     };
 
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    };
+
     const createProject = makeCreateProjectUseCase();
 
     const { project } = await createProject.execute({
       user,
       data,
     });
+
+    revalidateTag('projects', 'max');
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max');
 
     return successResponse({ project }, 201, 'Project created successfully');
   } catch (err) {

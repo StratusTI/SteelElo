@@ -1,18 +1,26 @@
-import { GET } from "@/app/api/auth/me/route";
-import { User } from "@/src/@types/user";
-import { verifyJWT } from "@/src/http/middlewares/verify-jwt";
-import { makeGetUserProfileUseCase } from "@/src/use-cases/factories/make-get-user-profile";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { GET } from '@/app/api/auth/me/route'
+import { User } from '@/src/@types/user'
+import { verifyAuth } from '@/src/auth'
+import { makeGetUserProfileUseCase } from '@/src/use-cases/factories/make-get-user-profile'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/src/http/middlewares/verify-jwt', () => ({
-  verifyJWT: vi.fn()
+vi.mock('@/src/auth', () => ({
+  verifyAuth: vi.fn(),
 }))
 
 vi.mock('@/src/use-cases/factories/make-get-user-profile', () => ({
-  makeGetUserProfileUseCase: vi.fn()
+  makeGetUserProfileUseCase: vi.fn(),
 }))
 
 describe('GET /api/auth/me', () => {
+  const mockAuthUser = {
+    id: 1,
+    email: 'john.doe@example.com',
+    admin: false,
+    superadmin: false,
+    enterpriseId: 1,
+  }
+
   const mockUser: User = {
     id: 1,
     nome: 'John',
@@ -27,20 +35,22 @@ describe('GET /api/auth/me', () => {
     empresa: 'Acme Inc',
     departamento: 'Engineering',
     time: 'Backend',
-    online: true
+    online: true,
   }
 
   const mockGetUserProfileUseCase = {
-    execute: vi.fn()
+    execute: vi.fn(),
   }
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(makeGetUserProfileUseCase).mockReturnValue(mockGetUserProfileUseCase as any)
+    vi.mocked(makeGetUserProfileUseCase).mockReturnValue(
+      mockGetUserProfileUseCase as any
+    )
   })
 
   it('should return 401 when token is not provided', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
+    vi.mocked(verifyAuth).mockResolvedValue({
       user: null,
       error: Response?.json(
         {
@@ -49,8 +59,8 @@ describe('GET /api/auth/me', () => {
           message: 'Authentication token not found',
           error: { code: 'UNAUTHORIZED' },
         },
-        { status: 401}
-      ) as any
+        { status: 401 }
+      ) as any,
     })
 
     const response = await GET()
@@ -66,7 +76,7 @@ describe('GET /api/auth/me', () => {
   })
 
   it('should return 401 when token is invalid', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
+    vi.mocked(verifyAuth).mockResolvedValue({
       user: null,
       error: Response?.json(
         {
@@ -94,8 +104,8 @@ describe('GET /api/auth/me', () => {
   })
 
   it('should return 200 with user data when token is valid', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
-      user: mockUser,
+    vi.mocked(verifyAuth).mockResolvedValue({
+      user: mockAuthUser,
     })
     mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
@@ -128,8 +138,8 @@ describe('GET /api/auth/me', () => {
   })
 
   it('should build correct full name from nome and sobrenome', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
-      user: mockUser,
+    vi.mocked(verifyAuth).mockResolvedValue({
+      user: mockAuthUser,
     })
     mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
@@ -145,8 +155,8 @@ describe('GET /api/auth/me', () => {
       sobrenome: '',
     }
 
-    vi.mocked(verifyJWT).mockResolvedValue({
-      user: userWithoutLastName,
+    vi.mocked(verifyAuth).mockResolvedValue({
+      user: mockAuthUser,
     })
     mockGetUserProfileUseCase.execute.mockResolvedValue({ user: userWithoutLastName })
 
@@ -157,8 +167,8 @@ describe('GET /api/auth/me', () => {
   })
 
   it('should return all expected user fields', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
-      user: mockUser,
+    vi.mocked(verifyAuth).mockResolvedValue({
+      user: mockAuthUser,
     })
     mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 
@@ -183,8 +193,8 @@ describe('GET /api/auth/me', () => {
   })
 
   it('should not expose sensitive data', async () => {
-    vi.mocked(verifyJWT).mockResolvedValue({
-      user: mockUser,
+    vi.mocked(verifyAuth).mockResolvedValue({
+      user: mockAuthUser,
     })
     mockGetUserProfileUseCase.execute.mockResolvedValue({ user: mockUser })
 

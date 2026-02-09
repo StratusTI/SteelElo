@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import { verifyAuth } from '@/src/auth';
 import {
   generateAuthUrl,
   getOAuthConfig,
@@ -16,10 +16,10 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   const { provider } = await params;
 
   if (!isValidProvider(provider)) {
-    return standardError('BAD_REQUEST', 'Provider inválido');
+    return standardError('BAD_REQUEST', 'Provider invalido');
   }
 
-  const { user, error } = await verifyJWT();
+  const { user, error } = await verifyAuth();
 
   if (error || !user) {
     return error;
@@ -30,7 +30,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   if (!config.clientId || !config.clientSecret) {
     return standardError(
       'INTERNAL_SERVER_ERROR',
-      `Integração com ${provider} não está configurada`,
+      `Integracao com ${provider} nao esta configurada`,
     );
   }
 
@@ -45,9 +45,9 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
   const cookieStore = await cookies();
   cookieStore.set(`oauth_state_${provider}`, state, {
     httpOnly: true,
-    secure: true, // Required for sameSite: 'none'
-    sameSite: 'none', // Required for cross-site OAuth flow
-    maxAge: 60 * 10, // 10 minutes
+    secure: true,
+    sameSite: 'none',
+    maxAge: 60 * 10,
     path: '/',
   });
 

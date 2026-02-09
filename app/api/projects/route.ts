@@ -1,7 +1,9 @@
+import { unstable_cache } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
+import type { User } from '@/src/@types/user';
+import { verifyAuth } from '@/src/auth';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import { makeGetProjectsUseCase } from '@/src/use-cases/factories/make-get-projects';
 import { standardError, successResponse } from '@/src/utils/http-response';
 
@@ -18,16 +20,15 @@ const filtersSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth();
 
-  if (authError || !user) {
+  if (authError || !authUser) {
     return authError;
   }
 
   try {
     const { searchParams } = new URL(req.url);
 
-    // Parse query params
     const rawFilters: {
       search?: string;
       status?: string[];
@@ -50,7 +51,6 @@ export async function GET(req: NextRequest) {
       limit: searchParams.get('limit') || undefined,
     };
 
-    // Remove undefined values
     Object.keys(rawFilters).forEach((key) => {
       const typedKey = key as keyof typeof rawFilters;
       if (rawFilters[typedKey] === undefined) {
@@ -60,14 +60,54 @@ export async function GET(req: NextRequest) {
 
     const validatedFilters = filtersSchema.parse(rawFilters);
 
-    const getProjects = makeGetProjectsUseCase();
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    };
 
-    const result = await getProjects.execute({
-      user,
-      filters: validatedFilters,
+    const cacheKey = `projects-${user.id}-${user.idempresa}`;
+    const filtersCacheKey = JSON.stringify(validatedFilters);
+
+    const getCachedProjects = unstable_cache(
+      async (userJson: string, filtersJson: string) => {
+        const parsedUser = JSON.parse(userJson) as User;
+        const parsedFilters = JSON.parse(filtersJson);
+        const getProjects = makeGetProjectsUseCase();
+        return getProjects.execute({
+          user: parsedUser,
+          filters: parsedFilters,
+        });
+      },
+      [cacheKey, filtersCacheKey],
+      {
+        revalidate: 30,
+        tags: ['projects', `projects-enterprise-${user.idempresa}`],
+      },
+    );
+
+    const result = await getCachedProjects(
+      JSON.stringify(user),
+      filtersCacheKey,
+    );
+
+    return successResponse(result, 200, undefined, {
+      maxAge: 30,
+      staleWhileRevalidate: 60,
+      private: true,
     });
-
-    return successResponse(result, 200);
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid query parameters', {

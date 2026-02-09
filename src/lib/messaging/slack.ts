@@ -51,6 +51,9 @@ export async function sendSlackMessage(
   return data;
 }
 
+/**
+ * @deprecated Use user ID as channel for DMs instead
+ */
 export function getDefaultSlackChannelId(): string {
   return process.env.SLACK_DEFAULT_CHANNEL_ID || '';
 }
