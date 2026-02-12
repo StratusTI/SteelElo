@@ -1,11 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 import {
-  verifyAuth,
-  getFullUserProfile,
   generateAccessToken,
   generateRefreshToken,
   setAuthCookies,
+  verifyAuth,
 } from '@/src/auth';
 import { ConflictError } from '@/src/use-cases/errors/conflict-error';
 import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';

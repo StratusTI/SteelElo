@@ -69,7 +69,7 @@ export function AddStickies({ variant, onAdd }: AddStickiesProps) {
       });
       toast.success('Post-it criado com sucesso');
       onAdd?.();
-    } catch (error) {
+    } catch (_error) {
       toast.error('Falha ao criar post-it');
     }
   };
@@ -171,15 +171,9 @@ function serializeTodoContent(
 
 interface StickyNoteProps {
   sticky?: Sticky;
-  isNew?: boolean;
-  onCreated?: () => void;
 }
 
-export function StickyNote({
-  sticky,
-  isNew = false,
-  onCreated,
-}: StickyNoteProps) {
+export function StickyNote({ sticky }: StickyNoteProps) {
   const [content, setContent] = useState(sticky?.content || '');
   const [currentColor, setCurrentColor] = useState<ColorKey>(
     (sticky?.backgroundColor as ColorKey) || 'gray',
@@ -195,7 +189,7 @@ export function StickyNote({
 
   const updateSticky = useUpdateSticky();
   const deleteSticky = useDeleteSticky();
-  const createSticky = useCreateSticky();
+  const _createSticky = useCreateSticky();
 
   useEffect(() => {
     if (sticky?.content) {
@@ -230,7 +224,7 @@ export function StickyNote({
             stickyId: sticky.id,
             data: updates,
           });
-        } catch (error) {
+        } catch (_error) {
           toast.error('Falha ao salvar alterações');
         }
       }, 500);
@@ -259,7 +253,7 @@ export function StickyNote({
           stickyId: sticky.id,
           data: { backgroundColor: color },
         });
-      } catch (error) {
+      } catch (_error) {
         toast.error('Falha ao alterar cor');
       }
     }
@@ -274,7 +268,7 @@ export function StickyNote({
           stickyId: sticky.id,
           data: { isBold: newBold },
         });
-      } catch (error) {
+      } catch (_error) {
         toast.error('Falha ao alterar formatação');
       }
     }
@@ -289,7 +283,7 @@ export function StickyNote({
           stickyId: sticky.id,
           data: { isItalic: newItalic },
         });
-      } catch (error) {
+      } catch (_error) {
         toast.error('Falha ao alterar formatação');
       }
     }
@@ -356,7 +350,7 @@ export function StickyNote({
     try {
       await deleteSticky.mutateAsync(sticky.id);
       toast.success('Post-it excluído com sucesso');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Falha ao excluir post-it');
     }
   };

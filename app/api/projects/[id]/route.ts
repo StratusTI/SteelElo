@@ -1,10 +1,10 @@
-import type { NextRequest } from 'next/server';
 import { revalidateTag, unstable_cache } from 'next/cache';
+import type { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import type { User } from '@/src/@types/user';
 import type { AuthUser } from '@/src/auth';
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
+import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,

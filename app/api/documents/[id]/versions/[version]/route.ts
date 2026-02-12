@@ -51,7 +51,10 @@ export async function GET(
       return standardError('FORBIDDEN', err.message);
     }
 
-    console.error('[GET /api/documents/[id]/versions/[version]] Unexpected error:', err);
+    console.error(
+      '[GET /api/documents/[id]/versions/[version]] Unexpected error:',
+      err,
+    );
     return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch version');
   }
 }

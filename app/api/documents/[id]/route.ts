@@ -12,7 +12,12 @@ import { makeUpdateDocumentUseCase } from '@/src/use-cases/factories/make-update
 import { enrichDocumentWithCreator } from '@/src/utils/enrich-document-creator';
 import { standardError, successResponse } from '@/src/utils/http-response';
 
-const documentStatusEnum = z.enum(['draft', 'published', 'private', 'archived']);
+const documentStatusEnum = z.enum([
+  'draft',
+  'published',
+  'private',
+  'archived',
+]);
 
 const updateDocumentSchema = z.object({
   titulo: z.string().min(1).optional(),
@@ -27,6 +32,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: documentId } = await params;
+
+  if (!documentId || documentId.length < 20) {
+    return standardError('BAD_REQUEST', 'Invalid document ID');
+  }
 
   const { user: authUser, error: authError } = await verifyAuth();
 
@@ -85,7 +94,11 @@ export async function PATCH(
 
     const enrichedDocument = await enrichDocumentWithCreator(document);
 
-    return successResponse({ document: enrichedDocument }, 200, 'Document updated successfully');
+    return successResponse(
+      { document: enrichedDocument },
+      200,
+      'Document updated successfully',
+    );
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {
@@ -126,7 +139,11 @@ export async function DELETE(
       documentId,
     });
 
-    return successResponse({ success: true }, 200, 'Document deleted successfully');
+    return successResponse(
+      { success: true },
+      200,
+      'Document deleted successfully',
+    );
   } catch (err) {
     if (err instanceof DocumentNotFoundError) {
       return standardError('RESOURCE_NOT_FOUND', err.message);

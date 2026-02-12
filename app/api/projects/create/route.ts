@@ -1,8 +1,9 @@
-import type { NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import type { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
+import type { User } from '@/src/@types/user';
 import { verifyAuth } from '@/src/auth';
+import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,
@@ -10,7 +11,6 @@ import {
 } from '@/src/use-cases/errors/project-errors';
 import { makeCreateProjectUseCase } from '@/src/use-cases/factories/make-create-project';
 import { standardError, successResponse } from '@/src/utils/http-response';
-import type { User } from '@/src/@types/user';
 
 const createProjectSchema = z.object({
   nome: z.string().min(3).max(255),

@@ -27,7 +27,11 @@ export async function POST(
       documentId,
     });
 
-    return successResponse({ document }, 200, 'Document published successfully');
+    return successResponse(
+      { document },
+      200,
+      'Document published successfully',
+    );
   } catch (err) {
     if (err instanceof DocumentNotFoundError) {
       return standardError('RESOURCE_NOT_FOUND', err.message);

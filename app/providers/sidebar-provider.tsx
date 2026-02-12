@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface SidebarContextType {
   isOpen: boolean;
@@ -16,26 +22,26 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem('sidebar');
-    if (stored !== null) setIsOpen(stored === 'true')
-  }, [])
+    if (stored !== null) setIsOpen(stored === 'true');
+  }, []);
 
   const toggle = () => {
-    setIsOpen(prev => {
+    setIsOpen((prev) => {
       const newValue = !prev;
       localStorage.setItem('sidebar', String(newValue));
       return newValue;
-    })
-  }
+    });
+  };
 
   const open = () => {
     setIsOpen(true);
     localStorage.setItem('sidebar', 'true');
-  }
+  };
 
   const close = () => {
     setIsOpen(false);
     localStorage.setItem('sidebar', 'false');
-  }
+  };
 
   return (
     <SidebarContext.Provider
@@ -43,7 +49,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         isOpen,
         toggle,
         open,
-        close
+        close,
       }}
     >
       {children}

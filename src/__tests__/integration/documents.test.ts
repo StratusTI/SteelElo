@@ -88,8 +88,10 @@ describe('Documents API', () => {
     enterpriseId: 1,
   };
 
+  const mockDocId = 'clxyz1234567890abcdefgh';
+
   const mockDocument = {
-    id: 1,
+    id: mockDocId,
     titulo: 'Test Document',
     icone: '📄',
     conteudo: '# Hello',
@@ -248,9 +250,9 @@ describe('Documents API', () => {
       };
       vi.mocked(makeGetDocumentByIdUseCase).mockReturnValue(mockUseCase as any);
 
-      const request = new NextRequest('http://localhost/api/documents/1');
+      const request = new NextRequest(`http://localhost/api/documents/${mockDocId}`);
       const response = await GET_BY_ID(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -270,13 +272,13 @@ describe('Documents API', () => {
       };
       vi.mocked(makeUpdateDocumentUseCase).mockReturnValue(mockUseCase as any);
 
-      const request = new NextRequest('http://localhost/api/documents/1', {
+      const request = new NextRequest(`http://localhost/api/documents/${mockDocId}`, {
         method: 'PATCH',
         body: JSON.stringify({ titulo: 'Updated Title' }),
       });
 
       const response = await PATCH(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -294,12 +296,12 @@ describe('Documents API', () => {
       };
       vi.mocked(makeDeleteDocumentUseCase).mockReturnValue(mockUseCase as any);
 
-      const request = new NextRequest('http://localhost/api/documents/1', {
+      const request = new NextRequest(`http://localhost/api/documents/${mockDocId}`, {
         method: 'DELETE',
       });
 
       const response = await DELETE(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -319,12 +321,12 @@ describe('Documents API', () => {
       vi.mocked(makeArchiveDocumentUseCase).mockReturnValue(mockUseCase as any);
 
       const request = new NextRequest(
-        'http://localhost/api/documents/1/archive',
+        `http://localhost/api/documents/${mockDocId}/archive`,
         { method: 'POST' },
       );
 
       const response = await POST_ARCHIVE(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -348,12 +350,12 @@ describe('Documents API', () => {
       vi.mocked(makePublishDocumentUseCase).mockReturnValue(mockUseCase as any);
 
       const request = new NextRequest(
-        'http://localhost/api/documents/1/publish',
+        `http://localhost/api/documents/${mockDocId}/publish`,
         { method: 'POST' },
       );
 
       const response = await POST_PUBLISH(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -374,12 +376,12 @@ describe('Documents API', () => {
       );
 
       const request = new NextRequest(
-        'http://localhost/api/documents/1/favorite',
+        `http://localhost/api/documents/${mockDocId}/favorite`,
         { method: 'POST' },
       );
 
       const response = await POST_FAVORITE(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 
@@ -393,8 +395,8 @@ describe('Documents API', () => {
       vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser });
 
       const mockVersions = [
-        { id: 1, documentoId: 1, versao: 2, conteudo: 'v2', usuarioId: 1, createdAt: new Date() },
-        { id: 2, documentoId: 1, versao: 1, conteudo: 'v1', usuarioId: 1, createdAt: new Date() },
+        { id: 'v1id', documentoId: mockDocId, versao: 2, conteudo: 'v2', usuarioId: 1, createdAt: new Date() },
+        { id: 'v2id', documentoId: mockDocId, versao: 1, conteudo: 'v1', usuarioId: 1, createdAt: new Date() },
       ];
       const mockUseCase = {
         execute: vi.fn().mockResolvedValue({ versions: mockVersions }),
@@ -404,11 +406,11 @@ describe('Documents API', () => {
       );
 
       const request = new NextRequest(
-        'http://localhost/api/documents/1/versions',
+        `http://localhost/api/documents/${mockDocId}/versions`,
       );
 
       const response = await GET_VERSIONS(request, {
-        params: Promise.resolve({ id: '1' }),
+        params: Promise.resolve({ id: mockDocId }),
       });
       const data = await response?.json();
 

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { PanelLeftCloseIcon } from '@hugeicons-pro/core-stroke-rounded';
 import { useSideBar } from '@/app/providers/sidebar-provider';
@@ -11,12 +11,8 @@ export function SidebarToggleButton() {
   if (isOpen) return null;
 
   return (
-    <Button
-      variant='ghost'
-      size='icon-sm'
-      onClick={() => open()}
-    >
+    <Button variant='ghost' size='icon-sm' onClick={() => open()}>
       <Icon icon={PanelLeftCloseIcon} />
     </Button>
-  )
+  );
 }

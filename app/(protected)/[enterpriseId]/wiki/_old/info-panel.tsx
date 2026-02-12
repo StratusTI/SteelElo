@@ -1,5 +1,8 @@
-'use client'
-import { CircleArrowRight02Icon, PanelRightIcon } from '@hugeicons-pro/core-stroke-rounded';
+'use client';
+import {
+  CircleArrowRight02Icon,
+  PanelRightIcon,
+} from '@hugeicons-pro/core-stroke-rounded';
 import type { Editor } from '@tiptap/react';
 import { useMemo, useState } from 'react';
 import { Icon } from '@/app/components/HugeIcons';
@@ -19,8 +22,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import type { DocumentVersion } from '@/src/@types/document';
 import type { DocumentWithCreator } from '@/src/hooks/use-documents';
@@ -56,28 +59,45 @@ function computeStats(content: string) {
   return { words, chars, paragraphs, readingTime: `${minutes}m` };
 }
 
-export function ButtonPanelOpen({ open, onOpenChange }: Pick<InfoPanelProps, 'open' | 'onOpenChange'>) {
+export function ButtonPanelOpen({
+  open,
+  onOpenChange,
+}: Pick<InfoPanelProps, 'open' | 'onOpenChange'>) {
   return (
     <div className='flex gap-2 h-full p-8'>
       <Button
         variant='ghost'
         size='icon-sm'
-        className={cn('transition-opacity', open && 'opacity-0 pointer-events-none')}
+        className={cn(
+          'transition-opacity',
+          open && 'opacity-0 pointer-events-none',
+        )}
         onClick={() => onOpenChange(!open)}
       >
         <Icon icon={PanelRightIcon} size={18} />
       </Button>
     </div>
-  )
+  );
 }
 
-export function InfoPanel({ open, onOpenChange, document, versions, editorRef }: InfoPanelProps) {
+export function InfoPanel({
+  open,
+  onOpenChange,
+  document,
+  versions,
+  editorRef,
+}: InfoPanelProps) {
   const content = document?.conteudo ?? '';
   const headings = useMemo(() => extractHeadings(content), [content]);
   const stats = useMemo(() => computeStats(content), [content]);
-  const [previewVersion, setPreviewVersion] = useState<DocumentVersion | null>(null);
+  const [previewVersion, setPreviewVersion] = useState<DocumentVersion | null>(
+    null,
+  );
 
-  const handleHeadingClick = (heading: { level: number; text: string }, index: number) => {
+  const handleHeadingClick = (
+    heading: { level: number; text: string },
+    index: number,
+  ) => {
     if (!editorRef?.current) return;
 
     const editorElement = editorRef.current.view.dom;
@@ -97,7 +117,10 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
 
     // Fallback: scroll to nth heading of that level
     if (headingElements[index]) {
-      headingElements[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      headingElements[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
   };
 
@@ -106,7 +129,7 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
     const counts: Record<string, number> = {};
     return headings.map((h) => {
       const key = `${h.level}-${h.text}`;
-      counts[key] = (counts[key] || 0);
+      counts[key] = counts[key] || 0;
       const idx = counts[key];
       counts[key]++;
       return idx;
@@ -118,7 +141,7 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
       <div
         className={cn(
           'transition-all duration-300 flex flex-col gap-3 h-full border-l border-border ease-out py-10',
-          open ? 'w-73.5' : 'w-0 overflow-hidden border-l-0'
+          open ? 'w-73.5' : 'w-0 overflow-hidden border-l-0',
         )}
       >
         <Button
@@ -129,13 +152,16 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
         >
           <Icon icon={CircleArrowRight02Icon} size={20} />
         </Button>
-        <Tabs defaultValue="summary" className='p-0 m-0 px-3.5'>
+        <Tabs defaultValue='summary' className='p-0 m-0 px-3.5'>
           <TabsList>
-            <TabsTrigger value="summary">Sumário</TabsTrigger>
-            <TabsTrigger value="info">Informações</TabsTrigger>
-            <TabsTrigger value="files">Arquivos</TabsTrigger>
+            <TabsTrigger value='summary'>Sumário</TabsTrigger>
+            <TabsTrigger value='info'>Informações</TabsTrigger>
+            <TabsTrigger value='files'>Arquivos</TabsTrigger>
           </TabsList>
-          <TabsContent value="summary" className='flex-1 py-2 overflow-hidden h-full'>
+          <TabsContent
+            value='summary'
+            className='flex-1 py-2 overflow-hidden h-full'
+          >
             <div className='flex flex-col h-full items-start gap-y-1 mt-0'>
               {headings.length === 0 ? (
                 <Smaller className='text-muted-foreground px-2'>
@@ -149,7 +175,9 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
                     size='xs'
                     className='hover:bg-transparent hover:underline'
                     style={{ paddingLeft: `${heading.level * 8}px` }}
-                    onClick={() => handleHeadingClick(heading, headingIndices[index])}
+                    onClick={() =>
+                      handleHeadingClick(heading, headingIndices[index])
+                    }
                   >
                     <Smaller className='text-muted-foreground'>
                       {heading.text}
@@ -159,25 +187,34 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
               )}
             </div>
           </TabsContent>
-          <TabsContent value="info" className='flex-1 py-2 flex flex-col gap-5 overflow-hidden h-full'>
+          <TabsContent
+            value='info'
+            className='flex-1 py-2 flex flex-col gap-5 overflow-hidden h-full'
+          >
             {/* Detalhes do arquivo */}
             <div className='grid grid-cols-2 gap-2'>
               <Card size='sm' className='p-0 bg-muted m-0 max-w-30'>
                 <CardHeader>
                   <CardTitle>{stats.words}</CardTitle>
-                  <CardDescription className='text-xs'>Palavras</CardDescription>
+                  <CardDescription className='text-xs'>
+                    Palavras
+                  </CardDescription>
                 </CardHeader>
               </Card>
               <Card size='sm' className='p-0 bg-muted m-0 max-w-30'>
                 <CardHeader>
                   <CardTitle>{stats.chars}</CardTitle>
-                  <CardDescription className='text-xs'>Caracteres</CardDescription>
+                  <CardDescription className='text-xs'>
+                    Caracteres
+                  </CardDescription>
                 </CardHeader>
               </Card>
               <Card size='sm' className='p-0 bg-muted m-0 max-w-30'>
                 <CardHeader>
                   <CardTitle>{stats.paragraphs}</CardTitle>
-                  <CardDescription className='text-xs'>Parágrafos</CardDescription>
+                  <CardDescription className='text-xs'>
+                    Parágrafos
+                  </CardDescription>
                 </CardHeader>
               </Card>
               <Card size='sm' className='p-0 bg-muted m-0 max-w-30'>
@@ -191,12 +228,11 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
             {/*Edit by & Create by*/}
             <div className='flex flex-col gap-2'>
               <div className='flex flex-col'>
-                <Smaller className='text-muted-foreground'>
-                  Editado por
-                </Smaller>
+                <Smaller className='text-muted-foreground'>Editado por</Smaller>
                 <div className='flex items-center justify-between'>
                   <Small>
-                    {document?.creator?.username || `Usuário #${document?.createdBy}`}
+                    {document?.creator?.username ||
+                      `Usuário #${document?.createdBy}`}
                   </Small>
                   <Small className='text-muted-foreground'>
                     {document?.updatedAt
@@ -207,12 +243,11 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
               </div>
 
               <div className='flex flex-col'>
-                <Smaller className='text-muted-foreground'>
-                  Criado por
-                </Smaller>
+                <Smaller className='text-muted-foreground'>Criado por</Smaller>
                 <div className='flex items-center justify-between'>
                   <Small>
-                    {document?.creator?.username || `Usuário #${document?.createdBy}`}
+                    {document?.creator?.username ||
+                      `Usuário #${document?.createdBy}`}
                   </Small>
                   <Small className='text-muted-foreground'>
                     {document?.createdAt
@@ -229,7 +264,11 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
                 Histórico de versões
               </Smaller>
               <div className='flex flex-col gap-3'>
-                <Button variant='ghost' size='sm' className='justify-start underline w-min'>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='justify-start underline w-min'
+                >
                   Versão atual
                 </Button>
                 {versions?.map((version) => (
@@ -252,7 +291,10 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="files" className='flex-1 py-2 overflow-hidden h-full'>
+          <TabsContent
+            value='files'
+            className='flex-1 py-2 overflow-hidden h-full'
+          >
             <Smaller className='text-muted-foreground'>
               Nenhum arquivo anexado
             </Smaller>
@@ -261,17 +303,22 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
       </div>
 
       {/* Version preview modal */}
-      <AlertDialog open={!!previewVersion} onOpenChange={(open) => !open && setPreviewVersion(null)}>
+      <AlertDialog
+        open={!!previewVersion}
+        onOpenChange={(open) => !open && setPreviewVersion(null)}
+      >
         <AlertDialogContent className='bg-background p-0 gap-0 max-w-3xl max-h-[80vh] overflow-hidden'>
           <AlertDialogHeader className='p-6 pb-0'>
             <AlertDialogTitle>
-              Versão de {previewVersion && new Date(previewVersion.createdAt).toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+              Versão de{' '}
+              {previewVersion &&
+                new Date(previewVersion.createdAt).toLocaleString('pt-BR', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
             </AlertDialogTitle>
           </AlertDialogHeader>
           <div className='p-6 overflow-y-auto max-h-[60vh]'>
@@ -290,5 +337,5 @@ export function InfoPanel({ open, onOpenChange, document, versions, editorRef }:
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
 }

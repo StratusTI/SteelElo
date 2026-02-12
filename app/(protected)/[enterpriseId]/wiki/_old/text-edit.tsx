@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   AttachmentIcon,
@@ -23,7 +23,7 @@ import {
   TextItalicIcon,
   TextStrikethroughIcon,
   TextUnderlineIcon,
-  UnavailableIcon
+  UnavailableIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import type { Editor } from '@tiptap/react';
 import { useState } from 'react';
@@ -39,17 +39,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Kbd } from '@/components/ui/kbd';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 interface TextEditProps {
@@ -65,7 +69,7 @@ export function TextEdit({ editor }: TextEditProps) {
   return (
     <div className='flex items-center gap-2 h-8'>
       <TitleDropdown editor={editor} />
-      <div className='h-full border border-border'/>
+      <div className='h-full border border-border' />
       <ColorPicker editor={editor} />
       <div className='h-full border border-border' />
       {/* Text customization */}
@@ -74,7 +78,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('bold') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleBold().run()}
@@ -92,7 +96,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('italic') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleItalic().run()}
@@ -110,7 +114,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('underline') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleUnderline().run()}
@@ -128,7 +132,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('strike') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleStrike().run()}
@@ -150,10 +154,14 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
-                className={cn(editor?.isActive({ textAlign: 'left' }) && 'bg-accent')}
-                onClick={() => editor?.chain().focus().setTextAlign('left').run()}
+                className={cn(
+                  editor?.isActive({ textAlign: 'left' }) && 'bg-accent',
+                )}
+                onClick={() =>
+                  editor?.chain().focus().setTextAlign('left').run()
+                }
               >
                 <Icon icon={TextAlignLeftIcon} strokeWidth={2} />
               </Button>
@@ -168,10 +176,14 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
-                className={cn(editor?.isActive({ textAlign: 'center' }) && 'bg-accent')}
-                onClick={() => editor?.chain().focus().setTextAlign('center').run()}
+                className={cn(
+                  editor?.isActive({ textAlign: 'center' }) && 'bg-accent',
+                )}
+                onClick={() =>
+                  editor?.chain().focus().setTextAlign('center').run()
+                }
               >
                 <Icon icon={TextAlignCenterIcon} strokeWidth={2} />
               </Button>
@@ -186,10 +198,14 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
-                className={cn(editor?.isActive({ textAlign: 'right' }) && 'bg-accent')}
-                onClick={() => editor?.chain().focus().setTextAlign('right').run()}
+                className={cn(
+                  editor?.isActive({ textAlign: 'right' }) && 'bg-accent',
+                )}
+                onClick={() =>
+                  editor?.chain().focus().setTextAlign('right').run()
+                }
               >
                 <Icon icon={TextAlignRightIcon} strokeWidth={2} />
               </Button>
@@ -208,10 +224,12 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('orderedList') && 'bg-accent')}
-                onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+                onClick={() =>
+                  editor?.chain().focus().toggleOrderedList().run()
+                }
               >
                 <Icon icon={LeftToRightListNumberIcon} strokeWidth={2} />
               </Button>
@@ -226,7 +244,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('bulletList') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleBulletList().run()}
@@ -244,7 +262,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('taskList') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleTaskList().run()}
@@ -266,7 +284,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('blockquote') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleBlockquote().run()}
@@ -283,7 +301,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 className={cn(editor?.isActive('codeBlock') && 'bg-accent')}
                 onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
@@ -304,7 +322,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 onClick={() =>
                   editor
@@ -327,7 +345,7 @@ export function TextEdit({ editor }: TextEditProps) {
           <TooltipTrigger
             render={
               <Button
-                variant="ghost"
+                variant='ghost'
                 size='icon-sm'
                 onClick={() => toast.info('Funcionalidade em breve')}
               >
@@ -341,12 +359,12 @@ export function TextEdit({ editor }: TextEditProps) {
         </Tooltip>
       </div>
     </div>
-  )
+  );
 }
 
 function ColorPicker({ editor }: { editor?: Editor | null }) {
-  const [selectedTextColor, setSelectedTextColor] = useState('none')
-  const [selectedBgColor, setSelectedBgColor] = useState('none')
+  const [selectedTextColor, setSelectedTextColor] = useState('none');
+  const [selectedBgColor, setSelectedBgColor] = useState('none');
 
   const TEXT_COLOR = [
     { color: '#5c5e63', value: 'gray', label: 'Gray' },
@@ -357,8 +375,8 @@ function ColorPicker({ editor }: { editor?: Editor | null }) {
     { color: '#17bee9', value: 'light-blue', label: 'Light Blue' },
     { color: '#266df0', value: 'dark-blue', label: 'Dark Blue' },
     { color: '#9162f9', value: 'purple', label: 'Purple' },
-    { color: '', value: 'none', label: 'None' }
-  ]
+    { color: '', value: 'none', label: 'None' },
+  ];
 
   const BACKGROUND_COLOR = [
     { color: '#404144', value: 'gray', label: 'Gray' },
@@ -369,8 +387,8 @@ function ColorPicker({ editor }: { editor?: Editor | null }) {
     { color: '#1f495c', value: 'light-blue', label: 'Light Blue' },
     { color: '#223558', value: 'dark-blue', label: 'Dark Blue' },
     { color: '#3d325a', value: 'purple', label: 'Purple' },
-    { color: '', value: 'none', label: 'None' }
-  ]
+    { color: '', value: 'none', label: 'None' },
+  ];
 
   const handleTextColor = (color: string) => {
     setSelectedTextColor(color);
@@ -394,29 +412,38 @@ function ColorPicker({ editor }: { editor?: Editor | null }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="sm">
+          <Button variant='ghost' size='sm'>
             <Smaller>Cor</Smaller>
             <span
               className='size-6 rounded-sm border border-border flex items-center justify-center'
-              style={{ backgroundColor: selectedBgColor, color: selectedTextColor }}
+              style={{
+                backgroundColor: selectedBgColor,
+                color: selectedTextColor,
+              }}
             >
               <Icon icon={TextFontIcon} size={16} />
             </span>
           </Button>
         }
       />
-      <DropdownMenuContent className='w-auto p-2 space-y-2'align="start">
-        <DropdownMenuGroup className="flex flex-col space-y-1.5">
+      <DropdownMenuContent className='w-auto p-2 space-y-2' align='start'>
+        <DropdownMenuGroup className='flex flex-col space-y-1.5'>
           <Smaller>Cor do texto</Smaller>
           <div className='flex items-center gap-2'>
             {TEXT_COLOR.map((item) => (
               <DropdownMenuItem
                 key={item.value}
                 onClick={() => handleTextColor(item.color)}
-                className="p-0 m-0 size-6 rounded border border-border hover:opacity-80 flex items-center justify-center"
+                className='p-0 m-0 size-6 rounded border border-border hover:opacity-80 flex items-center justify-center'
                 style={{ backgroundColor: item.color || 'transparent' }}
               >
-                {item.color === '' && <Icon icon={UnavailableIcon} size={16} className='opacity-75' />}
+                {item.color === '' && (
+                  <Icon
+                    icon={UnavailableIcon}
+                    size={16}
+                    className='opacity-75'
+                  />
+                )}
               </DropdownMenuItem>
             ))}
           </div>
@@ -428,17 +455,23 @@ function ColorPicker({ editor }: { editor?: Editor | null }) {
               <DropdownMenuItem
                 key={item.value}
                 onClick={() => handleBgColor(item.color)}
-                className="p-0 m-0 size-6 rounded border border-border hover:opacity-80 flex items-center justify-center"
+                className='p-0 m-0 size-6 rounded border border-border hover:opacity-80 flex items-center justify-center'
                 style={{ backgroundColor: item.color || 'transparent' }}
               >
-                {item.color === '' && <Icon icon={UnavailableIcon} size={16} className='opacity-75' />}
+                {item.color === '' && (
+                  <Icon
+                    icon={UnavailableIcon}
+                    size={16}
+                    className='opacity-75'
+                  />
+                )}
               </DropdownMenuItem>
             ))}
           </div>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 function TitleDropdown({ editor }: { editor?: Editor | null }) {
@@ -455,7 +488,10 @@ function TitleDropdown({ editor }: { editor?: Editor | null }) {
   const getCurrentFormat = () => {
     if (!editor) return TITLE_FORMAT[0];
     for (const format of TITLE_FORMAT) {
-      if ('level' in format && editor.isActive('heading', { level: format.level })) {
+      if (
+        'level' in format &&
+        editor.isActive('heading', { level: format.level })
+      ) {
         return format;
       }
     }
@@ -477,13 +513,13 @@ function TitleDropdown({ editor }: { editor?: Editor | null }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" size="sm">
+          <Button variant='outline' size='sm'>
             <Icon icon={selectedFormat.icon} size={16} />
             <Smaller>{selectedFormat.label}</Smaller>
           </Button>
         }
       />
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align='start'>
         <DropdownMenuGroup>
           {TITLE_FORMAT.map((item) => (
             <DropdownMenuItem
@@ -491,14 +527,14 @@ function TitleDropdown({ editor }: { editor?: Editor | null }) {
               onClick={() => handleSelect(item)}
               className={selectedFormat.value === item.value ? 'bg-accent' : ''}
             >
-              <Icon icon={item.icon} size={16} className="mr-2" />
+              <Icon icon={item.icon} size={16} className='mr-2' />
               {item.label}
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 function ImageInsertDialog({ editor }: { editor?: Editor | null }) {
@@ -519,7 +555,7 @@ function ImageInsertDialog({ editor }: { editor?: Editor | null }) {
         <TooltipTrigger
           render={
             <Button
-              variant="ghost"
+              variant='ghost'
               size='icon-sm'
               onClick={() => setOpen(true)}
             >
@@ -550,10 +586,18 @@ function ImageInsertDialog({ editor }: { editor?: Editor | null }) {
             />
           </div>
           <AlertDialogFooter className='bg-muted/50 p-3'>
-            <AlertDialogCancel variant='outline' size='sm' onClick={() => setImageUrl('')}>
+            <AlertDialogCancel
+              variant='outline'
+              size='sm'
+              onClick={() => setImageUrl('')}
+            >
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction size='sm' onClick={handleInsert} disabled={!imageUrl.trim()}>
+            <AlertDialogAction
+              size='sm'
+              onClick={handleInsert}
+              disabled={!imageUrl.trim()}
+            >
               Inserir
             </AlertDialogAction>
           </AlertDialogFooter>

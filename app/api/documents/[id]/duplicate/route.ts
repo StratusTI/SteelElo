@@ -27,7 +27,11 @@ export async function POST(
       documentId,
     });
 
-    return successResponse({ document }, 201, 'Document duplicated successfully');
+    return successResponse(
+      { document },
+      201,
+      'Document duplicated successfully',
+    );
   } catch (err) {
     if (err instanceof DocumentNotFoundError) {
       return standardError('RESOURCE_NOT_FOUND', err.message);
@@ -37,7 +41,13 @@ export async function POST(
       return standardError('FORBIDDEN', err.message);
     }
 
-    console.error('[POST /api/documents/[id]/duplicate] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to duplicate document');
+    console.error(
+      '[POST /api/documents/[id]/duplicate] Unexpected error:',
+      err,
+    );
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to duplicate document',
+    );
   }
 }

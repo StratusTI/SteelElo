@@ -27,6 +27,9 @@ export async function GET(req: NextRequest) {
     return successResponse({ tree }, 200);
   } catch (err) {
     console.error('[GET /api/documents/tree] Unexpected error:', err);
-    return standardError('INTERNAL_SERVER_ERROR', 'Failed to fetch document tree');
+    return standardError(
+      'INTERNAL_SERVER_ERROR',
+      'Failed to fetch document tree',
+    );
   }
 }

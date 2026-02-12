@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   Archive03Icon,
@@ -10,7 +10,7 @@ import {
   MoreVerticalIcon,
   StarIcon,
   Task01Icon,
-  TransactionHistoryIcon
+  TransactionHistoryIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -38,15 +38,15 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from '@/components/ui/command';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Field, FieldLabel } from "@/components/ui/field"
+} from '@/components/ui/dropdown-menu';
+import { Field, FieldLabel } from '@/components/ui/field';
 import {
   Select,
   SelectContent,
@@ -54,9 +54,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useMatchesPath } from '@/lib/matchesPath';
 import { cn } from '@/lib/utils';
 import type { DocumentStatus } from '@/src/@types/document';
@@ -166,30 +170,34 @@ export function DocActions({
 
   return (
     <div className='flex gap-1'>
-      <PublishDocument documentId={documentId} status={status} publicShareToken={publicShareToken} />
+      <PublishDocument
+        documentId={documentId}
+        status={status}
+        publicShareToken={publicShareToken}
+      />
       <MoveDocumentForOtherProject documentId={documentId} />
       <Tooltip>
         <TooltipTrigger
           render={
-            <Button variant="ghost" size="icon-sm" onClick={handleCopyLink}>
+            <Button variant='ghost' size='icon-sm' onClick={handleCopyLink}>
               <Icon icon={Link02Icon} size={20} />
             </Button>
           }
         />
-        <TooltipContent>
-          Copiar link
-        </TooltipContent>
+        <TooltipContent>Copiar link</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger
           render={
-            <Button variant="ghost" size="icon-sm" onClick={handleToggleFavorite}>
+            <Button
+              variant='ghost'
+              size='icon-sm'
+              onClick={handleToggleFavorite}
+            >
               <Icon
                 icon={StarIcon}
                 size={20}
-                className={cn(
-                  isFavorite && 'text-yellow-500 fill-yellow-500'
-                )}
+                className={cn(isFavorite && 'text-yellow-500 fill-yellow-500')}
               />
             </Button>
           }
@@ -208,10 +216,18 @@ export function DocActions({
         />
         <DropdownMenuContent className='w-50 p-2.5' align='end'>
           <DropdownMenuGroup className='flex flex-col gap-1.5'>
-            <Field orientation="horizontal" className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-sm px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0">
-              <FieldLabel htmlFor="switch-size-sm" className='text-xs leading-none font-medium text-primary' >Largura total</FieldLabel>
+            <Field
+              orientation='horizontal'
+              className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-sm px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+            >
+              <FieldLabel
+                htmlFor='switch-size-sm'
+                className='text-xs leading-none font-medium text-primary'
+              >
+                Largura total
+              </FieldLabel>
               <Switch
-                id="switch-size-sm"
+                id='switch-size-sm'
                 size='sm'
                 checked={isFullWidth}
                 onCheckedChange={handleToggleFullWidth}
@@ -231,7 +247,9 @@ export function DocActions({
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleArchive}>
               <Icon icon={Archive03Icon} size={16} />
-              <Smaller>{status === 'archived' ? 'Desarquivar' : 'Arquivar'}</Smaller>
+              <Smaller>
+                {status === 'archived' ? 'Desarquivar' : 'Arquivar'}
+              </Smaller>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <ExportDocument content={content} title={title} />
@@ -240,7 +258,7 @@ export function DocActions({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
 
 function PublishDocument({
@@ -285,14 +303,12 @@ function PublishDocument({
       <Tooltip>
         <TooltipTrigger
           render={
-            <Button variant="outline" size="sm" disabled>
+            <Button variant='outline' size='sm' disabled>
               Publicar
             </Button>
           }
         />
-        <TooltipContent>
-          Desarquive primeiro
-        </TooltipContent>
+        <TooltipContent>Desarquive primeiro</TooltipContent>
       </Tooltip>
     );
   }
@@ -302,7 +318,7 @@ function PublishDocument({
       <AlertDialog>
         <AlertDialogTrigger
           render={
-            <Button variant="outline" size="sm">
+            <Button variant='outline' size='sm'>
               Publicado
             </Button>
           }
@@ -311,7 +327,9 @@ function PublishDocument({
           <AlertDialogHeader className='bg-muted/20 p-6 flex gap-4'>
             <div>
               <AlertDialogTitle>Documento publicado</AlertDialogTitle>
-              <AlertDialogDescription>Este documento está publicado e acessível por link público.</AlertDialogDescription>
+              <AlertDialogDescription>
+                Este documento está publicado e acessível por link público.
+              </AlertDialogDescription>
             </div>
           </AlertDialogHeader>
           {publicShareToken && (
@@ -319,7 +337,11 @@ function PublishDocument({
               <code className='flex-1 text-xs bg-muted rounded px-3 py-2 truncate'>
                 {`${typeof window !== 'undefined' ? window.location.origin : ''}/public/${publicShareToken}`}
               </code>
-              <Button variant='outline' size='sm' onClick={handleCopyPublicLink}>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={handleCopyPublicLink}
+              >
                 <Icon icon={Link02Icon} size={14} />
                 Copiar
               </Button>
@@ -328,9 +350,7 @@ function PublishDocument({
           <AlertDialogFooter className='bg-muted/50 p-3 justify-between sm:justify-between'>
             <div className='flex gap-1 items-center'>
               <Icon icon={InternetIcon} size={14} />
-              <Smaller>
-                Qualquer pessoa com o link pode acessar.
-              </Smaller>
+              <Smaller>Qualquer pessoa com o link pode acessar.</Smaller>
             </div>
             <div className='flex gap-2 items-center'>
               <AlertDialogCancel variant='outline' size='sm'>
@@ -355,7 +375,7 @@ function PublishDocument({
     <AlertDialog>
       <AlertDialogTrigger
         render={
-          <Button variant="outline" size="sm">
+          <Button variant='outline' size='sm'>
             Publicar
           </Button>
         }
@@ -364,28 +384,32 @@ function PublishDocument({
         <AlertDialogHeader className='bg-muted/20 p-6 flex gap-4'>
           <div>
             <AlertDialogTitle>Publicar documento</AlertDialogTitle>
-            <AlertDialogDescription>Gerar URL pública para compartilhar está página.</AlertDialogDescription>
+            <AlertDialogDescription>
+              Gerar URL pública para compartilhar está página.
+            </AlertDialogDescription>
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter className='bg-muted/50 p-3 justify-between sm:justify-between'>
           <div className='flex gap-1 items-center'>
             <Icon icon={InternetIcon} size={14} />
-            <Smaller>
-              Qualquer pessoa com o link pode acessar.
-            </Smaller>
-           </div>
+            <Smaller>Qualquer pessoa com o link pode acessar.</Smaller>
+          </div>
           <div className='flex gap-2 items-center'>
             <AlertDialogCancel variant='outline' size='sm'>
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction size='sm' onClick={handlePublish} disabled={publishDocument.isPending}>
+            <AlertDialogAction
+              size='sm'
+              onClick={handlePublish}
+              disabled={publishDocument.isPending}
+            >
               {publishDocument.isPending ? 'Publicando...' : 'Publicar'}
             </AlertDialogAction>
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
 
 function MoveDocumentForOtherProject({ documentId }: { documentId: number }) {
@@ -418,26 +442,26 @@ function MoveDocumentForOtherProject({ documentId }: { documentId: number }) {
         <TooltipTrigger
           render={
             <Button
-              variant="ghost"
-              size="icon-sm"
+              variant='ghost'
+              size='icon-sm'
               onClick={() => setOpen(true)}
             >
               <Icon icon={FolderImportIcon} size={20} />
             </Button>
           }
         />
-        <TooltipContent>
-          Mover página
-        </TooltipContent>
+        <TooltipContent>Mover página</TooltipContent>
       </Tooltip>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command>
-          <CommandInput placeholder="Procure por projetos..." />
+          <CommandInput placeholder='Procure por projetos...' />
           <CommandList>
             <CommandEmpty>
-              {isLoading ? 'Carregando projetos...' : 'Nenhum projeto encontrado.'}
+              {isLoading
+                ? 'Carregando projetos...'
+                : 'Nenhum projeto encontrado.'}
             </CommandEmpty>
-            <CommandGroup heading="PROJETOS">
+            <CommandGroup heading='PROJETOS'>
               {projects.map((project) => (
                 <CommandItem
                   key={project.id}
@@ -453,37 +477,49 @@ function MoveDocumentForOtherProject({ documentId }: { documentId: number }) {
         </Command>
       </CommandDialog>
     </>
-  )
+  );
 }
 
-function ExportDocument({ content, title }: { content?: string; title?: string }) {
+function ExportDocument({
+  content,
+  title,
+}: {
+  content?: string;
+  title?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [format, setFormat] = useState('pdf');
   const [contentFilter, setContentFilter] = useState('all');
   const [pageFormat, setPageFormat] = useState('a4');
 
-  const handleFormatChange = (value: string | null) => { if (value) setFormat(value); };
-  const handleContentFilterChange = (value: string | null) => { if (value) setContentFilter(value); };
-  const handlePageFormatChange = (value: string | null) => { if (value) setPageFormat(value); };
+  const handleFormatChange = (value: string | null) => {
+    if (value) setFormat(value);
+  };
+  const handleContentFilterChange = (value: string | null) => {
+    if (value) setContentFilter(value);
+  };
+  const handlePageFormatChange = (value: string | null) => {
+    if (value) setPageFormat(value);
+  };
   const styleRef = useRef<HTMLStyleElement | null>(null);
 
   const exportFormat = [
-    { label: "PDF", value: "pdf" },
-    { label: "Markdown", value: "md" },
+    { label: 'PDF', value: 'pdf' },
+    { label: 'Markdown', value: 'md' },
   ];
 
   const includeContent = [
-    { label: "Tudo", value: "all" },
-    { label: "Sem imagens", value: "no-images" },
+    { label: 'Tudo', value: 'all' },
+    { label: 'Sem imagens', value: 'no-images' },
   ];
 
   const formatPage = [
-    { label: "A4", value: "a4" },
-    { label: "A3", value: "a3" },
-    { label: "A2", value: "a2" },
-    { label: "Carta", value: "letter" },
-    { label: "Jurídico", value: "legal" },
-    { label: "Tablóide", value: "tabloid" },
+    { label: 'A4', value: 'a4' },
+    { label: 'A3', value: 'a3' },
+    { label: 'A2', value: 'a2' },
+    { label: 'Carta', value: 'letter' },
+    { label: 'Jurídico', value: 'legal' },
+    { label: 'Tablóide', value: 'tabloid' },
   ];
 
   const pageSizeMap: Record<string, string> = {
@@ -503,7 +539,9 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
     }
 
     if (format === 'md') {
-      const blob = new Blob([exportContent], { type: 'text/markdown;charset=utf-8' });
+      const blob = new Blob([exportContent], {
+        type: 'text/markdown;charset=utf-8',
+      });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -538,9 +576,9 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
     <>
       <div
         onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          setOpen(true)
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(true);
         }}
         className='flex items-center gap-2'
       >
@@ -556,13 +594,16 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
           <div className='p-6'>
             <form className='space-y-4'>
               <Field className='w-full flex flex-row items-center justify-between'>
-                <FieldLabel htmlFor="export-format" className='flex-1'>
+                <FieldLabel htmlFor='export-format' className='flex-1'>
                   <Small className='text-muted-foreground'>
                     Formato de exportação
                   </Small>
                 </FieldLabel>
                 <Select value={format} onValueChange={handleFormatChange}>
-                  <SelectTrigger id="export-format" className='w-auto! bg-transparent! border-none! min-w-8'>
+                  <SelectTrigger
+                    id='export-format'
+                    className='w-auto! bg-transparent! border-none! min-w-8'
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align='end' className='w-auto!'>
@@ -577,13 +618,19 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
                 </Select>
               </Field>
               <Field className='w-full flex flex-row items-center justify-between'>
-                <FieldLabel htmlFor="include-content" className='flex-1'>
+                <FieldLabel htmlFor='include-content' className='flex-1'>
                   <Small className='text-muted-foreground'>
                     Incluir conteúdo
                   </Small>
                 </FieldLabel>
-                <Select value={contentFilter} onValueChange={handleContentFilterChange}>
-                  <SelectTrigger id="include-content" className='w-auto! bg-transparent! border-none! min-w-8'>
+                <Select
+                  value={contentFilter}
+                  onValueChange={handleContentFilterChange}
+                >
+                  <SelectTrigger
+                    id='include-content'
+                    className='w-auto! bg-transparent! border-none! min-w-8'
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align='end' className='w-auto!'>
@@ -599,13 +646,19 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
               </Field>
               {format === 'pdf' && (
                 <Field className='w-full flex flex-row items-center justify-between'>
-                  <FieldLabel htmlFor="page-format" className='flex-1'>
+                  <FieldLabel htmlFor='page-format' className='flex-1'>
                     <Small className='text-muted-foreground'>
                       Formato da página
                     </Small>
                   </FieldLabel>
-                  <Select value={pageFormat} onValueChange={handlePageFormatChange}>
-                    <SelectTrigger id="page-format" className='w-auto! bg-transparent! border-none! min-w-8'>
+                  <Select
+                    value={pageFormat}
+                    onValueChange={handlePageFormatChange}
+                  >
+                    <SelectTrigger
+                      id='page-format'
+                      className='w-auto! bg-transparent! border-none! min-w-8'
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent align='end' className='w-auto!'>
@@ -633,5 +686,5 @@ function ExportDocument({ content, title }: { content?: string; title?: string }
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
 }

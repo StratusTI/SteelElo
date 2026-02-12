@@ -27,7 +27,9 @@ export async function POST(
     return successResponse(
       { isFavorite },
       200,
-      isFavorite ? 'Document added to favorites' : 'Document removed from favorites',
+      isFavorite
+        ? 'Document added to favorites'
+        : 'Document removed from favorites',
     );
   } catch (err) {
     if (err instanceof DocumentNotFoundError) {

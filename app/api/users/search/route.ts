@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
+import type { User } from '@/src/@types/user';
 import { verifyAuth } from '@/src/auth';
 import { makeSearchUsersUseCase } from '@/src/use-cases/factories/make-search-users';
 import { standardError, successResponse } from '@/src/utils/http-response';
 import { searchUsersSchema } from '@/src/utils/zod-schemas/search-users-schema';
-import type { User } from '@/src/@types/user';
 
 export async function GET(req: NextRequest) {
   const { user: authUser, error: authError } = await verifyAuth();

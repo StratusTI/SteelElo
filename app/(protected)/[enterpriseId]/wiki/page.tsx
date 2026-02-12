@@ -1,6 +1,4 @@
-import {
-  Home03Icon,
-} from '@hugeicons-pro/core-stroke-rounded';
+import { Home03Icon } from '@hugeicons-pro/core-stroke-rounded';
 import Clock from '@/app/components/shared/clock';
 import { BreadCrumb, NavBar } from '@/app/components/shared/navigation/navBar';
 import { H4 } from '@/app/components/typography/heading/h4';

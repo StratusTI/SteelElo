@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import type { User } from '@/src/@types/user';
 import type { AuthUser } from '@/src/auth';
+import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import { InsufficientPermissionsError } from '@/src/use-cases/errors/insufficient-permissions-error';
 import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';
 import { makeRemoveProjectMemberUseCase } from '@/src/use-cases/factories/make-remove.project-member';

@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { Add01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { Add01Icon } from '@hugeicons-pro/core-stroke-rounded';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Icon } from "@/app/components/HugeIcons";
-import { Button } from "@/components/ui/button";
+import { Icon } from '@/app/components/HugeIcons';
+import { Button } from '@/components/ui/button';
 import { useMatchesPath } from '@/lib/matchesPath';
 import { useCreateDocument } from '@/src/hooks/use-documents';
 
@@ -33,5 +33,5 @@ export function AddDocButton() {
       <Icon icon={Add01Icon} />
       {createDocument.isPending ? 'Criando...' : 'Criar documento'}
     </Button>
-  )
+  );
 }

@@ -1,10 +1,13 @@
-'use client'
+'use client';
 
-import { FilterMailIcon, Search01Icon } from "@hugeicons-pro/core-solid-rounded";
-import { useState } from "react";
-import { Icon } from "@/app/components/HugeIcons";
-import { Smaller } from "@/app/components/typography/text/smaller";
-import { Button } from "@/components/ui/button"
+import {
+  FilterMailIcon,
+  Search01Icon,
+} from '@hugeicons-pro/core-solid-rounded';
+import { useState } from 'react';
+import { Icon } from '@/app/components/HugeIcons';
+import { Smaller } from '@/app/components/typography/text/smaller';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -13,15 +16,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 
 interface FilterDocProps {
   onSearchChange?: (search: string) => void;
   onFavoritesToggle?: (favOnly: boolean) => void;
 }
 
-export function FilterDoc({ onSearchChange, onFavoritesToggle }: FilterDocProps) {
+export function FilterDoc({
+  onSearchChange,
+  onFavoritesToggle,
+}: FilterDocProps) {
   const [search, setSearch] = useState('');
   const [favOnly, setFavOnly] = useState(false);
 
@@ -58,15 +64,16 @@ export function FilterDoc({ onSearchChange, onFavoritesToggle }: FilterDocProps)
         </DropdownMenuGroup>
         <DropdownMenuSeparator className='bg-transparent border-transparent' />
         <DropdownMenuGroup>
-          <DropdownMenuCheckboxItem checked={favOnly} onClick={handleFavoritesToggle}>
+          <DropdownMenuCheckboxItem
+            checked={favOnly}
+            onClick={handleFavoritesToggle}
+          >
             <Smaller>Favoritos</Smaller>
           </DropdownMenuCheckboxItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuLabel>
-            Data de criação
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>Data de criação</DropdownMenuLabel>
           <DropdownMenuCheckboxItem>
             <Smaller>1 semana atrás</Smaller>
           </DropdownMenuCheckboxItem>

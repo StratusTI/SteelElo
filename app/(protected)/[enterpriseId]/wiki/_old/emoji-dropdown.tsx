@@ -14,10 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  EmojiPicker,
-  EmojiPickerContent,
-} from '@/components/ui/emoji-picker';
+import { EmojiPicker, EmojiPickerContent } from '@/components/ui/emoji-picker';
 import {
   InputGroup,
   InputGroupAddon,
@@ -31,7 +28,10 @@ interface EmojiIconPickerProps {
   onSelect?: (emoji: string) => void;
 }
 
-export function EmojiIconPicker({ currentEmoji, onSelect }: EmojiIconPickerProps) {
+export function EmojiIconPicker({
+  currentEmoji,
+  onSelect,
+}: EmojiIconPickerProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger

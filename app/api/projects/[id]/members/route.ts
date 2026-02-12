@@ -1,9 +1,9 @@
-import type { NextRequest } from 'next/server';
 import { revalidateTag, unstable_cache } from 'next/cache';
+import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import type { User } from '@/src/@types/user';
 import type { AuthUser } from '@/src/auth';
+import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import { ConflictError } from '@/src/use-cases/errors/conflict-error';
 import { InsufficientPermissionsError } from '@/src/use-cases/errors/insufficient-permissions-error';
 import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';

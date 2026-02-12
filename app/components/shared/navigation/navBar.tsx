@@ -43,9 +43,7 @@ export function BreadCrumb({ items }: BreadCrumbProps) {
                     className='flex gap-1.5 items-center'
                   >
                     <Icon icon={item.icon} size={16} />
-                    <Small>
-                      {item.name}
-                    </Small>
+                    <Small>{item.name}</Small>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </TooltipTrigger>

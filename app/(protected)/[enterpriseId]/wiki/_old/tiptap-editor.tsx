@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
@@ -25,7 +25,12 @@ interface TiptapEditorProps {
   editable?: boolean;
 }
 
-export function TiptapEditor({ content, onChange, editorRef, editable = true }: TiptapEditorProps) {
+export function TiptapEditor({
+  content,
+  onChange,
+  editorRef,
+  editable = true,
+}: TiptapEditorProps) {
   const isInitialContent = useRef(true);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,7 +83,9 @@ export function TiptapEditor({ content, onChange, editorRef, editable = true }: 
       ? ({ editor }) => {
           if (!isInitialContent.current && onChange) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const markdownStorage = (editor.storage as any).markdown as { getMarkdown: () => string };
+            const markdownStorage = (editor.storage as any).markdown as {
+              getMarkdown: () => string;
+            };
             onChange(markdownStorage.getMarkdown());
           }
         }

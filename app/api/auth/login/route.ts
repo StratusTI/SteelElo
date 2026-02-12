@@ -1,13 +1,13 @@
 import bcrypt from 'bcryptjs';
 import type { NextRequest } from 'next/server';
-import { prismaSteel } from '@/src/lib/prisma';
-import { successResponse, standardError } from '@/src/utils/http-response';
 import {
+  type AuthUser,
   generateAccessToken,
   generateRefreshToken,
   setAuthCookies,
-  type AuthUser,
 } from '@/src/auth';
+import { prismaSteel } from '@/src/lib/prisma';
+import { standardError, successResponse } from '@/src/utils/http-response';
 
 export async function POST(req: NextRequest) {
   try {

@@ -4,12 +4,17 @@ import { verifyAuth } from '@/src/auth';
 import { makeCreateDocumentUseCase } from '@/src/use-cases/factories/make-create-document';
 import { makeGetDocumentsUseCase } from '@/src/use-cases/factories/make-get-documents';
 import {
-  enrichDocumentWithCreator,
   enrichDocumentsWithCreator,
+  enrichDocumentWithCreator,
 } from '@/src/utils/enrich-document-creator';
 import { standardError, successResponse } from '@/src/utils/http-response';
 
-const documentStatusEnum = z.enum(['draft', 'published', 'private', 'archived']);
+const documentStatusEnum = z.enum([
+  'draft',
+  'published',
+  'private',
+  'archived',
+]);
 
 const createDocumentSchema = z.object({
   titulo: z.string().min(1),
@@ -46,7 +51,12 @@ export async function GET(req: NextRequest) {
       filters: {
         status: status as any,
         search,
-        parentId: parentId !== null ? (parentId === 'null' ? null : parentId) : undefined,
+        parentId:
+          parentId !== null
+            ? parentId === 'null'
+              ? null
+              : parentId
+            : undefined,
       },
     });
 
@@ -79,7 +89,11 @@ export async function POST(req: NextRequest) {
 
     const enrichedDocument = await enrichDocumentWithCreator(document);
 
-    return successResponse({ document: enrichedDocument }, 201, 'Document created successfully');
+    return successResponse(
+      { document: enrichedDocument },
+      201,
+      'Document created successfully',
+    );
   } catch (err) {
     if (err instanceof z.ZodError) {
       return standardError('VALIDATION_ERROR', 'Invalid request data', {

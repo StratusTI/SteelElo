@@ -60,11 +60,7 @@ export function SideBarProjects() {
 
   const { close } = useSideBar();
 
-  const {
-    data: projectsData,
-    isLoading,
-    error,
-  } = useProjects({
+  const { data: projectsData, isLoading } = useProjects({
     enterpriseId: Number(enterpriseId),
     limit: 20,
   });
@@ -316,11 +312,7 @@ export function SideBarProjects() {
               <Icon icon={SlidersHorizontalIcon} />
             </Button>
             {/* Deve fechar o sidebar */}
-            <Button
-              variant='ghost'
-              size='icon-sm'
-              onClick={() => close()}
-            >
+            <Button variant='ghost' size='icon-sm' onClick={() => close()}>
               <Icon icon={PanelLeftCloseIcon} />
             </Button>
           </div>

@@ -61,7 +61,10 @@ export function SideBarWiki() {
               <Button
                 variant='ghost'
                 size='sm'
-                className={cn('group min-w-full justify-between transition-none', isActive && 'bg-accent')}
+                className={cn(
+                  'group min-w-full justify-between transition-none',
+                  isActive && 'bg-accent',
+                )}
                 style={{ paddingLeft: `${(depth + 1) * 12}px` }}
               >
                 <span className='flex items-center gap-1.5 truncate'>
@@ -96,7 +99,10 @@ export function SideBarWiki() {
         key={doc.id}
         variant='ghost'
         size='sm'
-        className={cn('w-full justify-start gap-1.5 truncate', isActive && 'bg-accent')}
+        className={cn(
+          'w-full justify-start gap-1.5 truncate',
+          isActive && 'bg-accent',
+        )}
         style={{ paddingLeft: `${(depth + 1) * 12}px` }}
         onClick={() => router.push(buildPath(`/wiki/${doc.id}`))}
       >
@@ -156,9 +162,7 @@ export function SideBarWiki() {
         }
       />
       <CollapsibleContent>
-        <div>
-          {docs.map((doc) => renderDocItem(doc))}
-        </div>
+        <div>{docs.map((doc) => renderDocItem(doc))}</div>
       </CollapsibleContent>
     </Collapsible>
   );
@@ -169,10 +173,7 @@ export function SideBarWiki() {
         <div className='flex items-center justify-between gap-4'>
           <Large>Wiki</Large>
           <div>
-            <Button
-              variant='ghost'
-              size='icon-sm'
-            >
+            <Button variant='ghost' size='icon-sm'>
               <Icon icon={PanelLeftCloseIcon} />
             </Button>
           </div>
@@ -206,10 +207,33 @@ export function SideBarWiki() {
           </div>
         ) : (
           <>
-            {renderSection('workspace', 'Espaço de Trabalho', '/wiki/workspace', workspaceDocs, true, true)}
-            {renderSection('shared', 'Compartilhados', '/wiki/public', sharedDocs)}
-            {renderSection('private', 'Privados', '/wiki/private', privateDocs, true)}
-            {renderSection('archived', 'Arquivados', '/wiki/archived', archivedDocs)}
+            {renderSection(
+              'workspace',
+              'Espaço de Trabalho',
+              '/wiki/workspace',
+              workspaceDocs,
+              true,
+              true,
+            )}
+            {renderSection(
+              'shared',
+              'Compartilhados',
+              '/wiki/public',
+              sharedDocs,
+            )}
+            {renderSection(
+              'private',
+              'Privados',
+              '/wiki/private',
+              privateDocs,
+              true,
+            )}
+            {renderSection(
+              'archived',
+              'Arquivados',
+              '/wiki/archived',
+              archivedDocs,
+            )}
           </>
         )}
       </div>
