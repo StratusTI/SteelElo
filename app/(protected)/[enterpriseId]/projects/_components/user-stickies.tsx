@@ -18,7 +18,7 @@ export function UserStickies() {
   const displayStickies = stickies.slice(0, 6);
 
   return (
-    <div className='flex flex-col gap-4 w-full'>
+    <div className='flex flex-col gap-4 w-full pt-4 border-t border-border'>
       <div className='flex justify-between items-center'>
         <Small>Seus post-its</Small>
 

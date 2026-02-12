@@ -3,7 +3,7 @@ import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 import type { IconSvgObject } from '../@types/icon-svg-object';
 
 export interface Project {
-  id: number;
+  id: string;
   nome: string;
   projectId: string | null;
   descricao: string | null;
@@ -39,8 +39,8 @@ export const projectKeys = {
   lists: () => [...projectKeys.all, 'list'] as const,
   list: (filters: Omit<UseProjectsParams, 'enabled'>) => [...projectKeys.lists(), filters] as const,
   details: () => [...projectKeys.all, 'detail'] as const,
-  detail: (id: number) => [...projectKeys.details(), id] as const,
-  members: (projectId: number) => ['project-members', projectId] as const,
+  detail: (id: string) => [...projectKeys.details(), id] as const,
+  members: (projectId: string) => ['project-members', projectId] as const,
 };
 
 export function useProjects({
@@ -128,7 +128,7 @@ export function useUpdateProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ projectId, data }: { projectId: number; data: UpdateProjectData }) => {
+    mutationFn: async ({ projectId, data }: { projectId: string; data: UpdateProjectData }) => {
       const response = await fetch(`/api/projects/${projectId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -154,7 +154,7 @@ export function useDeleteProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (projectId: number) => {
+    mutationFn: async (projectId: string) => {
       const response = await fetch(`/api/projects/${projectId}`, {
         method: 'DELETE',
       });

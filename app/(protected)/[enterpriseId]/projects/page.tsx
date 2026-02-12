@@ -7,6 +7,7 @@ import { AIInitialChat } from '@/app/components/shared/ai/ai-initial-chat';
 import Clock from '@/app/components/shared/clock';
 import { UserQuickStart } from '@/app/components/shared/company/user/user-quick-start';
 import { BreadCrumb, NavBar } from '@/app/components/shared/navigation/navBar';
+import { SidebarToggleButton } from '@/app/components/shared/sidebar-toggle-button';
 import { H4 } from '@/app/components/typography/heading/h4';
 import { Button } from '@/components/ui/button';
 import type { BreadCrumbItem } from '@/lib/@types/breadcrumb';
@@ -28,7 +29,10 @@ export default async function ProjectsPage() {
   return (
     <div className='h-full w-full flex flex-col'>
       <NavBar>
-        <BreadCrumb items={breadCrumbTree} />
+        <div className='flex items-center gap-2'>
+          <SidebarToggleButton />
+          <BreadCrumb items={breadCrumbTree} />
+        </div>
         <Button variant='outline' size='sm'>
           <Icon icon={DashboardSquare03Icon} size={16} />
           Gerenciar widgets

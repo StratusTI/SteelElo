@@ -23,6 +23,7 @@ import {
   WorkIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import { useRouter } from 'next/navigation';
+import { useSideBar } from '@/app/providers/sidebar-provider';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,
@@ -56,6 +57,8 @@ type PageTreeItem =
 export function SideBarProjects() {
   const router = useRouter();
   const { buildPath, enterpriseId } = useMatchesPath();
+
+  const { close } = useSideBar();
 
   const {
     data: projectsData,
@@ -312,10 +315,11 @@ export function SideBarProjects() {
             >
               <Icon icon={SlidersHorizontalIcon} />
             </Button>
+            {/* Deve fechar o sidebar */}
             <Button
               variant='ghost'
               size='icon-sm'
-              onClick={() => console.log('notification')}
+              onClick={() => close()}
             >
               <Icon icon={PanelLeftCloseIcon} />
             </Button>

@@ -32,7 +32,7 @@ export class PrismaProjectsRepository implements ProjectRepository {
     return this.mapToProject(project);
   }
 
-  async findById(id: number): Promise<Project | null> {
+  async findById(id: string): Promise<Project | null> {
     const project = await prismaElo.projeto.findUnique({
       where: { id },
     });
@@ -149,7 +149,7 @@ export class PrismaProjectsRepository implements ProjectRepository {
     };
   }
 
-  async update(id: number, data: UpdateProjectRequest): Promise<Project> {
+  async update(id: string, data: UpdateProjectRequest): Promise<Project> {
     const project = await prismaElo.projeto.update({
       where: { id },
       data: {
@@ -169,7 +169,7 @@ export class PrismaProjectsRepository implements ProjectRepository {
     return this.mapToProject(project);
   }
 
-  async archive(id: number): Promise<void> {
+  async archive(id: string): Promise<void> {
     await prismaElo.projeto.update({
       where: { id },
       data: {
@@ -178,7 +178,7 @@ export class PrismaProjectsRepository implements ProjectRepository {
     });
   }
 
-  async isUserMember(projectId: number, userId: number): Promise<boolean> {
+  async isUserMember(projectId: string, userId: number): Promise<boolean> {
     const member = await prismaElo.projetoMembro.findFirst({
       where: {
         projetoId: projectId,

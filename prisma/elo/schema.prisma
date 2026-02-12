@@ -10,7 +10,7 @@ datasource db {
 }
 
 model Projeto {
-  id               Int                @id @default(autoincrement())
+  id               String             @id @default(cuid()) @db.VarChar(30)
   nome             String             @db.VarChar(255)
   projectId        String?            @db.VarChar(10) @unique
   descricao        String?            @db.Text
@@ -49,8 +49,8 @@ model Projeto {
 }
 
 model ProjetoMembro {
-  id           Int                @id @default(autoincrement())
-  projetoId    Int                @map("projeto_id")
+  id           String             @id @default(cuid()) @db.VarChar(30)
+  projetoId    String             @map("projeto_id") @db.VarChar(30)
   usuarioId    Int                @map("usuario_id")
   role         ProjetoMemberRole? @default(member)
   source       String?            @default("direct") @db.VarChar(50)
@@ -64,11 +64,11 @@ model ProjetoMembro {
 }
 
 model Coluna {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid()) @db.VarChar(30)
   titulo    String    @db.VarChar(100)
   ordem     Int       @default(0)
   cor       String?   @default("#cccccc") @db.VarChar(7)
-  projetoId Int       @map("projeto_id")
+  projetoId String    @map("projeto_id") @db.VarChar(30)
   createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(0)
   projeto   Projeto   @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_coluna_projeto")
   tarefas   Tarefa[]
@@ -79,7 +79,7 @@ model Coluna {
 }
 
 model Tarefa {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid()) @db.VarChar(30)
   titulo            String              @db.VarChar(255)
   descricao         String?             @db.Text
   data_inicio       DateTime?           @db.Date
@@ -91,9 +91,9 @@ model Tarefa {
   horasRealizadas   Decimal?            @map("horas_realizadas") @db.Decimal(8, 2)
   dataInicioReal    DateTime?           @map("data_inicio_real") @db.DateTime(0)
   dataConclusaoReal DateTime?           @map("data_conclusao_real") @db.DateTime(0)
-  colunaId          Int                 @map("coluna_id")
-  projetoId         Int                 @map("projeto_id")
-  userStoryId       Int?                @map("user_story_id")
+  colunaId          String              @map("coluna_id") @db.VarChar(30)
+  projetoId         String              @map("projeto_id") @db.VarChar(30)
+  userStoryId       String?             @map("user_story_id") @db.VarChar(30)
   createdBy         Int                 @map("created_by")
   createdAt         DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt         DateTime?           @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
@@ -116,8 +116,8 @@ model Tarefa {
 }
 
 model TarefaResponsavel {
-  id          Int       @id @default(autoincrement())
-  tarefaId    Int       @map("tarefa_id")
+  id          String    @id @default(cuid()) @db.VarChar(30)
+  tarefaId    String    @map("tarefa_id") @db.VarChar(30)
   usuarioId   Int       @map("usuario_id")
   atribuidoEm DateTime? @default(now()) @map("atribuido_em") @db.DateTime(0)
   tarefa      Tarefa    @relation(fields: [tarefaId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_tr_tarefa")
@@ -129,11 +129,11 @@ model TarefaResponsavel {
 }
 
 model Subtarefa {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid()) @db.VarChar(30)
   titulo    String    @db.VarChar(255)
   concluida Boolean?  @default(false)
   ordem     Int       @default(0)
-  tarefaId  Int       @map("tarefa_id")
+  tarefaId  String    @map("tarefa_id") @db.VarChar(30)
   createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(0)
   tarefa    Tarefa    @relation(fields: [tarefaId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_subtarefa_tarefa")
 
@@ -143,10 +143,10 @@ model Subtarefa {
 }
 
 model Tag {
-  id        Int         @id @default(autoincrement())
+  id        String      @id @default(cuid()) @db.VarChar(30)
   nome      String      @db.VarChar(50)
   cor       String?     @default("#3b82f6") @db.VarChar(7)
-  projetoId Int         @map("projeto_id")
+  projetoId String      @map("projeto_id") @db.VarChar(30)
   createdAt DateTime?   @default(now()) @map("created_at") @db.DateTime(0)
   projeto   Projeto     @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_tag_projeto")
   tarefas   TarefaTag[]
@@ -156,9 +156,9 @@ model Tag {
 }
 
 model TarefaTag {
-  id       Int    @id @default(autoincrement())
-  tarefaId Int    @map("tarefa_id")
-  tagId    Int    @map("tag_id")
+  id       String @id @default(cuid()) @db.VarChar(30)
+  tarefaId String @map("tarefa_id") @db.VarChar(30)
+  tagId    String @map("tag_id") @db.VarChar(30)
   tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_tt_tag")
   tarefa   Tarefa @relation(fields: [tarefaId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_tt_tarefa")
 
@@ -169,11 +169,11 @@ model TarefaTag {
 }
 
 model Comentario {
-  id        Int          @id @default(autoincrement())
+  id        String       @id @default(cuid()) @db.VarChar(30)
   texto     String       @db.Text
-  tarefaId  Int          @map("tarefa_id")
+  tarefaId  String       @map("tarefa_id") @db.VarChar(30)
   usuarioId Int          @map("usuario_id")
-  parentId  Int?         @map("parent_id")
+  parentId  String?      @map("parent_id") @db.VarChar(30)
   createdAt DateTime?    @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt DateTime?    @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
   parent    Comentario?  @relation("ComentarioReplies", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_comentario_parent")
@@ -188,12 +188,12 @@ model Comentario {
 }
 
 model Anexo {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid()) @db.VarChar(30)
   nome      String    @db.VarChar(255)
   url       String    @db.VarChar(500)
   tipo      String?   @db.VarChar(50)
   tamanho   BigInt?
-  tarefaId  Int       @map("tarefa_id")
+  tarefaId  String    @map("tarefa_id") @db.VarChar(30)
   usuarioId Int       @map("usuario_id")
   createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(0)
   tarefa    Tarefa    @relation(fields: [tarefaId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_anexo_tarefa")
@@ -204,7 +204,7 @@ model Anexo {
 }
 
 model UserStory {
-  id                 Int                 @id @default(autoincrement())
+  id                 String              @id @default(cuid()) @db.VarChar(30)
   titulo             String              @db.VarChar(255)
   persona            String?             @db.VarChar(100)
   acao               String?             @db.Text
@@ -215,9 +215,9 @@ model UserStory {
   horasRealizadas    Decimal?            @map("horas_realizadas") @db.Decimal(8, 2)
   prioridade         Int?                @default(0)
   status             UserStoryStatus?    @default(backlog)
-  projetoId          Int                 @map("projeto_id")
-  sprintId           Int?                @map("sprint_id")
-  featureId          Int?                @map("feature_id")
+  projetoId          String              @map("projeto_id") @db.VarChar(30)
+  sprintId           String?             @map("sprint_id") @db.VarChar(30)
+  featureId          String?             @map("feature_id") @db.VarChar(30)
   createdAt          DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt          DateTime?           @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
   dodChecklist       StoryDodChecklist[]
@@ -234,7 +234,7 @@ model UserStory {
 }
 
 model Sprint {
-  id                  Int              @id @default(autoincrement())
+  id                  String           @id @default(cuid()) @db.VarChar(30)
   nome                String           @db.VarChar(100)
   objetivo            String?          @db.Text
   dataInicio          DateTime         @map("data_inicio") @db.Date
@@ -243,7 +243,7 @@ model Sprint {
   capacidadeRealizada Decimal?         @map("capacidade_realizada") @db.Decimal(10, 2)
   velocidade          Decimal?         @db.Decimal(10, 2)
   status              SprintStatus?    @default(planejamento)
-  projetoId           Int              @map("projeto_id")
+  projetoId           String           @map("projeto_id") @db.VarChar(30)
   createdAt           DateTime?        @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt           DateTime?        @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
   capacidadeTime      CapacidadeTime[]
@@ -260,8 +260,8 @@ model Sprint {
 }
 
 model SprintMetrica {
-  id                   Int       @id @default(autoincrement())
-  sprintId             Int       @map("sprint_id")
+  id                   String    @id @default(cuid()) @db.VarChar(30)
+  sprintId             String    @map("sprint_id") @db.VarChar(30)
   data                 DateTime  @db.Date
   storyPointsRestantes Decimal?  @map("story_points_restantes") @db.Decimal(10, 2)
   horasRestantes       Decimal?  @map("horas_restantes") @db.Decimal(10, 2)
@@ -279,12 +279,12 @@ model SprintMetrica {
 }
 
 model DefinitionOfDone {
-  id             Int                 @id @default(autoincrement())
+  id             String              @id @default(cuid()) @db.VarChar(30)
   titulo         String              @db.VarChar(255)
   descricao      String?             @db.Text
   ordem          Int                 @default(0)
   obrigatorio    Boolean?            @default(true)
-  projetoId      Int                 @map("projeto_id")
+  projetoId      String              @map("projeto_id") @db.VarChar(30)
   nivel          DodNivel?           @default(story)
   createdAt      DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt      DateTime?           @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
@@ -297,9 +297,9 @@ model DefinitionOfDone {
 }
 
 model StoryDodChecklist {
-  id            Int              @id @default(autoincrement())
-  storyId       Int              @map("story_id")
-  dodId         Int              @map("dod_id")
+  id            String           @id @default(cuid()) @db.VarChar(30)
+  storyId       String           @map("story_id") @db.VarChar(30)
+  dodId         String           @map("dod_id") @db.VarChar(30)
   concluido     Boolean?         @default(false)
   verificadoPor Int?             @map("verificado_por")
   verificadoEm  DateTime?        @map("verificado_em") @db.DateTime(0)
@@ -314,11 +314,11 @@ model StoryDodChecklist {
 }
 
 model CapacidadeTime {
-  id                     Int               @id @default(autoincrement())
-  projetoId              Int               @map("projeto_id")
+  id                     String            @id @default(cuid()) @db.VarChar(30)
+  projetoId              String            @map("projeto_id") @db.VarChar(30)
   usuarioId              Int               @map("usuario_id")
-  sprintId               Int?              @map("sprint_id")
-  piId                   Int?              @map("pi_id")
+  sprintId               String?           @map("sprint_id") @db.VarChar(30)
+  piId                   String?           @map("pi_id") @db.VarChar(30)
   capacidadeTotalHoras   Decimal           @map("capacidade_total_horas") @db.Decimal(8, 2)
   capacidadePlanejadaSp  Decimal?          @map("capacidade_planejada_sp") @db.Decimal(8, 2)
   ausenciasHoras         Decimal?          @default(0.00) @map("ausencias_horas") @db.Decimal(8, 2)
@@ -338,26 +338,26 @@ model CapacidadeTime {
 }
 
 model Retrospectiva {
-  id            Int                  @id @default(autoincrement())
-  sprintId      Int                  @map("sprint_id")
-  dataReuniao   DateTime             @map("data_reuniao") @db.DateTime(0)
-  facilitadorId Int?                 @map("facilitador_id")
-  formato       String?              @default("start-stop-continue") @db.VarChar(100)
+  id            String              @id @default(cuid()) @db.VarChar(30)
+  sprintId      String              @map("sprint_id") @db.VarChar(30)
+  dataReuniao   DateTime            @map("data_reuniao") @db.DateTime(0)
+  facilitadorId Int?                @map("facilitador_id")
+  formato       String?             @default("start-stop-continue") @db.VarChar(100)
   status        RetrospectivaStatus? @default(agendada)
-  notasGerais   String?              @map("notas_gerais") @db.Text
-  createdAt     DateTime?            @default(now()) @map("created_at") @db.DateTime(0)
-  updatedAt     DateTime?            @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  notasGerais   String?             @map("notas_gerais") @db.Text
+  createdAt     DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt     DateTime?           @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
   acoes         RetrospectivaAcao[]
   itens         RetrospectivaItem[]
-  sprint        Sprint               @relation(fields: [sprintId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_retro_sprint")
+  sprint        Sprint              @relation(fields: [sprintId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_retro_sprint")
 
   @@index([sprintId], map: "idx_sprint")
   @@map("retrospectivas")
 }
 
 model RetrospectivaItem {
-  id              Int                    @id @default(autoincrement())
-  retrospectivaId Int                    @map("retrospectiva_id")
+  id              String                 @id @default(cuid()) @db.VarChar(30)
+  retrospectivaId String                 @map("retrospectiva_id") @db.VarChar(30)
   categoria       RetrospectivaCategoria
   descricao       String                 @db.Text
   autorId         Int?                   @map("autor_id")
@@ -373,9 +373,9 @@ model RetrospectivaItem {
 }
 
 model RetrospectivaAcao {
-  id              Int                      @id @default(autoincrement())
-  retrospectivaId Int                      @map("retrospectiva_id")
-  itemId          Int?                     @map("item_id")
+  id              String                   @id @default(cuid()) @db.VarChar(30)
+  retrospectivaId String                   @map("retrospectiva_id") @db.VarChar(30)
+  itemId          String?                  @map("item_id") @db.VarChar(30)
   descricao       String                   @db.Text
   responsavelId   Int?                     @map("responsavel_id")
   prazo           DateTime?                @db.Date
@@ -393,7 +393,7 @@ model RetrospectivaAcao {
 }
 
 model Art {
-  id                Int                @id @default(autoincrement())
+  id                String             @id @default(cuid()) @db.VarChar(30)
   nome              String             @db.VarChar(100)
   descricao         String?            @db.Text
   valueStream       String?            @map("value_stream") @db.VarChar(100)
@@ -413,9 +413,9 @@ model Art {
 }
 
 model ProjetoArt {
-  id           Int       @id @default(autoincrement())
-  projetoId    Int       @map("projeto_id")
-  artId        Int       @map("art_id")
+  id           String    @id @default(cuid()) @db.VarChar(30)
+  projetoId    String    @map("projeto_id") @db.VarChar(30)
+  artId        String    @map("art_id") @db.VarChar(30)
   adicionadoEm DateTime? @default(now()) @map("adicionado_em") @db.DateTime(0)
   art          Art       @relation(fields: [artId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_pa_art")
   projeto      Projeto   @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_pa_projeto")
@@ -427,9 +427,9 @@ model ProjetoArt {
 }
 
 model ProgramIncrement {
-  id                 Int              @id @default(autoincrement())
+  id                 String           @id @default(cuid()) @db.VarChar(30)
   nome               String           @db.VarChar(100)
-  artId              Int              @map("art_id")
+  artId              String           @map("art_id") @db.VarChar(30)
   dataInicio         DateTime         @map("data_inicio") @db.Date
   dataFim            DateTime         @map("data_fim") @db.Date
   dataPlanning       DateTime?        @map("data_planning") @db.Date
@@ -459,9 +459,9 @@ model ProgramIncrement {
 }
 
 model PiObjective {
-  id                   Int                  @id @default(autoincrement())
-  piId                 Int                  @map("pi_id")
-  projetoId            Int                  @map("projeto_id")
+  id                   String               @id @default(cuid()) @db.VarChar(30)
+  piId                 String               @map("pi_id") @db.VarChar(30)
+  projetoId            String               @map("projeto_id") @db.VarChar(30)
   descricao            String               @db.Text
   businessValue        Int?                 @default(0) @map("business_value")
   probabilidadeSucesso Decimal?             @map("probabilidade_sucesso") @db.Decimal(5, 2)
@@ -482,9 +482,9 @@ model PiObjective {
 }
 
 model PiObjectiveFeature {
-  id            Int         @id @default(autoincrement())
-  piObjectiveId Int         @map("pi_objective_id")
-  featureId     Int         @map("feature_id")
+  id            String      @id @default(cuid()) @db.VarChar(30)
+  piObjectiveId String      @map("pi_objective_id") @db.VarChar(30)
+  featureId     String      @map("feature_id") @db.VarChar(30)
   feature       Feature     @relation(fields: [featureId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_piof_feature")
   piObjective   PiObjective @relation(fields: [piObjectiveId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_piof_pio")
 
@@ -495,8 +495,8 @@ model PiObjectiveFeature {
 }
 
 model IpIteration {
-  id             Int              @id @default(autoincrement())
-  piId           Int              @map("pi_id")
+  id             String           @id @default(cuid()) @db.VarChar(30)
+  piId           String           @map("pi_id") @db.VarChar(30)
   dataInicio     DateTime         @map("data_inicio") @db.Date
   dataFim        DateTime         @map("data_fim") @db.Date
   objetivo       String?          @db.Text
@@ -509,8 +509,8 @@ model IpIteration {
 }
 
 model InspectAdapt {
-  id                   Int                 @id @default(autoincrement())
-  piId                 Int                 @map("pi_id")
+  id                   String              @id @default(cuid()) @db.VarChar(30)
+  piId                 String              @map("pi_id") @db.VarChar(30)
   dataReuniao          DateTime            @map("data_reuniao") @db.DateTime(0)
   facilitadorId        Int?                @map("facilitador_id")
   piPerformanceMetrics String?             @map("pi_performance_metrics") @db.LongText
@@ -526,8 +526,8 @@ model InspectAdapt {
 }
 
 model IaProblema {
-  id                Int                @id @default(autoincrement())
-  inspectAdaptId    Int                @map("inspect_adapt_id")
+  id                String             @id @default(cuid()) @db.VarChar(30)
+  inspectAdaptId    String             @map("inspect_adapt_id") @db.VarChar(30)
   problema          String             @db.Text
   impacto           String?            @db.Text
   votos             Int?               @default(0)
@@ -542,8 +542,8 @@ model IaProblema {
 }
 
 model IaAcao {
-  id            Int           @id @default(autoincrement())
-  problemaId    Int           @map("problema_id")
+  id            String        @id @default(cuid()) @db.VarChar(30)
+  problemaId    String        @map("problema_id") @db.VarChar(30)
   descricao     String        @db.Text
   responsavelId Int?          @map("responsavel_id")
   prazo         DateTime?     @db.Date
@@ -558,7 +558,7 @@ model IaAcao {
 }
 
 model Epic {
-  id                  Int               @id @default(autoincrement())
+  id                  String            @id @default(cuid()) @db.VarChar(30)
   titulo              String            @db.VarChar(255)
   descricao           String?           @db.Text
   hypothesisStatement String?           @map("hypothesis_statement") @db.Text
@@ -572,9 +572,9 @@ model Epic {
   oportunidadeTempo   Int?              @default(0) @map("oportunidade_tempo")
   tamanhoJob          Int?              @default(0) @map("tamanho_job")
   ownerId             Int?              @map("owner_id")
-  artId               Int?              @map("art_id")
-  piTarget            Int?              @map("pi_target")
-  parentEpicId        Int?              @map("parent_epic_id")
+  artId               String?           @map("art_id") @db.VarChar(30)
+  piTarget            String?           @map("pi_target") @db.VarChar(30)
+  parentEpicId        String?           @map("parent_epic_id") @db.VarChar(30)
   createdAt           DateTime?         @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
   art                 Art?              @relation(fields: [artId], references: [id], onUpdate: Restrict, map: "fk_epic_art")
@@ -592,13 +592,13 @@ model Epic {
 }
 
 model Feature {
-  id                 Int                  @id @default(autoincrement())
+  id                 String               @id @default(cuid()) @db.VarChar(30)
   titulo             String               @db.VarChar(255)
   descricao          String?              @db.Text
   benefitHypothesis  String?              @map("benefit_hypothesis") @db.Text
   acceptanceCriteria String?              @map("acceptance_criteria") @db.Text
-  epicId             Int?                 @map("epic_id")
-  piId               Int                  @map("pi_id")
+  epicId             String?              @map("epic_id") @db.VarChar(30)
+  piId               String               @map("pi_id") @db.VarChar(30)
   status             FeatureStatus?       @default(backlog)
   wsjfScore          Decimal?             @map("wsjf_score") @db.Decimal(10, 2)
   valorNegocio       Int?                 @default(0) @map("valor_negocio")
@@ -622,18 +622,18 @@ model Feature {
 }
 
 model Dependencia {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid()) @db.VarChar(30)
   tipoOrigem        DependenciaEntidade @map("tipo_origem")
-  entidadeOrigemId  Int                 @map("entidade_origem_id")
+  entidadeOrigemId  String              @map("entidade_origem_id") @db.VarChar(30)
   tipoDestino       DependenciaEntidade @map("tipo_destino")
-  entidadeDestinoId Int                 @map("entidade_destino_id")
+  entidadeDestinoId String              @map("entidade_destino_id") @db.VarChar(30)
   tipoDependencia   DependenciaTipo?    @default(finish_to_start) @map("tipo_dependencia")
   status            DependenciaStatus?  @default(identificada)
   criticidade       Criticidade?        @default(media)
   descricao         String?             @db.Text
-  projetoOrigemId   Int?                @map("projeto_origem_id")
-  projetoDestinoId  Int?                @map("projeto_destino_id")
-  piId              Int?                @map("pi_id")
+  projetoOrigemId   String?             @map("projeto_origem_id") @db.VarChar(30)
+  projetoDestinoId  String?             @map("projeto_destino_id") @db.VarChar(30)
+  piId              String?             @map("pi_id") @db.VarChar(30)
   criadoPor         Int?                @map("criado_por")
   createdAt         DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt         DateTime?           @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
@@ -647,7 +647,7 @@ model Dependencia {
 }
 
 model Risco {
-  id                Int               @id @default(autoincrement())
+  id                String            @id @default(cuid()) @db.VarChar(30)
   titulo            String            @db.VarChar(255)
   descricao         String            @db.Text
   tipo              RiscoTipo?        @default(risco)
@@ -658,9 +658,9 @@ model Risco {
   planoMitigacao    String?           @map("plano_mitigacao") @db.Text
   planoContingencia String?           @map("plano_contingencia") @db.Text
   status            RiscoStatus?      @default(identificado)
-  projetoId         Int?              @map("projeto_id")
-  piId              Int?              @map("pi_id")
-  featureId         Int?              @map("feature_id")
+  projetoId         String?           @map("projeto_id") @db.VarChar(30)
+  piId              String?           @map("pi_id") @db.VarChar(30)
+  featureId         String?           @map("feature_id") @db.VarChar(30)
   ownerId           Int?              @map("owner_id")
   identificadoPor   Int?              @map("identificado_por")
   dataIdentificacao DateTime?         @map("data_identificacao") @db.Date
@@ -681,10 +681,10 @@ model Risco {
 }
 
 model Roadmap {
-  id           Int                  @id @default(autoincrement())
+  id           String               @id @default(cuid()) @db.VarChar(30)
   nome         String               @db.VarChar(100)
   descricao    String?              @db.Text
-  artId        Int?                 @map("art_id")
+  artId        String?              @map("art_id") @db.VarChar(30)
   tipo         RoadmapTipo?         @default(program)
   visibilidade RoadmapVisibilidade? @default(privado)
   createdBy    Int?                 @map("created_by")
@@ -698,12 +698,12 @@ model Roadmap {
 }
 
 model RoadmapItem {
-  id          Int               @id @default(autoincrement())
-  roadmapId   Int               @map("roadmap_id")
-  featureId   Int?              @map("feature_id")
-  epicId      Int?              @map("epic_id")
-  piInicio    Int?              @map("pi_inicio")
-  piFim       Int?              @map("pi_fim")
+  id          String            @id @default(cuid()) @db.VarChar(30)
+  roadmapId   String            @map("roadmap_id") @db.VarChar(30)
+  featureId   String?           @map("feature_id") @db.VarChar(30)
+  epicId      String?           @map("epic_id") @db.VarChar(30)
+  piInicio    String?           @map("pi_inicio") @db.VarChar(30)
+  piFim       String?           @map("pi_fim") @db.VarChar(30)
   milestone   String?           @db.VarChar(100)
   cor         String?           @default("#3b82f6") @db.VarChar(7)
   ordem       Int?              @default(0)
@@ -722,23 +722,28 @@ model RoadmapItem {
 }
 
 model Documento {
-  id        Int               @id @default(autoincrement())
-  titulo    String            @db.VarChar(255)
-  icone     String            @db.VarChar(10)
-  conteudo  String?           @db.LongText
-  parentId  Int?              @map("parent_id")
-  ordem     Int               @default(0)
-  projetoId Int               @map("projeto_id")
-  status    DocumentoStatus   @default(draft)
-  createdBy Int               @map("created_by")
-  createdAt DateTime?         @default(now()) @map("created_at") @db.DateTime(0)
-  updatedAt DateTime?         @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
-  versoes   DocumentoVersao[]
-  parent    Documento?        @relation("DocumentoHierarchy", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_doc_parent")
-  children  Documento[]       @relation("DocumentoHierarchy")
-  projeto   Projeto           @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_doc_projeto")
+  id               String               @id @default(cuid()) @db.VarChar(30)
+  titulo           String               @db.VarChar(255)
+  icone            String               @db.VarChar(10)
+  conteudo         String?              @db.LongText
+  parentId         String?              @map("parent_id") @db.VarChar(30)
+  ordem            Int                  @default(0)
+  empresaId        Int?                 @map("empresa_id")
+  projetoId        String?              @map("projeto_id") @db.VarChar(30)
+  status           DocumentoStatus      @default(draft)
+  createdBy        Int                  @map("created_by")
+  publicShareToken String?              @unique @db.VarChar(64)
+  isFullWidth      Boolean              @default(false) @map("is_full_width")
+  createdAt        DateTime?            @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt        DateTime?            @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  versoes          DocumentoVersao[]
+  favoritos        DocumentoFavorito[]
+  parent           Documento?           @relation("DocumentoHierarchy", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_doc_parent")
+  children         Documento[]          @relation("DocumentoHierarchy")
+  projeto          Projeto?             @relation(fields: [projetoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_doc_projeto")
 
   @@index([projetoId, status], map: "idx_projeto")
+  @@index([empresaId, status], map: "idx_empresa_status")
   @@index([parentId], map: "idx_parent")
   @@index([createdBy], map: "idx_created_by")
   @@index([ordem], map: "idx_ordem")
@@ -746,9 +751,21 @@ model Documento {
   @@map("documentos")
 }
 
+model DocumentoFavorito {
+  id          String    @id @default(cuid()) @db.VarChar(30)
+  documentoId String    @map("documento_id") @db.VarChar(30)
+  usuarioId   Int       @map("usuario_id")
+  createdAt   DateTime? @default(now()) @map("created_at") @db.DateTime(0)
+  documento   Documento @relation(fields: [documentoId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_fav_doc")
+
+  @@unique([documentoId, usuarioId], map: "uniq_doc_favorito")
+  @@index([usuarioId], map: "idx_usuario")
+  @@map("documento_favoritos")
+}
+
 model DocumentoVersao {
-  id               Int       @id @default(autoincrement())
-  documentoId      Int       @map("documento_id")
+  id               String    @id @default(cuid()) @db.VarChar(30)
+  documentoId      String    @map("documento_id") @db.VarChar(30)
   versao           Int       @default(1)
   conteudo         String    @db.LongText
   usuarioId        Int       @map("usuario_id")
@@ -766,12 +783,12 @@ model DocumentoVersao {
 }
 
 model Atividade {
-  id               Int                    @id @default(autoincrement())
+  id               String                 @id @default(cuid()) @db.VarChar(30)
   tipo             AtividadeTipo
   entidade         AtividadeEntidade
-  entidadeId       Int                    @map("entidade_id")
+  entidadeId       String                 @map("entidade_id") @db.VarChar(30)
   usuarioId        Int                    @map("usuario_id")
-  projetoId        Int                    @map("projeto_id")
+  projetoId        String                 @map("projeto_id") @db.VarChar(30)
   descricao        String?                @db.Text
   metadata         String?                @db.LongText
   createdAt        DateTime?              @default(now()) @map("created_at") @db.DateTime(0)
@@ -794,8 +811,8 @@ model Atividade {
 }
 
 model AtividadeLike {
-  id          Int       @id @default(autoincrement())
-  atividadeId Int       @map("atividade_id")
+  id          String    @id @default(cuid()) @db.VarChar(30)
+  atividadeId String    @map("atividade_id") @db.VarChar(30)
   usuarioId   Int       @map("usuario_id")
   createdAt   DateTime? @default(now()) @map("created_at") @db.DateTime(0)
   atividade   Atividade @relation(fields: [atividadeId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_like_atividade")
@@ -808,11 +825,11 @@ model AtividadeLike {
 }
 
 model AtividadeComentario {
-  id          Int                   @id @default(autoincrement())
-  atividadeId Int                   @map("atividade_id")
+  id          String                @id @default(cuid()) @db.VarChar(30)
+  atividadeId String                @map("atividade_id") @db.VarChar(30)
   usuarioId   Int                   @map("usuario_id")
   texto       String                @db.Text
-  parentId    Int?                  @map("parent_id")
+  parentId    String?               @map("parent_id") @db.VarChar(30)
   totalLikes  Int?                  @default(0) @map("total_likes")
   editado     Boolean?              @default(false)
   editadoEm   DateTime?             @map("editado_em") @db.DateTime(0)
@@ -832,8 +849,8 @@ model AtividadeComentario {
 }
 
 model ComentarioLike {
-  id           Int                 @id @default(autoincrement())
-  comentarioId Int                 @map("comentario_id")
+  id           String              @id @default(cuid()) @db.VarChar(30)
+  comentarioId String              @map("comentario_id") @db.VarChar(30)
   usuarioId    Int                 @map("usuario_id")
   createdAt    DateTime?           @default(now()) @map("created_at") @db.DateTime(0)
   comentario   AtividadeComentario @relation(fields: [comentarioId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_clike_comentario")
@@ -1101,4 +1118,5 @@ enum DocumentoStatus {
   draft
   published
   private
+  archived
 }

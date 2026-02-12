@@ -15,6 +15,7 @@ import {
 import type { BreadCrumbProps } from '@/lib/@types/breadcrumb';
 import type { TabItemProps } from '@/lib/@types/tabs';
 import { Icon } from '../../HugeIcons';
+import { Small } from '../../typography/text/small';
 
 interface NavBarProps {
   children: React.ReactNode;
@@ -31,18 +32,20 @@ export function NavBar({ children }: NavBarProps) {
 export function BreadCrumb({ items }: BreadCrumbProps) {
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className='flex items-center justify-center'>
         {items.map((item, index) => (
           <React.Fragment key={item.href ?? index}>
             <Tooltip>
-              <TooltipTrigger>
-                <BreadcrumbItem>
+              <TooltipTrigger className='flex items-center'>
+                <BreadcrumbItem className='flex items-center'>
                   <BreadcrumbLink
                     href={item.href}
                     className='flex gap-1.5 items-center'
                   >
-                    <Icon icon={item.icon} size={18} />
-                    {item.name}
+                    <Icon icon={item.icon} size={16} />
+                    <Small>
+                      {item.name}
+                    </Small>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </TooltipTrigger>

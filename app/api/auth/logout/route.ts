@@ -1,5 +1,5 @@
-import { successResponse } from '@/src/utils/http-response';
 import { clearAuthCookies } from '@/src/auth';
+import { successResponse } from '@/src/utils/http-response';
 
 export async function POST() {
   await clearAuthCookies();

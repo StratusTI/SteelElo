@@ -4,6 +4,7 @@ import { Header } from '@/app/components/shared/header/header';
 import { GlobalSideBar } from '@/app/components/shared/navigation/globalSideBar';
 import { SideBar } from '@/app/components/shared/navigation/sideBar';
 import { EnterpriseProvider } from '@/app/providers/enterprise-provider';
+import { SidebarProvider } from '@/app/providers/sidebar-provider';
 import { requireAuth } from '@/src/lib/helpers/auth-helper';
 
 interface EnterpriseLayoutProps {
@@ -48,16 +49,20 @@ export default async function EnterpriseLayout({
       isAdmin={isAdmin}
       isSuperAdmin={isSuperAdmin}
     >
-      <div className='flex flex-col h-screen overflow-hidden p-0 gap-2'>
-        <Header enterpriseId={enterpriseId} />
-        <div className='flex flex-1 overflow-hidden'>
-          <GlobalSideBar />
-          <div className='flex-1 mr-1 mb-1 overflow-hidden bg-card rounded-lg border-2 border-border flex'>
-            <SideBar />
-            <Suspense fallback={<div>Carregando...</div>}>{children}</Suspense>
+      <SidebarProvider>
+        <div className='flex flex-col h-screen overflow-hidden p-0 gap-2'>
+          <Header enterpriseId={enterpriseId} />
+          <div className='flex flex-1 overflow-hidden'>
+            <GlobalSideBar />
+            <div className='flex-1 mr-1 mb-1 overflow-hidden bg-card rounded-lg border-2 border-border flex'>
+              <SideBar />
+              <Suspense fallback={<div>Carregando...</div>}>
+                {children}
+              </Suspense>
+            </div>
           </div>
         </div>
-      </div>
+      </SidebarProvider>
     </EnterpriseProvider>
   );
 }

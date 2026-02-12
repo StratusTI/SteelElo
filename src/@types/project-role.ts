@@ -125,8 +125,8 @@ export const ROLE_PERMISSIONS: Record<ProjectRole, ProjectPermission[]> = {
 }
 
 export interface ProjectMember {
-  id: number
-  projetoId: number
+  id: string
+  projetoId: string
   usuarioId: number
   role: ProjectRole
   adicionadoEm: Date

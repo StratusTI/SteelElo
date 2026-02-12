@@ -25,31 +25,34 @@ const mockUser: User = {
   online: true,
 };
 
+let activeProjectId: string;
+
 describe('Archive Project Use Case', () => {
   beforeEach(async () => {
     projectsRepository = new InMemoryProjectRepository();
     sut = new ArchiveProjectUseCase(projectsRepository);
 
     // Criar projeto inicial para testes
-    await projectsRepository.create({
+    const activeProject = await projectsRepository.create({
       nome: 'Active Project',
       ownerId: mockUser.id,
       idempresa: mockUser.idempresa!,
       status: ProjetoStatus.execution,
     });
+    activeProjectId = activeProject.id;
   });
 
   it('should archive a project', async () => {
     const result = await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: activeProjectId,
     });
 
     expect(result.success).toBe(true);
 
     // Verificar que o status foi alterado
-    const project = await projectsRepository.findById(1);
+    const project = await projectsRepository.findById(activeProjectId);
     expect(project?.status).toBe(ProjetoStatus.cancelled);
   });
 
@@ -58,21 +61,21 @@ describe('Archive Project Use Case', () => {
       sut.execute({
         user: mockUser,
         userRole: 'owner',
-        projectId: 999,
+        projectId: 'non-existent-id',
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
 
   it('should archive project regardless of current status', async () => {
     // Criar projetos em diferentes status
-    await projectsRepository.create({
+    const draftProject = await projectsRepository.create({
       nome: 'Draft Project',
       ownerId: mockUser.id,
       idempresa: mockUser.idempresa!,
       status: ProjetoStatus.draft,
     });
 
-    await projectsRepository.create({
+    const completedProject = await projectsRepository.create({
       nome: 'Completed Project',
       ownerId: mockUser.id,
       idempresa: mockUser.idempresa!,
@@ -83,21 +86,21 @@ describe('Archive Project Use Case', () => {
     await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 2,
+      projectId: draftProject.id,
     });
 
     // Arquivar projeto completed
     await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 3,
+      projectId: completedProject.id,
     });
 
-    const draftProject = await projectsRepository.findById(2);
-    const completedProject = await projectsRepository.findById(3);
+    const archivedDraft = await projectsRepository.findById(draftProject.id);
+    const archivedCompleted = await projectsRepository.findById(completedProject.id);
 
-    expect(draftProject?.status).toBe(ProjetoStatus.cancelled);
-    expect(completedProject?.status).toBe(ProjetoStatus.cancelled);
+    expect(archivedDraft?.status).toBe(ProjetoStatus.cancelled);
+    expect(archivedCompleted?.status).toBe(ProjetoStatus.cancelled);
   });
 
   it('should not appear in findByNameAndCompany after archiving', async () => {
@@ -105,7 +108,7 @@ describe('Archive Project Use Case', () => {
     await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: activeProjectId,
     });
 
     // Tentar buscar por nome
@@ -123,7 +126,7 @@ describe('Archive Project Use Case', () => {
     await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: activeProjectId,
     });
 
     // Criar novo projeto com mesmo nome (deve permitir)
@@ -134,7 +137,7 @@ describe('Archive Project Use Case', () => {
     });
 
     expect(newProject.nome).toBe('Active Project');
-    expect(newProject.id).not.toBe(1);
+    expect(newProject.id).not.toBe(activeProjectId);
     expect(newProject.status).not.toBe(ProjetoStatus.cancelled);
   });
 
@@ -143,20 +146,20 @@ describe('Archive Project Use Case', () => {
     const result1 = await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: activeProjectId,
     });
 
     // Segundo arquivamento
     const result2 = await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: activeProjectId,
     });
 
     expect(result1.success).toBe(true);
     expect(result2.success).toBe(true);
 
-    const project = await projectsRepository.findById(1);
+    const project = await projectsRepository.findById(activeProjectId);
     expect(project?.status).toBe(ProjetoStatus.cancelled);
   });
 });

@@ -24,13 +24,17 @@ const mockUser: User = {
   online: true,
 };
 
+let projectAId: string;
+let projectBId: string;
+let projectCId: string;
+
 describe('Get Projects Use Case', () => {
   beforeEach(async () => {
     projectsRepository = new InMemoryProjectRepository();
     sut = new GetProjectsUseCase(projectsRepository);
 
     // Seed test data
-    await projectsRepository.create({
+    const projectA = await projectsRepository.create({
       nome: 'Project A',
       descricao: 'First project',
       ownerId: 1,
@@ -38,8 +42,9 @@ describe('Get Projects Use Case', () => {
       status: ProjetoStatus.execution,
       prioridade: ProjetoPriority.high,
     });
+    projectAId = projectA.id;
 
-    await projectsRepository.create({
+    const projectB = await projectsRepository.create({
       nome: 'Project B',
       descricao: 'Second project',
       ownerId: 2,
@@ -47,8 +52,9 @@ describe('Get Projects Use Case', () => {
       status: ProjetoStatus.draft,
       prioridade: ProjetoPriority.medium,
     });
+    projectBId = projectB.id;
 
-    await projectsRepository.create({
+    const projectC = await projectsRepository.create({
       nome: 'Project C',
       descricao: 'Third project',
       ownerId: 1,
@@ -56,6 +62,7 @@ describe('Get Projects Use Case', () => {
       status: ProjetoStatus.completed,
       prioridade: ProjetoPriority.low,
     });
+    projectCId = projectC.id;
 
     // Ajustar createdAt diretamente no array do repository
     // para garantir ordem previsível
@@ -66,7 +73,7 @@ describe('Get Projects Use Case', () => {
 
   it('should list only projects where user is member (non-superadmin)', async () => {
     // User 1 is member of Project A only
-    projectsRepository.addMember(1, mockUser.id);
+    projectsRepository.addMember(projectAId, mockUser.id);
 
     const result = await sut.execute({
       user: mockUser,
@@ -162,7 +169,7 @@ describe('Get Projects Use Case', () => {
     const superadminUser = { ...mockUser, superadmin: true };
 
     // Add user 1 as member of Project A
-    projectsRepository.addMember(1, 1);
+    projectsRepository.addMember(projectAId, 1);
 
     const result = await sut.execute({
       user: superadminUser,

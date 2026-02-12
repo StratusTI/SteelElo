@@ -7,15 +7,15 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
 interface UpdateProjectMemberRoleUseCaseRequest {
   user: User
-  projectId: number
+  projectId: string
   userId: number
   newRole: ProjectRole
 }
 
 interface UpdateProjectMemberRoleUseCaseResponse {
   member: {
-    id: number
-    projectId: number
+    id: string
+    projectId: string
     userId: number
     role: ProjectRole,
     addedAt: Date

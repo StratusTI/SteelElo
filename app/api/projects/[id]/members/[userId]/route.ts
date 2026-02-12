@@ -33,12 +33,11 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; userId: string }> },
 ) {
-  const { id, userId } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId, userId } = await params;
   const memberUserId = Number.parseInt(userId, 10);
 
-  if (Number.isNaN(projectId) || Number.isNaN(memberUserId)) {
-    return standardError('BAD_REQUEST', 'Invalid project or user ID');
+  if (Number.isNaN(memberUserId)) {
+    return standardError('BAD_REQUEST', 'Invalid user ID');
   }
 
   const { user: authUser, error: authError } = await requireProjectRole({
@@ -104,12 +103,11 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string; userId: string }> },
 ) {
-  const { id, userId } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId, userId } = await params;
   const memberUserId = Number.parseInt(userId, 10);
 
-  if (Number.isNaN(projectId) || Number.isNaN(memberUserId)) {
-    return standardError('BAD_REQUEST', 'Invalid project or user ID');
+  if (Number.isNaN(memberUserId)) {
+    return standardError('BAD_REQUEST', 'Invalid user ID');
   }
 
   const { user: authUser, error: authError } = await requireProjectRole({

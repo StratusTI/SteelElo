@@ -3,7 +3,16 @@
     "allow": [
       "Bash(ls:*)",
       "Bash(pnpm prisma:generate:*)",
-      "Bash(pnpm prisma generate:*)"
+      "Bash(pnpm prisma generate:*)",
+      "WebFetch(domain:frimousse.liveblocks.io)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(dir:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vitest:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx prisma generate:*)"
     ]
   }
 }

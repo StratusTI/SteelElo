@@ -4,7 +4,7 @@ import { ProjectMembersRepository } from "../repositories/project-members-reposi
 
 interface GetUserProjectRoleRequest {
   user: User
-  projectId: number
+  projectId: string
 }
 
 interface GetUserProjectRoleResponse {

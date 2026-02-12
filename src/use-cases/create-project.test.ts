@@ -50,7 +50,7 @@ describe('Create Project Use Case', () => {
       },
     });
 
-    expect(project.id).toEqual(expect.any(Number));
+    expect(project.id).toEqual(expect.any(String));
     expect(project.nome).toBe('New Project');
     expect(project.ownerId).toBe(mockUser.id);
     expect(project.idempresa).toBe(mockUser.idempresa);

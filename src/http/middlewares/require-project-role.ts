@@ -6,7 +6,7 @@ import { standardError } from '@/src/utils/http-response'
 import type { NextResponse } from 'next/server'
 
 interface RequireProjectRoleOptions {
-  projectId: number
+  projectId: string
   minimumRole?: ProjectRole
   permission?: ProjectPermission
 }

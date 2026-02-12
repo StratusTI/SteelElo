@@ -3,120 +3,89 @@
 import {
   Add01Icon,
   ArrowRight01Icon,
+  File02Icon,
   FileAddIcon,
   Home03Icon,
   PanelLeftCloseIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useMatchesPath } from '@/lib/matchesPath';
-import type { IconSvgObject } from '@/src/@types/icon-svg-object';
+import { cn } from '@/lib/utils';
+import type { DocumentWithChildren } from '@/src/@types/document';
+import { useCreateDocument, useDocumentTree } from '@/src/hooks/use-documents';
 import { Icon } from '../../HugeIcons';
 import { Large } from '../../typography/text/large';
 import { Muted } from '../../typography/text/muted';
 
-type PageTreeItem =
-  | {
-      name: string;
-      label: string;
-      icon?: IconSvgObject;
-      path?: string;
-      defaultOpen?: boolean;
-    }
-  | {
-      name: string;
-      label: string;
-      icon?: IconSvgObject;
-      path?: string;
-      items: PageTreeItem[];
-      defaultOpen?: boolean;
-    };
-
 export function SideBarWiki() {
   const router = useRouter();
-  const { buildPath } = useMatchesPath();
+  const { buildPath, pathname } = useMatchesPath();
+  const { data: treeData, isLoading } = useDocumentTree();
+  const createDocument = useCreateDocument();
 
-  const pageTree: PageTreeItem[] = [
-    { name: 'home', label: 'Início', path: '/wiki/', icon: Home03Icon },
+  const tree = treeData?.data?.tree ?? [];
 
-    {
-      name: 'workspace',
-      label: 'Espaço de Trabalho',
-      icon: Add01Icon,
-      path: '/wiki/workspace',
-      defaultOpen: true,
-      items: [],
-    },
+  const workspaceDocs = tree.filter((doc) => doc.status === 'draft');
+  const sharedDocs = tree.filter((doc) => doc.status === 'published');
+  const privateDocs = tree.filter((doc) => doc.status === 'private');
+  const archivedDocs = tree.filter((doc) => doc.status === 'archived');
 
-    {
-      name: 'shared',
-      label: 'Compartilhados',
-      path: '/wiki/shared',
-      defaultOpen: false,
-      items: [],
-    },
+  const handleNewDocument = async () => {
+    try {
+      const result = await createDocument.mutateAsync({ titulo: 'Sem título' });
+      const newDoc = result.data.document;
+      router.push(buildPath(`/wiki/${newDoc.id}`));
+    } catch {
+      toast.error('Falha ao criar documento');
+    }
+  };
 
-    {
-      name: 'private',
-      label: 'Privados',
-      icon: Add01Icon,
-      path: '/wiki/private',
-      defaultOpen: false,
-      items: [],
-    },
+  const renderDocItem = (doc: DocumentWithChildren, depth = 0) => {
+    const hasChildren = doc.children && doc.children.length > 0;
+    const isActive = pathname === buildPath(`/wiki/${doc.id}`);
 
-    {
-      name: 'archived',
-      label: 'Arquivados',
-      path: '/wiki/archived',
-      defaultOpen: false,
-      items: [],
-    },
-  ];
-
-  const renderItem = (pageItem: PageTreeItem) => {
-    if ('items' in pageItem) {
+    if (hasChildren) {
       return (
-        <Collapsible key={pageItem.name} defaultOpen={pageItem.defaultOpen}>
+        <Collapsible key={doc.id}>
           <CollapsibleTrigger
-            onClick={() =>
-              pageItem.path && router.push(buildPath(pageItem.path))
-            }
+            onClick={() => router.push(buildPath(`/wiki/${doc.id}`))}
             render={
               <Button
                 variant='ghost'
                 size='sm'
-                className='group min-w-full justify-between transition-none'
+                className={cn('group min-w-full justify-between transition-none', isActive && 'bg-accent')}
+                style={{ paddingLeft: `${(depth + 1) * 12}px` }}
               >
-                <Muted>{pageItem.label}</Muted>
-                <div className='flex items-center gap-0.5'>
-                  {pageItem.icon && (
-                    <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
-                      <Icon
-                        icon={pageItem.icon}
-                        strokeWidth={2}
-                        className='opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out group-aria-expanded:opacity-100 text-muted-foreground'
-                      />
-                    </span>
+                <span className='flex items-center gap-1.5 truncate'>
+                  {doc.icone ? (
+                    <span className='text-sm'>{doc.icone}</span>
+                  ) : (
+                    <Icon icon={File02Icon} size={14} />
                   )}
-                  <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
-                    <Icon
-                      icon={ArrowRight01Icon}
-                      strokeWidth={2}
-                      className='opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out group-aria-expanded:rotate-90 group-aria-expanded:opacity-100 text-muted-foreground'
-                    />
-                  </span>
-                </div>
+                  <Muted className='truncate'>{doc.titulo}</Muted>
+                </span>
+                <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
+                  <Icon
+                    icon={ArrowRight01Icon}
+                    strokeWidth={2}
+                    className='opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out group-aria-expanded:rotate-90 group-aria-expanded:opacity-100 text-muted-foreground'
+                  />
+                </span>
               </Button>
             }
           />
           <CollapsibleContent>
-            <div>{pageItem.items.map((child) => renderItem(child))}</div>
+            <div>
+              {doc.children.map((child) => renderDocItem(child, depth + 1))}
+            </div>
           </CollapsibleContent>
         </Collapsible>
       );
@@ -124,17 +93,75 @@ export function SideBarWiki() {
 
     return (
       <Button
-        key={pageItem.name}
+        key={doc.id}
         variant='ghost'
         size='sm'
-        className='text-secondary-foreground/90 hover:text-primary w-full justify-start gap-2'
-        onClick={() => pageItem.path && router.push(buildPath(pageItem.path))}
+        className={cn('w-full justify-start gap-1.5 truncate', isActive && 'bg-accent')}
+        style={{ paddingLeft: `${(depth + 1) * 12}px` }}
+        onClick={() => router.push(buildPath(`/wiki/${doc.id}`))}
       >
-        <Icon icon={pageItem.icon ?? []} strokeWidth={2} />
-        {pageItem.label}
+        {doc.icone ? (
+          <span className='text-sm'>{doc.icone}</span>
+        ) : (
+          <Icon icon={File02Icon} size={14} />
+        )}
+        <span className='truncate'>{doc.titulo}</span>
       </Button>
     );
   };
+
+  const renderSection = (
+    name: string,
+    label: string,
+    path: string,
+    docs: DocumentWithChildren[],
+    showAddButton = false,
+    defaultOpen = false,
+  ) => (
+    <Collapsible key={name} defaultOpen={defaultOpen}>
+      <CollapsibleTrigger
+        onClick={() => router.push(buildPath(path))}
+        render={
+          <Button
+            variant='ghost'
+            size='sm'
+            className='group min-w-full justify-between transition-none'
+          >
+            <Muted>{label}</Muted>
+            <div className='flex items-center gap-0.5'>
+              {showAddButton && (
+                <span
+                  className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNewDocument();
+                  }}
+                >
+                  <Icon
+                    icon={Add01Icon}
+                    strokeWidth={2}
+                    className='opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out group-aria-expanded:opacity-100 text-muted-foreground'
+                  />
+                </span>
+              )}
+              <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
+                <Icon
+                  icon={ArrowRight01Icon}
+                  strokeWidth={2}
+                  className='opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out group-aria-expanded:rotate-90 group-aria-expanded:opacity-100 text-muted-foreground'
+                />
+              </span>
+            </div>
+          </Button>
+        }
+      />
+      <CollapsibleContent>
+        <div>
+          {docs.map((doc) => renderDocItem(doc))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
 
   return (
     <>
@@ -145,7 +172,6 @@ export function SideBarWiki() {
             <Button
               variant='ghost'
               size='icon-sm'
-              onClick={() => console.log('notification')}
             >
               <Icon icon={PanelLeftCloseIcon} />
             </Button>
@@ -153,14 +179,39 @@ export function SideBarWiki() {
         </div>
         <Button
           variant='outline'
-          onClick={() => console.log('notification')}
+          onClick={handleNewDocument}
+          disabled={createDocument.isPending}
           className='w-full justify-start text-secondary-foreground/90 hover:text-primary'
         >
-          <Icon icon={FileAddIcon} strokeWidth={2} /> Novo documento
+          <Icon icon={FileAddIcon} strokeWidth={2} />
+          {createDocument.isPending ? 'Criando...' : 'Novo documento'}
         </Button>
       </div>
       <div className='flex flex-col gap-1'>
-        {pageTree.map((item) => renderItem(item))}
+        <Button
+          variant='ghost'
+          size='sm'
+          className='text-secondary-foreground/90 hover:text-primary w-full justify-start gap-2'
+          onClick={() => router.push(buildPath('/wiki/'))}
+        >
+          <Icon icon={Home03Icon} strokeWidth={2} />
+          Início
+        </Button>
+
+        {isLoading ? (
+          <div className='flex flex-col gap-1 mt-2'>
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className='w-full h-8' />
+            ))}
+          </div>
+        ) : (
+          <>
+            {renderSection('workspace', 'Espaço de Trabalho', '/wiki/workspace', workspaceDocs, true, true)}
+            {renderSection('shared', 'Compartilhados', '/wiki/public', sharedDocs)}
+            {renderSection('private', 'Privados', '/wiki/private', privateDocs, true)}
+            {renderSection('archived', 'Arquivados', '/wiki/archived', archivedDocs)}
+          </>
+        )}
       </div>
     </>
   );

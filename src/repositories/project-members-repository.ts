@@ -11,18 +11,18 @@ export interface ProjectMemberWithUser extends ProjectMember {
 }
 
 export interface ProjectMembersRepository {
-  findByUserAndProject(userId: number, projectId: number): Promise<ProjectMember[]>
-  findByProject(projectId: number): Promise<ProjectMember[]>
-  findByProjectWithUsers(projectId: number): Promise<ProjectMemberWithUser[]>
-  countOwners(projectId: number): Promise<number>
-  findMembership(projectId: number, userId: number, source?: string): Promise<ProjectMember | null>
+  findByUserAndProject(userId: number, projectId: string): Promise<ProjectMember[]>
+  findByProject(projectId: string): Promise<ProjectMember[]>
+  findByProjectWithUsers(projectId: string): Promise<ProjectMemberWithUser[]>
+  countOwners(projectId: string): Promise<number>
+  findMembership(projectId: string, userId: number, source?: string): Promise<ProjectMember | null>
   create(data: {
-    projectId: number,
+    projectId: string,
     userId: number,
     role: ProjectRole,
     source?: string
   }): Promise<ProjectMember>
-  updateRole(id: number, role: ProjectRole): Promise<ProjectMember>
-  delete(id: number): Promise<void>
-  deleteByUserAndProject(userId: number, projectId: number, source?: string): Promise<void>
+  updateRole(id: string, role: ProjectRole): Promise<ProjectMember>
+  delete(id: string): Promise<void>
+  deleteByUserAndProject(userId: number, projectId: string, source?: string): Promise<void>
 }

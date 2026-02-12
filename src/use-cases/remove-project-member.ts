@@ -6,7 +6,7 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
 interface RemoveProjectMemberUseCaseRequest {
   user: User
-  projectId: number
+  projectId: string
   userId: number
   force?: boolean // Para confirmar remoção mesmo com tarefas
 }
@@ -70,8 +70,8 @@ export class RemoveProjectMemberUseCase {
     // }
 
     await this.projectMembersRepository.deleteByUserAndProject(
-      projectId,
       userId,
+      projectId,
       'direct'
     )
 

@@ -35,12 +35,7 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
-
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
+  const { id: projectId } = await params;
 
   const { user: authUser, error } = await requireProjectRole({
     projectId,
@@ -55,7 +50,7 @@ export async function GET(
     const user = authUserToUser(authUser);
 
     const getCachedMembers = unstable_cache(
-      async (userJson: string, projId: number) => {
+      async (userJson: string, projId: string) => {
         const parsedUser = JSON.parse(userJson) as User;
         const getProjectMembers = makeGetProjectMembersUsecase();
         const { members } = await getProjectMembers.execute({
@@ -101,12 +96,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
-
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
+  const { id: projectId } = await params;
 
   const { user: authUser, error: authError } = await requireProjectRole({
     projectId,
