@@ -10,7 +10,10 @@ interface UseAutoSaveOptions {
   debounceMs?: number;
 }
 
-export function useAutoSave({ documentId, debounceMs = 1000 }: UseAutoSaveOptions) {
+export function useAutoSave({
+  documentId,
+  debounceMs = 1000,
+}: UseAutoSaveOptions) {
   const [status, setStatus] = useState<SaveStatus>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const updateDocument = useUpdateDocument();

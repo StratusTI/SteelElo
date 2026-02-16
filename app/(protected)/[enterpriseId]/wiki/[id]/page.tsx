@@ -68,18 +68,18 @@ export default function DocumentPage() {
 
   if (isLoading) {
     return (
-      <div className="h-full w-full flex flex-col">
+      <div className='h-full w-full flex flex-col'>
         <NavBar>
           <BreadCrumb items={breadcrumbItems} />
         </NavBar>
-        <div className="flex-1 w-full overflow-y-auto">
-          <div className="max-w-4xl mx-auto w-full p-8 flex flex-col gap-6">
-            <Skeleton className="h-10 w-3/4" />
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-4 w-40" />
+        <div className='flex-1 w-full overflow-y-auto'>
+          <div className='max-w-4xl mx-auto w-full p-8 flex flex-col gap-6'>
+            <Skeleton className='h-10 w-3/4' />
+            <div className='flex items-center gap-3'>
+              <Skeleton className='h-8 w-8 rounded-full' />
+              <Skeleton className='h-4 w-40' />
             </div>
-            <Skeleton className="h-64 w-full" />
+            <Skeleton className='h-64 w-full' />
           </div>
         </div>
       </div>
@@ -88,11 +88,11 @@ export default function DocumentPage() {
 
   if (isError || !document) {
     return (
-      <div className="h-full w-full flex flex-col">
+      <div className='h-full w-full flex flex-col'>
         <NavBar>
           <BreadCrumb items={breadcrumbItems} />
         </NavBar>
-        <div className="flex-1 w-full flex items-center justify-center">
+        <div className='flex-1 w-full flex items-center justify-center'>
           <Muted>Documento não encontrado.</Muted>
         </div>
       </div>
@@ -114,9 +114,9 @@ export default function DocumentPage() {
   const saveLabel = SAVE_LABEL[saveStatus];
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className='h-full w-full flex flex-col'>
       <NavBar>
-        <div className="flex items-center gap-3 w-full">
+        <div className='flex items-center gap-3 w-full'>
           <BreadCrumb items={breadcrumbItems} />
           {saveLabel && (
             <span
@@ -127,28 +127,28 @@ export default function DocumentPage() {
           )}
         </div>
       </NavBar>
-      <div className="flex-1 w-full overflow-x-hidden overflow-y-auto">
+      <div className='flex-1 w-full overflow-x-hidden overflow-y-auto'>
         <div
           className={`mx-auto w-full flex flex-col gap-6 p-8 ${document.isFullWidth ? 'max-w-full' : 'max-w-4xl'}`}
         >
-          <div className="flex flex-col gap-4">
-            <div className="flex items-baseline gap-2">
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-baseline gap-2'>
               {document.icone && (
-                <span className="text-4xl">{document.icone}</span>
+                <span className='text-4xl'>{document.icone}</span>
               )}
               <input
-                type="text"
+                type='text'
                 value={displayTitle}
                 onChange={handleTitleChange}
-                placeholder="Sem título"
-                className="text-4xl font-bold tracking-tight bg-transparent border-none outline-none w-full placeholder:text-muted-foreground/50"
+                placeholder='Sem título'
+                className='text-4xl font-bold tracking-tight bg-transparent border-none outline-none w-full placeholder:text-muted-foreground/50'
               />
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
               {document.creator && (
-                <div className="flex items-center gap-2">
-                  <Avatar size="sm">
+                <div className='flex items-center gap-2'>
+                  <Avatar size='sm'>
                     {document.creator.foto ? (
                       <AvatarImage src={document.creator.foto} />
                     ) : null}
@@ -160,7 +160,7 @@ export default function DocumentPage() {
                 </div>
               )}
 
-              <div className="flex items-center gap-1">
+              <div className='flex items-center gap-1'>
                 <Icon icon={StatusIcon} size={14} />
                 <span>{STATUS_LABEL[document.status]}</span>
               </div>

@@ -159,9 +159,7 @@ export function SideBarWiki() {
                   />
                 </span>
               )}
-              <span
-                className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'
-              >
+              <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
                 <Icon
                   icon={ArrowRight01Icon}
                   strokeWidth={2}

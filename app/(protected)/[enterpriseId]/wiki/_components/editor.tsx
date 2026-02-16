@@ -24,7 +24,11 @@ interface EditorProps {
   onUpdate?: (markdown: string) => void;
 }
 
-export function Editor({ initialContent, editable = true, onUpdate }: EditorProps) {
+export function Editor({
+  initialContent,
+  editable = true,
+  onUpdate,
+}: EditorProps) {
   const hasSetContent = useRef(false);
 
   const editor = useEditor({
@@ -54,7 +58,9 @@ export function Editor({ initialContent, editable = true, onUpdate }: EditorProp
     immediatelyRender: false,
     onUpdate: onUpdate
       ? ({ editor }) => {
-          const md = (editor.storage as Record<string, any>).markdown.getMarkdown() as string;
+          const md = (
+            editor.storage as Record<string, any>
+          ).markdown.getMarkdown() as string;
           onUpdate(md);
         }
       : undefined,
@@ -69,7 +75,7 @@ export function Editor({ initialContent, editable = true, onUpdate }: EditorProp
   return (
     <EditorContent
       editor={editor}
-      className="prose prose-neutral dark:prose-invert max-w-none"
+      className='prose prose-neutral dark:prose-invert max-w-none'
     />
   );
 }
