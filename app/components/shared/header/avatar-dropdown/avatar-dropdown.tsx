@@ -91,7 +91,11 @@ export function AvatarDropdown({ user }: AvatarDropdownProps) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-            <DropdownMenuItem className='gap-2' variant='destructive' onClick={handleLogout}>
+            <DropdownMenuItem
+              className='gap-2'
+              variant='destructive'
+              onClick={handleLogout}
+            >
               <Icon icon={LogoutSquare01Icon} size={24} />
               <Smaller>Sair</Smaller>
             </DropdownMenuItem>
