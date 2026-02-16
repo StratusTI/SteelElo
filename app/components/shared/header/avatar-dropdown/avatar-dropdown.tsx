@@ -5,6 +5,7 @@ import {
   Settings01Icon,
   SlidersHorizontalIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Icon } from '@/app/components/HugeIcons';
 import { ModalUserConfigurations } from '@/app/components/shared/company/user/modal-user-configurations';
@@ -27,6 +28,12 @@ type ModalType = 'profile' | 'preferences' | null;
 
 export function AvatarDropdown({ user }: AvatarDropdownProps) {
   const [openModal, setOpenModal] = useState<ModalType>(null);
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  }
 
   return (
     <>
@@ -84,7 +91,7 @@ export function AvatarDropdown({ user }: AvatarDropdownProps) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-            <DropdownMenuItem className='gap-2' variant='destructive'>
+            <DropdownMenuItem className='gap-2' variant='destructive' onClick={handleLogout}>
               <Icon icon={LogoutSquare01Icon} size={24} />
               <Smaller>Sair</Smaller>
             </DropdownMenuItem>
