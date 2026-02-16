@@ -24,7 +24,7 @@ export function InfoDropdown() {
       <DropdownMenuTrigger
         render={
           <Button variant='ghost' size='icon-sm'>
-            <Icon icon={HelpCircleIcon} strokeWidth={1.5} />
+            <Icon icon={HelpCircleIcon} strokeWidth={2} />
           </Button>
         }
       />

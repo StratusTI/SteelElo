@@ -8,6 +8,7 @@ import {
   Home03Icon,
   PanelLeftCloseIcon,
 } from '@hugeicons-pro/core-stroke-rounded';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,6 @@ export function SideBarWiki() {
       return (
         <Collapsible key={doc.id}>
           <CollapsibleTrigger
-            onClick={() => router.push(buildPath(`/wiki/${doc.id}`))}
             render={
               <Button
                 variant='ghost'
@@ -67,7 +67,10 @@ export function SideBarWiki() {
                 )}
                 style={{ paddingLeft: `${(depth + 1) * 12}px` }}
               >
-                <span className='flex items-center gap-1.5 truncate'>
+                <span
+                  className='flex items-center gap-1.5 truncate'
+                  onClick={() => router.push(buildPath(`/wiki/${doc.id}`))}
+                >
                   {doc.icone ? (
                     <span className='text-sm'>{doc.icone}</span>
                   ) : (
@@ -126,14 +129,20 @@ export function SideBarWiki() {
   ) => (
     <Collapsible key={name} defaultOpen={defaultOpen}>
       <CollapsibleTrigger
-        onClick={() => router.push(buildPath(path))}
         render={
           <Button
             variant='ghost'
             size='sm'
             className='group min-w-full justify-between transition-none'
           >
-            <Muted>{label}</Muted>
+            <Link
+              href={buildPath(path)}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Muted>{label}</Muted>
+            </Link>
             <div className='flex items-center gap-0.5'>
               {showAddButton && (
                 <span
@@ -150,7 +159,9 @@ export function SideBarWiki() {
                   />
                 </span>
               )}
-              <span className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'>
+              <span
+                className='inline-flex items-center justify-center h-6 w-6 rounded-md hover:bg-accent'
+              >
                 <Icon
                   icon={ArrowRight01Icon}
                   strokeWidth={2}
