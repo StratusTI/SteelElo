@@ -31,6 +31,11 @@ vi.mock('@/src/auth', () => ({
   verifyAuth: vi.fn(),
 }));
 
+vi.mock('@/src/utils/enrich-document-creator', () => ({
+  enrichDocumentsWithCreator: vi.fn((docs) => Promise.resolve(docs)),
+  enrichDocumentWithCreator: vi.fn((doc) => Promise.resolve(doc)),
+}));
+
 vi.mock('@/src/use-cases/factories/make-create-document', () => ({
   makeCreateDocumentUseCase: vi.fn(),
 }));
