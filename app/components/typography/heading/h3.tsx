@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface H3Props {
   children: React.ReactNode;
@@ -7,7 +7,12 @@ interface H3Props {
 
 export function H3({ children, className }: H3Props) {
   return (
-    <h3 className={cn('scroll-m-20 text-2xl font-semibold tracking-tight text-primary', className)}>
+    <h3
+      className={cn(
+        'scroll-m-20 text-2xl font-semibold tracking-tight text-primary',
+        className,
+      )}
+    >
       {children}
     </h3>
   );
