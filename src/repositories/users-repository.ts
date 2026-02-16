@@ -3,7 +3,7 @@ import { User } from "../@types/user";
 export interface SearchUsersParams {
   companyId: number
   query?: string
-  excludeProjectId?: number
+  excludeProjectId?: string
   limit?: number
 }
 

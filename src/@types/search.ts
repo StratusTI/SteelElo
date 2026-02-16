@@ -1,7 +1,7 @@
 export type SearchEntityType = 'project' | 'sprint' | 'task' | 'document'
 
 interface SearchResultBase {
-  id: number
+  id: string
   type: SearchEntityType
   title: string
   description?: string
@@ -21,7 +21,7 @@ export interface ProjectSearchResult extends SearchResultBase {
 
 export interface SprintSearchResult extends SearchResultBase {
   type: 'sprint'
-  projectId: number
+  projectId: string
   projectName: string
   startDate: Date
   endDate: Date
@@ -30,7 +30,7 @@ export interface SprintSearchResult extends SearchResultBase {
 
 export interface TaskSearchResult extends SearchResultBase {
   type: 'task'
-  projectId: number
+  projectId: string
   projectName: string
   status?: string
   assignees?: Array<{ id: number; name: string }>
@@ -38,7 +38,7 @@ export interface TaskSearchResult extends SearchResultBase {
 
 export interface DocumentSearchResult extends SearchResultBase {
   type: 'document'
-  projectId: number
+  projectId: string
   projectName: string
   icon: string
 }

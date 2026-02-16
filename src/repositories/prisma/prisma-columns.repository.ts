@@ -31,7 +31,7 @@ export class PrismaColumnsRepository implements ColumnsRepository {
     return created;
   }
 
-  async findByProject(projectId: number): Promise<Column[]> {
+  async findByProject(projectId: string): Promise<Column[]> {
     const columns = await prismaElo.coluna.findMany({
       where: { projetoId: projectId },
       orderBy: { ordem: 'asc' },
@@ -40,7 +40,7 @@ export class PrismaColumnsRepository implements ColumnsRepository {
     return columns.map(this.mapToColumn);
   }
 
-  async deleteByProject(projectId: number): Promise<void> {
+  async deleteByProject(projectId: string): Promise<void> {
     await prismaElo.coluna.deleteMany({
       where: { projetoId: projectId },
     });

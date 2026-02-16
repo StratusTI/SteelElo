@@ -7,13 +7,13 @@ import type { ProjectRole } from '@/src/@types/project-role';
 import type { User } from '@/src/@types/user';
 
 interface Project {
-  id: number;
+  id: string;
   nome: string;
   ownerId: number;
 }
 
 interface Member {
-  id: number;
+  id: string;
   userId: number;
   role: ProjectRole;
   source: string;
@@ -291,7 +291,7 @@ export function ProjectMembersClient({
 
 // Modal de Adicionar Membro
 interface AddMemberModalProps {
-  projectId: number;
+  projectId: string;
   onClose: () => void;
   onSuccess: () => void;
 }

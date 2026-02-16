@@ -10,10 +10,9 @@ export default async function ProjectMembersPage({
 }) {
   const { user } = await requireAuth();
 
-  const { id, enterpriseId } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId, enterpriseId } = await params;
 
-  if (Number.isNaN(projectId)) {
+  if (!projectId) {
     redirect(`/${enterpriseId}/projects`);
   }
 

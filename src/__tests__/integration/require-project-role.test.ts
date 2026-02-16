@@ -51,7 +51,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 
@@ -71,7 +71,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 
@@ -90,7 +90,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'admin',
       })
 
@@ -112,7 +112,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         permission: 'edit_any_task',
       })
 
@@ -124,7 +124,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
           superadmin: mockAuthUser.superadmin,
           idempresa: mockAuthUser.enterpriseId,
         }),
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: undefined,
         permission: 'edit_any_task',
       })
@@ -140,13 +140,13 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 42,
+        projectId: 'test-project-42',
         permission: 'delete_project',
       })
 
       const errorData = await result.error!.json()
       expect(errorData.error.details).toMatchObject({
-        projectId: 42,
+        projectId: 'test-project-42',
         userRole: 'member',
         requiredPermission: 'delete_project',
       })
@@ -165,7 +165,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'owner',
       })
 
@@ -184,7 +184,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       )
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 

@@ -4,7 +4,7 @@ import { UsersRepository } from "../repositories/users-repository";
 interface SearchUsersUseCaseRequest {
   user: User
   query?: string
-  excludeProjectId?: number
+  excludeProjectId?: string
   limit?: number
 }
 

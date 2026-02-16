@@ -17,7 +17,7 @@ export class InMemoryStickyRepository implements StickyRepository {
     const sticky: Sticky = {
       id: this.idCounter++,
       usuarioId: data.usuarioId,
-      content: data.content,
+      content: data.content ?? '',
       backgroundColor: data.backgroundColor || 'gray' as StickyColor,
       isBold: data.isBold || false,
       isItalic: data.isItalic || false,

@@ -9,7 +9,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
   // Setup do banco
   setupDatabase()
 
-  let testprojetoId: number
+  let testprojetoId: string
 
   beforeAll(async () => {
     // Cria dados de seed
@@ -26,7 +26,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
     // Garante estado limpo antes de cada teste
     await prismaElo.projetoMembro.deleteMany({
       where: {
-        id: { gte: 900100 }, // IDs de teste deste arquivo
+        id: { startsWith: 'test_repo_' },
       },
     })
   })
@@ -42,7 +42,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
       // Cria membro de teste
       await prismaElo.projetoMembro.create({
         data: {
-          id: 900101,
+          id: 'test_repo_member_001',
           projetoId: testprojetoId,
           usuarioId: 200,
           role: 'member',
@@ -63,7 +63,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
       // User 201 tem duas associações: member e admin
       await prismaElo.projetoMembro.create({
         data: {
-          id: 900102,
+          id: 'test_repo_member_002',
           projetoId: testprojetoId,
           usuarioId: 201,
           role: 'member',
@@ -73,7 +73,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
 
       await prismaElo.projetoMembro.create({
         data: {
-          id: 900103,
+          id: 'test_repo_member_003',
           projetoId: testprojetoId,
           usuarioId: 201,
           role: 'admin',
@@ -95,19 +95,19 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
       await prismaElo.projetoMembro.createMany({
         data: [
           {
-            id: 900104,
+            id: 'test_repo_member_004',
             projetoId: testprojetoId,
             usuarioId: 300,
             role: 'viewer',
           },
           {
-            id: 900105,
+            id: 'test_repo_member_005',
             projetoId: testprojetoId,
             usuarioId: 301,
             role: 'member',
           },
           {
-            id: 900106,
+            id: 'test_repo_member_006',
             projetoId: testprojetoId,
             usuarioId: 302,
             role: 'admin',
@@ -171,7 +171,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
       // Cria membro
       const member = await prismaElo.projetoMembro.create({
         data: {
-          id: 900107,
+          id: 'test_repo_member_007',
           projetoId: testprojetoId,
           usuarioId: 500,
           role: 'member',
@@ -197,7 +197,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
       // Cria membro
       const member = await prismaElo.projetoMembro.create({
         data: {
-          id: 900108,
+          id: 'test_repo_member_008',
           projetoId: testprojetoId,
           usuarioId: 600,
           role: 'member',
@@ -215,7 +215,7 @@ describe('PrismaProjectMembersRepository - Integration Tests', () => {
     })
 
     it('should throw error when deleting non-existent member', async () => {
-      await expect(repository.delete(999999)).rejects.toThrow()
+      await expect(repository.delete('nonexistent_id')).rejects.toThrow()
     })
   })
 })

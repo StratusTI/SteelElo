@@ -14,7 +14,7 @@ export class PrismaStickyRepository implements StickyRepository {
     const sticky = await prismaSteel.sticky.create({
       data: {
         usuarioId: data.usuarioId,
-        content: data.content,
+        content: data.content ?? '',
         backgroundColor: data.backgroundColor,
         isBold: data.isBold,
         isItalic: data.isItalic,

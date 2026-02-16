@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectKeys } from './use-projects';
 
 export interface ProjectMember {
-  id: number;
+  id: string;
   userId: number;
   role: string;
   source: string;
@@ -24,7 +24,7 @@ interface ProjectMembersResponse {
 }
 
 interface UseProjectMembersParams {
-  projectId: number;
+  projectId: string;
   enabled?: boolean;
 }
 
@@ -51,7 +51,7 @@ interface AddMemberData {
   role: string;
 }
 
-export function useAddProjectMember(projectId: number) {
+export function useAddProjectMember(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -70,13 +70,12 @@ export function useAddProjectMember(projectId: number) {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate members list
       queryClient.invalidateQueries({ queryKey: projectKeys.members(projectId) });
     },
   });
 }
 
-export function useRemoveProjectMember(projectId: number) {
+export function useRemoveProjectMember(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -93,7 +92,6 @@ export function useRemoveProjectMember(projectId: number) {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate members list
       queryClient.invalidateQueries({ queryKey: projectKeys.members(projectId) });
     },
   });
@@ -104,7 +102,7 @@ interface UpdateMemberRoleData {
   role: string;
 }
 
-export function useUpdateProjectMemberRole(projectId: number) {
+export function useUpdateProjectMemberRole(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -123,7 +121,6 @@ export function useUpdateProjectMemberRole(projectId: number) {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate members list
       queryClient.invalidateQueries({ queryKey: projectKeys.members(projectId) });
     },
   });
