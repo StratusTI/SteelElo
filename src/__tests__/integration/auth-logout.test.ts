@@ -33,11 +33,12 @@ describe('POST /api/auth/logout', () => {
     })
   })
 
-  it('should delete auth_token cookie', async () => {
+  it('should delete auth cookies', async () => {
     await POST()
 
     expect(mockDelete).toHaveBeenCalledWith('auth_token')
-    expect(mockDelete).toHaveBeenCalledTimes(1)
+    expect(mockDelete).toHaveBeenCalledWith('refresh_token')
+    expect(mockDelete).toHaveBeenCalledTimes(2)
   })
 
   it('should be idempotent (return success even if cookie does not exist)', async () => {
@@ -50,6 +51,7 @@ describe('POST /api/auth/logout', () => {
     expect(response.status).toBe(200)
     expect(data.success).toBe(true)
     expect(mockDelete).toHaveBeenCalledWith('auth_token')
+    expect(mockDelete).toHaveBeenCalledWith('refresh_token')
   })
 
   it('should return standardized response structure', async () => {

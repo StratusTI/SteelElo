@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2';
 import { ProjectMember, ProjectRole } from "@/src/@types/project-role";
 import { ProjectMembersRepository, ProjectMemberWithUser } from "../project-members-repository";
 
@@ -10,19 +11,18 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
     email: string
     foto: string | null
   }> = []
-  private idCounter = 1
 
-  async findByUserAndProject(userId: number, projectId: number): Promise<ProjectMember[]> {
+  async findByUserAndProject(userId: number, projectId: string): Promise<ProjectMember[]> {
     return this.items.filter(
-      (item) => item.usuarioId === userId && item.projetoId == projectId
+      (item) => item.usuarioId === userId && item.projetoId === projectId
     )
   }
 
-  async findByProject(projectId: number): Promise<ProjectMember[]> {
+  async findByProject(projectId: string): Promise<ProjectMember[]> {
     return this.items.filter((item) => item.projetoId === projectId)
   }
 
-  async findByProjectWithUsers(projectId: number): Promise<ProjectMemberWithUser[]> {
+  async findByProjectWithUsers(projectId: string): Promise<ProjectMemberWithUser[]> {
     const members = this.items.filter((item) => item.projetoId === projectId)
 
     return members.map(member => {
@@ -37,13 +37,13 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
     })
   }
 
-  async countOwners(projectId: number): Promise<number> {
+  async countOwners(projectId: string): Promise<number> {
     return this.items.filter(
-      (item) => item.projetoId === projectId && item.role == 'owner'
+      (item) => item.projetoId === projectId && item.role === 'owner'
     ).length
   }
 
-  async findMembership(projectId: number, userId: number, source?: string): Promise<ProjectMember | null> {
+  async findMembership(projectId: string, userId: number, source?: string): Promise<ProjectMember | null> {
     const membership = this.items.find(
       (item) =>
         item.projetoId === projectId &&
@@ -54,9 +54,9 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
     return membership || null
   }
 
-  async create(data: { projectId: number; userId: number; role: ProjectRole; source?: string; }): Promise<ProjectMember> {
+  async create(data: { projectId: string; userId: number; role: ProjectRole; source?: string; }): Promise<ProjectMember> {
     const member: ProjectMember = {
-      id: this.idCounter++,
+      id: createId(),
       projetoId: data.projectId,
       usuarioId: data.userId,
       role: data.role,
@@ -68,7 +68,7 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
     return member
   }
 
-  async updateRole(id: number, role: ProjectRole): Promise<ProjectMember> {
+  async updateRole(id: string, role: ProjectRole): Promise<ProjectMember> {
     const member = this.items.find((item) => item.id === id)
 
     if (!member) throw new Error('Member not found')
@@ -78,7 +78,7 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
     return member
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     const index = this.items.findIndex((item) => item.id === id)
 
     if (index === -1) {
@@ -89,7 +89,7 @@ export class InMemoryProjectMembersRepository implements ProjectMembersRepositor
   }
 
 
-  async deleteByUserAndProject(projectId: number, userId: number, source?: string): Promise<void> {
+  async deleteByUserAndProject(userId: number, projectId: string, source?: string): Promise<void> {
     const index = this.items.findIndex(
       (item) =>
         item.projetoId === projectId &&

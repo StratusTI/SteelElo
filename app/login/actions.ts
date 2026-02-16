@@ -1,61 +1,78 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import bcrypt from 'bcryptjs';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
+import {
+  type AuthUser,
+  generateAccessToken,
+  generateRefreshToken,
+  setAuthCookies,
+} from '@/src/auth';
+import { prismaSteel } from '@/src/lib/prisma';
+import type { LoginState } from './types';
 
-export async function loginAction(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+const loginSchema = z.object({
+  email: z.email('E-mail inválido'),
+  password: z.string().min(1, 'Senha é obrigatória'),
+});
 
-  if (!email || !password) {
+export async function loginAction(
+  _prevState: LoginState,
+  formData: FormData,
+): Promise<LoginState> {
+  const parsed = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+
+  if (!parsed.success) {
     return {
       success: false,
-      message: 'Email e senha são obrigatórios',
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
+
+  const { email, password } = parsed.data;
 
   try {
-    // Chamar a API de login
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-    const response = await fetch(`${baseUrl}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const dbUser = await prismaSteel.usuario.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        senha: true,
+        admin: true,
+        superadmin: true,
+        idempresa: true,
       },
-      body: JSON.stringify({ email, password }),
-      cache: 'no-store',
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || 'Erro ao realizar login',
-      };
+    if (!dbUser?.senha) {
+      return { success: false, message: 'Email ou senha inválidos' };
     }
 
-    // Se o login foi bem-sucedido, copiar o token do response para o cookie
-    // (caso a API não tenha setado o cookie corretamente)
-    if (data.data?.token) {
-      const cookieStore = await cookies();
-      cookieStore.set('auth_token', data.data.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60, // 1 hora
-        path: '/',
-      });
+    const isPasswordValid = await bcrypt.compare(password, dbUser.senha);
+    if (!isPasswordValid) {
+      return { success: false, message: 'Email ou senha inválidos' };
     }
-  } catch (error) {
-    console.error('[loginAction] Error:', error);
-    return {
-      success: false,
-      message: 'Erro ao conectar com o servidor',
+
+    const authUser: AuthUser = {
+      id: dbUser.id,
+      email: dbUser.email ?? '',
+      admin: Boolean(dbUser.admin),
+      superadmin: Boolean(dbUser.superadmin),
+      enterpriseId: dbUser.idempresa ?? 0,
     };
+
+    const accessToken = await generateAccessToken(authUser);
+    const { token: refreshToken } = await generateRefreshToken(authUser.id);
+
+    await setAuthCookies(accessToken, refreshToken);
+  } catch (error) {
+    console.error('[loginAction]', error);
+    return { success: false, message: 'Erro ao conectar com o servidor' };
   }
 
-  // Redirecionar APÓS o sucesso (fora do try-catch)
   redirect('/');
 }

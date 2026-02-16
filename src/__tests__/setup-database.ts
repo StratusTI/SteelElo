@@ -1,6 +1,8 @@
 import { afterAll, beforeAll, beforeEach } from "vitest";
 import { prismaElo } from "../lib/prisma";
 
+const TEST_PREFIX = 'test_'
+
 export async function setupDatabase() {
   beforeAll(async () => {
     const databaseUrl = "mysql://root:M7a64tl0@10.25.100.10:3306/easyretro_test?protocol=mysql"
@@ -15,14 +17,14 @@ export async function setupDatabase() {
   beforeEach(async () => {
     await prismaElo.projetoMembro.deleteMany({
       where: {
-        id: { gte: 900000  }
+        id: { startsWith: TEST_PREFIX }
       }
     })
   })
 
   afterAll(async () => {
     await prismaElo.projetoMembro.deleteMany({
-      where: { id: { gte: 900000 }}
+      where: { id: { startsWith: TEST_PREFIX } }
     })
 
     await prismaElo.$disconnect()
@@ -31,10 +33,10 @@ export async function setupDatabase() {
 
 export async function seedTestData() {
   const testProject = await prismaElo.projeto.upsert({
-    where: { id: 900001 },
+    where: { id: `${TEST_PREFIX}project_001` },
     update: {},
     create: {
-      id: 900001,
+      id: `${TEST_PREFIX}project_001`,
       nome: 'Projeto Teste',
       ownerId: 1,
       idempresa: 1
@@ -43,7 +45,7 @@ export async function seedTestData() {
 
   const testMemberViewer = await prismaElo.projetoMembro.create({
     data: {
-      id: 900001,
+      id: `${TEST_PREFIX}member_001`,
       projetoId: testProject.id,
       usuarioId: 100,
       role: 'viewer',
@@ -52,7 +54,7 @@ export async function seedTestData() {
 
   const testMemberMember = await prismaElo.projetoMembro.create({
     data: {
-      id: 900002,
+      id: `${TEST_PREFIX}member_002`,
       projetoId: testProject.id,
       usuarioId: 101,
       role: 'member',
@@ -61,7 +63,7 @@ export async function seedTestData() {
 
   const testMemberAdmin = await prismaElo.projetoMembro.create({
     data: {
-      id: 900003,
+      id: `${TEST_PREFIX}member_003`,
       projetoId: testProject.id,
       usuarioId: 102,
       role: 'admin',
@@ -78,10 +80,10 @@ export async function seedTestData() {
 
 export async function cleanupTestData() {
   await prismaElo.projetoMembro.deleteMany({
-    where: { id: { gte: 900000 } },
+    where: { id: { startsWith: TEST_PREFIX } },
   })
 
   await prismaElo.projeto.deleteMany({
-    where: { id: { gte: 900000 } },
+    where: { id: { startsWith: TEST_PREFIX } },
   })
 }

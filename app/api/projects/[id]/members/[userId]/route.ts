@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
+import type { User } from '@/src/@types/user';
+import type { AuthUser } from '@/src/auth';
 import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import { InsufficientPermissionsError } from '@/src/use-cases/errors/insufficient-permissions-error';
 import { ResourceNotFoundError } from '@/src/use-cases/errors/resource-not-found-error';
@@ -8,38 +10,55 @@ import { makeUpdateProjectMemberRoleUseCase } from '@/src/use-cases/factories/ma
 import { standardError, successResponse } from '@/src/utils/http-response';
 import { updateMemberRoleSchema } from '@/src/utils/zod-schemas/update-member-role-schema';
 
+function authUserToUser(authUser: AuthUser): User {
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    admin: authUser.admin,
+    superadmin: authUser.superadmin,
+    idempresa: authUser.enterpriseId,
+    nome: '',
+    sobrenome: '',
+    username: '',
+    foto: '',
+    telefone: '',
+    empresa: '',
+    departamento: null,
+    time: null,
+    online: false,
+  };
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; userId: string }> },
 ) {
-  const { id, userId } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId, userId } = await params;
   const memberUserId = Number.parseInt(userId, 10);
 
-  if (Number.isNaN(projectId) || Number.isNaN(memberUserId)) {
-    return standardError('BAD_REQUEST', 'Invalid project or user ID');
+  if (Number.isNaN(memberUserId)) {
+    return standardError('BAD_REQUEST', 'Invalid user ID');
   }
 
-  const { user, error: authError } = await requireProjectRole({
+  const { user: authUser, error: authError } = await requireProjectRole({
     projectId,
     permission: 'change_member_role',
   });
 
-  if (authError) return authError;
+  if (authError || !authUser) {
+    return authError;
+  }
 
   try {
     const body = await req.json();
     const validatedData = updateMemberRoleSchema.parse(body);
 
+    const user = authUserToUser(authUser);
     const updateMemberRole = makeUpdateProjectMemberRoleUseCase();
 
-    if (!user) {
-      return standardError('UNAUTHORIZED', 'User not found');
-    }
-
     const { member } = await updateMemberRole.execute({
-      user: user,
-      projectId: projectId,
+      user,
+      projectId,
       userId: memberUserId,
       newRole: validatedData.role,
     });
@@ -84,30 +103,28 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string; userId: string }> },
 ) {
-  const { id, userId } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId, userId } = await params;
   const memberUserId = Number.parseInt(userId, 10);
 
-  if (Number.isNaN(projectId) || Number.isNaN(memberUserId)) {
-    return standardError('BAD_REQUEST', 'Invalid project or user ID');
+  if (Number.isNaN(memberUserId)) {
+    return standardError('BAD_REQUEST', 'Invalid user ID');
   }
 
-  const { user, error: authError } = await requireProjectRole({
+  const { user: authUser, error: authError } = await requireProjectRole({
     projectId,
     permission: 'remove_member',
   });
 
-  if (authError) return authError;
+  if (authError || !authUser) {
+    return authError;
+  }
 
   try {
+    const user = authUserToUser(authUser);
     const removeMember = makeRemoveProjectMemberUseCase();
 
-    if (!user) {
-      return standardError('UNAUTHORIZED', 'User not found');
-    }
-
     const result = await removeMember.execute({
-      user: user,
+      user,
       projectId,
       userId: memberUserId,
     });

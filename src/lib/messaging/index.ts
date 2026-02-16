@@ -16,14 +16,15 @@ export async function sendWelcomeNotification(
     const message = getWelcomeMessage(userInfo, provider);
 
     if (provider === 'slack') {
-      const channelId = getDefaultSlackChannelId();
-      if (!channelId) {
-        console.warn('SLACK_DEFAULT_CHANNEL_ID not configured');
+      // Envia DM para o usuário usando o ID dele como channel
+      // Isso funciona em qualquer workspace sem precisar configurar canal
+      if (!userInfo.id) {
+        console.warn('Slack user ID not available for DM');
         return false;
       }
 
       const result = await sendSlackMessage(accessToken, {
-        channelId,
+        channelId: userInfo.id, // User ID funciona como channel para DM
         text: message.text,
         blocks: message.slackBlocks,
       });
@@ -32,6 +33,8 @@ export async function sendWelcomeNotification(
     }
 
     if (provider === 'teams') {
+      // Para Teams, também podemos enviar chat direto ao usuário
+      // Por enquanto, mantém a lógica de canal configurável
       const { teamId, channelId } = getDefaultTeamsConfig();
       if (!teamId || !channelId) {
         console.warn('TEAMS_DEFAULT_TEAM_ID or TEAMS_DEFAULT_CHANNEL_ID not configured');

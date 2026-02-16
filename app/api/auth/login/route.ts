@@ -1,100 +1,75 @@
 import bcrypt from 'bcryptjs';
-import * as jose from 'jose';
-import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
+import {
+  type AuthUser,
+  generateAccessToken,
+  generateRefreshToken,
+  setAuthCookies,
+} from '@/src/auth';
 import { prismaSteel } from '@/src/lib/prisma';
-
-const JWT_SECRET =
-  process.env.JWT_SECRET || 'local-dev-secret-change-in-production';
+import { standardError, successResponse } from '@/src/utils/http-response';
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    // Validação básica
     if (!email || !password) {
-      return Response.json(
-        { success: false, message: 'Email e senha são obrigatórios' },
-        { status: 400 },
-      );
+      return standardError('BAD_REQUEST', 'Email e senha sao obrigatorios');
     }
 
-    // Buscar usuário no banco (Steel)
-    const user = await prismaSteel.usuario.findUnique({
+    const dbUser = await prismaSteel.usuario.findUnique({
       where: { email },
-      include: {
-        empresa: {
-          select: { nome: true },
-        },
+      select: {
+        id: true,
+        email: true,
+        senha: true,
+        admin: true,
+        superadmin: true,
+        idempresa: true,
+        nome: true,
+        sobrenome: true,
       },
     });
 
-    if (!user || !user.senha) {
-      return Response.json(
-        { success: false, message: 'Email ou senha inválidos' },
-        { status: 401 },
-      );
+    if (!dbUser?.senha) {
+      return standardError('INVALID_CREDENTIALS', 'Email ou senha invalidos');
     }
 
-    // Validar senha
-    const isPasswordValid = await bcrypt.compare(password, user.senha);
-
+    const isPasswordValid = await bcrypt.compare(password, dbUser.senha);
     if (!isPasswordValid) {
-      return Response.json(
-        { success: false, message: 'Email ou senha inválidos' },
-        { status: 401 },
-      );
+      return standardError('INVALID_CREDENTIALS', 'Email ou senha invalidos');
     }
 
-    // Criar payload do JWT conforme especificação
-    const payload = {
-      iss: 'stratustelecom',
-      sub: String(user.id),
-      data: {
-        id: user.id,
-        nome: user.nome || '',
-        sobrenome: user.sobrenome || '',
-        username: user.username || '',
-        foto: user.foto || '',
-        email: user.email || '',
-        admin: user.admin ? 1 : 0,
-        superadmin: user.superadmin ? 1 : 0,
-        idempresa: user.idempresa || 0,
-        empresa: user.empresa?.nome || '',
-      },
+    const authUser: AuthUser = {
+      id: dbUser.id,
+      email: dbUser.email ?? '',
+      admin: Boolean(dbUser.admin),
+      superadmin: Boolean(dbUser.superadmin),
+      enterpriseId: dbUser.idempresa ?? 0,
     };
 
-    // Gerar token JWT
-    const secret = new TextEncoder().encode(JWT_SECRET);
-    const token = await new jose.SignJWT(payload)
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('1h')
-      .sign(secret);
+    const accessToken = await generateAccessToken(authUser);
+    const { token: refreshToken } = await generateRefreshToken(authUser.id);
 
-    // Salvar token em cookie httpOnly
-    const cookieStore = await cookies();
-    cookieStore.set('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60, // 1 hora
-      path: '/',
-    });
+    await setAuthCookies(accessToken, refreshToken);
 
-    return Response.json({
-      success: true,
-      message: 'Login realizado com sucesso',
-      data: {
-        user: payload.data,
-        token,
+    return successResponse(
+      {
+        user: {
+          id: dbUser.id,
+          email: dbUser.email,
+          nome: dbUser.nome,
+          sobrenome: dbUser.sobrenome,
+          admin: authUser.admin,
+          superadmin: authUser.superadmin,
+          enterpriseId: authUser.enterpriseId,
+        },
       },
-    });
+      200,
+      'Login realizado com sucesso',
+    );
   } catch (error) {
     console.error('[Login] Error:', error);
-    return Response.json(
-      { success: false, message: 'Erro ao realizar login' },
-      { status: 500 },
-    );
+    return standardError('INTERNAL_SERVER_ERROR', 'Erro ao realizar login');
   }
 }

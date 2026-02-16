@@ -3,7 +3,7 @@ import { prismaElo, prismaSteel } from "@/src/lib/prisma";
 import { ProjectMembersRepository, ProjectMemberWithUser } from "../project-members-repository";
 
 export class PrismaProjectMembersRepository implements ProjectMembersRepository {
-  async findByUserAndProject(userId: number, projectId: number): Promise<ProjectMember[]> {
+  async findByUserAndProject(userId: number, projectId: string): Promise<ProjectMember[]> {
     const members = await prismaElo.projetoMembro.findMany({
       where: {
         usuarioId: userId,
@@ -21,7 +21,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     }))
   }
 
-  async findByProject(projectId: number): Promise<ProjectMember[]> {
+  async findByProject(projectId: string): Promise<ProjectMember[]> {
     const members = await prismaElo.projetoMembro.findMany({
       where: {
         projetoId: projectId
@@ -38,7 +38,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     }))
   }
 
-  async findByProjectWithUsers(projectId: number): Promise<ProjectMemberWithUser[]> {
+  async findByProjectWithUsers(projectId: string): Promise<ProjectMemberWithUser[]> {
     const members = await prismaElo.projetoMembro.findMany({
       where: {
         projetoId: projectId
@@ -87,7 +87,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     })
   }
 
-  async countOwners(projectId: number): Promise<number> {
+  async countOwners(projectId: string): Promise<number> {
     return await prismaElo.projetoMembro.count({
       where: {
         projetoId: projectId,
@@ -96,7 +96,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     })
   }
 
-  async findMembership(projectId: number, userId: number, source?: string): Promise<ProjectMember | null> {
+  async findMembership(projectId: string, userId: number, source?: string): Promise<ProjectMember | null> {
     const member = await prismaElo.projetoMembro.findFirst({
       where: {
         projetoId: projectId,
@@ -117,7 +117,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     }
   }
 
-  async create(data: { projectId: number; userId: number; role: ProjectRole; source?: string; }): Promise<ProjectMember> {
+  async create(data: { projectId: string; userId: number; role: ProjectRole; source?: string; }): Promise<ProjectMember> {
     const member = await prismaElo.projetoMembro.create({
       data: {
         projetoId: data.projectId,
@@ -137,7 +137,7 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     }
   }
 
-  async updateRole(id: number, role: ProjectRole): Promise<ProjectMember> {
+  async updateRole(id: string, role: ProjectRole): Promise<ProjectMember> {
     const member = await prismaElo.projetoMembro.update({
       where: { id },
       data: { role: role as any }
@@ -153,13 +153,13 @@ export class PrismaProjectMembersRepository implements ProjectMembersRepository 
     }
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await prismaElo.projetoMembro.delete({
       where: { id }
     })
   }
 
-  async deleteByUserAndProject(userId: number, projectId: number, source?: string): Promise<void> {
+  async deleteByUserAndProject(userId: number, projectId: string, source?: string): Promise<void> {
     await prismaElo.projetoMembro.deleteMany({
       where: { usuarioId: userId, projetoId: projectId, source: source ?? 'direct' }
     })

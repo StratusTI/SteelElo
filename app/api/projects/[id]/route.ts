@@ -1,5 +1,8 @@
+import { revalidateTag, unstable_cache } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
+import type { User } from '@/src/@types/user';
+import type { AuthUser } from '@/src/auth';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
 import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import {
@@ -26,37 +29,69 @@ const updateProjectSchema = z.object({
   acesso: z.boolean().optional(),
 });
 
-// GET /api/projects/[id] - Detalhes do projeto
+function authUserToUser(authUser: AuthUser): User {
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    admin: authUser.admin,
+    superadmin: authUser.superadmin,
+    idempresa: authUser.enterpriseId,
+    nome: '',
+    sobrenome: '',
+    username: '',
+    foto: '',
+    telefone: '',
+    empresa: '',
+    departamento: null,
+    time: null,
+    online: false,
+  };
+}
+
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId } = await params;
 
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  // Validar apenas autenticação (permissão será checada no use case)
-  const { user, error } = await requireProjectRole({
+  const { user: authUser, error } = await requireProjectRole({
     projectId,
     minimumRole: 'viewer',
   });
 
-  if (error || !user) {
+  if (error || !authUser) {
     return error;
   }
 
   try {
-    const getProjectDetails = makeGetProjectDetailsUseCase();
+    const user = authUserToUser(authUser);
 
-    const { project } = await getProjectDetails.execute({
-      user,
+    const getCachedProjectDetails = unstable_cache(
+      async (userJson: string, projId: string) => {
+        const parsedUser = JSON.parse(userJson) as User;
+        const getProjectDetails = makeGetProjectDetailsUseCase();
+        return getProjectDetails.execute({
+          user: parsedUser,
+          projectId: projId,
+        });
+      },
+      [`project-${projectId}`],
+      {
+        revalidate: 60,
+        tags: ['projects', `project-${projectId}`],
+      },
+    );
+
+    const { project } = await getCachedProjectDetails(
+      JSON.stringify(user),
       projectId,
-    });
+    );
 
-    return successResponse({ project }, 200);
+    return successResponse({ project }, 200, undefined, {
+      maxAge: 60,
+      staleWhileRevalidate: 120,
+      private: true,
+    });
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return standardError('RESOURCE_NOT_FOUND', 'Project not found');
@@ -67,25 +102,22 @@ export async function GET(
   }
 }
 
-// PATCH /api/projects/[id] - Atualizar projeto
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId } = await params;
 
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  // Validar permissão de admin
-  const { user, userRole, error } = await requireProjectRole({
+  const {
+    user: authUser,
+    userRole,
+    error,
+  } = await requireProjectRole({
     projectId,
     minimumRole: 'admin',
   });
 
-  if (error || !user || !userRole) {
+  if (error || !authUser || !userRole) {
     return error;
   }
 
@@ -93,7 +125,6 @@ export async function PATCH(
     const body = await req.json();
     const validatedData = updateProjectSchema.parse(body);
 
-    // Converter strings de data para Date objects
     const data = {
       ...validatedData,
       dataInicio: validatedData.dataInicio
@@ -104,6 +135,7 @@ export async function PATCH(
         : undefined,
     };
 
+    const user = authUserToUser(authUser);
     const updateProject = makeUpdateProjectUseCase();
 
     const { project } = await updateProject.execute({
@@ -112,6 +144,10 @@ export async function PATCH(
       projectId,
       data,
     });
+
+    revalidateTag('projects', 'max');
+    revalidateTag(`project-${projectId}`, 'max');
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max');
 
     return successResponse({ project }, 200, 'Project updated successfully');
   } catch (err) {
@@ -142,29 +178,27 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/projects/[id] - Arquivar projeto
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId } = await params;
 
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  // Validar permissão de owner
-  const { user, userRole, error } = await requireProjectRole({
+  const {
+    user: authUser,
+    userRole,
+    error,
+  } = await requireProjectRole({
     projectId,
     permission: 'delete_project',
   });
 
-  if (error || !user || !userRole) {
+  if (error || !authUser || !userRole) {
     return error;
   }
 
   try {
+    const user = authUserToUser(authUser);
     const archiveProject = makeArchiveProjectUseCase();
 
     await archiveProject.execute({
@@ -172,6 +206,10 @@ export async function DELETE(
       userRole,
       projectId,
     });
+
+    revalidateTag('projects', 'max');
+    revalidateTag(`project-${projectId}`, 'max');
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max');
 
     return successResponse(
       { success: true },

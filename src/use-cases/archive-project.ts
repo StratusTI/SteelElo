@@ -6,7 +6,7 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 interface ArchiveProjectUseCaseRequest {
   user: User
   userRole: ProjectRole
-  projectId: number
+  projectId: string
 }
 
 interface ArchiveProjectUseCaseResponse {

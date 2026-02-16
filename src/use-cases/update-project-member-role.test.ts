@@ -69,7 +69,7 @@ describe('UpdateProjectMemberRoleUseCase', () => {
     await expect(() =>
       sut.execute({
         user: mockOwner,
-        projectId: 999,
+        projectId: 'non-existent-id',
         userId: 2,
         newRole: 'admin',
       })

@@ -1,10 +1,10 @@
-import type { User } from '@/src/@types/user'
+import type { AuthUser } from '@/src/auth'
 import { requireProjectRole } from '@/src/http/middlewares/require-project-role'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Mock do verifyJWT
-vi.mock('@/src/http/middlewares/verify-jwt', () => ({
-  verifyJWT: vi.fn(),
+// Mock do verifyAuth
+vi.mock('@/src/auth', () => ({
+  verifyAuth: vi.fn(),
 }))
 
 // Mock do use case factory
@@ -12,25 +12,16 @@ vi.mock('@/src/use-cases/factories/make-check-user-permission', () => ({
   makeCheckUserPermissionUseCase: vi.fn(),
 }))
 
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt'
+import { verifyAuth } from '@/src/auth'
 import { makeCheckUserPermissionUseCase } from '@/src/use-cases/factories/make-check-user-permission'
 
 describe('requireProjectRole Middleware - Integration Tests', () => {
-  const mockUser: User = {
+  const mockAuthUser: AuthUser = {
     id: 1,
-    nome: 'John',
-    sobrenome: 'Doe',
-    username: 'johndoe',
     email: 'john@example.com',
-    foto: '',
-    telefone: '',
     admin: false,
     superadmin: false,
-    idempresa: 1,
-    empresa: 'Test Company',
-    departamento: 'Engineering',
-    time: 'Backend',
-    online: true,
+    enterpriseId: 1,
   }
 
   const mockCheckPermissionUseCase = {
@@ -46,7 +37,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
 
   describe('Authentication checks', () => {
     it('should return 401 when user is not authenticated', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({
+      vi.mocked(verifyAuth).mockResolvedValue({
         user: null,
         error: Response.json(
           {
@@ -60,7 +51,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 
@@ -72,7 +63,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
 
   describe('Authorization checks', () => {
     it('should allow access when user has required minimum role', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({ user: mockUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser })
 
       mockCheckPermissionUseCase.execute.mockResolvedValue({
         hasPermission: true,
@@ -80,17 +71,17 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 
-      expect(result.user).toEqual(mockUser)
+      expect(result.user).toEqual(mockAuthUser)
       expect(result.userRole).toBe('admin')
       expect(result.error).toBeUndefined()
     })
 
     it('should deny access when user lacks required role', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({ user: mockUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser })
 
       mockCheckPermissionUseCase.execute.mockResolvedValue({
         hasPermission: false,
@@ -99,7 +90,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'admin',
       })
 
@@ -113,7 +104,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
     })
 
     it('should check specific permission when provided', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({ user: mockUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser })
 
       mockCheckPermissionUseCase.execute.mockResolvedValue({
         hasPermission: true,
@@ -121,20 +112,26 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         permission: 'edit_any_task',
       })
 
       expect(mockCheckPermissionUseCase.execute).toHaveBeenCalledWith({
-        user: mockUser,
-        projectId: 1,
+        user: expect.objectContaining({
+          id: mockAuthUser.id,
+          email: mockAuthUser.email,
+          admin: mockAuthUser.admin,
+          superadmin: mockAuthUser.superadmin,
+          idempresa: mockAuthUser.enterpriseId,
+        }),
+        projectId: 'test-project-1',
         minimumRole: undefined,
         permission: 'edit_any_task',
       })
     })
 
     it('should include detailed error information on denial', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({ user: mockUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser })
 
       mockCheckPermissionUseCase.execute.mockResolvedValue({
         hasPermission: false,
@@ -143,13 +140,13 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 42,
+        projectId: 'test-project-42',
         permission: 'delete_project',
       })
 
       const errorData = await result.error!.json()
       expect(errorData.error.details).toMatchObject({
-        projectId: 42,
+        projectId: 'test-project-42',
         userRole: 'member',
         requiredPermission: 'delete_project',
       })
@@ -158,9 +155,9 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
 
   describe('Superadmin bypass', () => {
     it('should allow superadmin to access any project', async () => {
-      const superadminUser: User = { ...mockUser, superadmin: true }
+      const superadminUser: AuthUser = { ...mockAuthUser, superadmin: true }
 
-      vi.mocked(verifyJWT).mockResolvedValue({ user: superadminUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: superadminUser })
 
       mockCheckPermissionUseCase.execute.mockResolvedValue({
         hasPermission: true,
@@ -168,7 +165,7 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
       })
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'owner',
       })
 
@@ -180,14 +177,14 @@ describe('requireProjectRole Middleware - Integration Tests', () => {
 
   describe('Error handling', () => {
     it('should handle unexpected errors gracefully', async () => {
-      vi.mocked(verifyJWT).mockResolvedValue({ user: mockUser })
+      vi.mocked(verifyAuth).mockResolvedValue({ user: mockAuthUser })
 
       mockCheckPermissionUseCase.execute.mockRejectedValue(
         new Error('Database connection failed')
       )
 
       const result = await requireProjectRole({
-        projectId: 1,
+        projectId: 'test-project-1',
         minimumRole: 'member',
       })
 

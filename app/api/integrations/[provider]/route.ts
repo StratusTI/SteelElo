@@ -1,4 +1,4 @@
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import { verifyAuth } from '@/src/auth';
 import {
   isValidProvider,
   type OAuthProvider,
@@ -17,10 +17,10 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
   const { provider } = await params;
 
   if (!isValidProvider(provider)) {
-    return standardError('BAD_REQUEST', 'Provider inválido');
+    return standardError('BAD_REQUEST', 'Provider invalido');
   }
 
-  const { user, error } = await verifyJWT();
+  const { user, error } = await verifyAuth();
 
   if (error || !user) {
     return error;
@@ -47,17 +47,17 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
     return successResponse(
       { provider },
       200,
-      'Integração desconectada com sucesso',
+      'Integracao desconectada com sucesso',
     );
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
-      return standardError('RESOURCE_NOT_FOUND', 'Integração não encontrada');
+      return standardError('RESOURCE_NOT_FOUND', 'Integracao nao encontrada');
     }
 
     console.error(`[DELETE /api/integrations/${provider}] Error:`, err);
     return standardError(
       'INTERNAL_SERVER_ERROR',
-      'Erro ao desconectar integração',
+      'Erro ao desconectar integracao',
     );
   }
 }

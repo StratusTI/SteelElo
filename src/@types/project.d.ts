@@ -39,7 +39,7 @@ export interface ProjectFilters {
 }
 
 export interface Project {
-  id: number;
+  id: string;
   nome: string;
   projectId: string | null;
   descricao: string | null;

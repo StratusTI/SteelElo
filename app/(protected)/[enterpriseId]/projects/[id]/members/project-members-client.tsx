@@ -7,13 +7,13 @@ import type { ProjectRole } from '@/src/@types/project-role';
 import type { User } from '@/src/@types/user';
 
 interface Project {
-  id: number;
+  id: string;
   nome: string;
   ownerId: number;
 }
 
 interface Member {
-  id: number;
+  id: string;
   userId: number;
   role: ProjectRole;
   source: string;
@@ -88,7 +88,6 @@ export function ProjectMembersClient({
 
       if (data.success) {
         alert('Role atualizada com sucesso!');
-        router.refresh();
         fetchMembers();
       } else {
         alert(data.error?.details || 'Erro ao atualizar role');
@@ -111,7 +110,6 @@ export function ProjectMembersClient({
 
       if (data.success) {
         alert('Membro removido com sucesso!');
-        router.refresh();
         fetchMembers();
       } else {
         alert(data.error?.details || data.message || 'Erro ao remover membro');
@@ -283,7 +281,6 @@ export function ProjectMembersClient({
             onSuccess={() => {
               setShowAddModal(false);
               fetchMembers();
-              router.refresh();
             }}
           />
         )}
@@ -294,7 +291,7 @@ export function ProjectMembersClient({
 
 // Modal de Adicionar Membro
 interface AddMemberModalProps {
-  projectId: number;
+  projectId: string;
   onClose: () => void;
   onSuccess: () => void;
 }

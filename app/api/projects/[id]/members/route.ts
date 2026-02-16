@@ -1,5 +1,8 @@
+import { revalidateTag, unstable_cache } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
+import type { User } from '@/src/@types/user';
+import type { AuthUser } from '@/src/auth';
 import { requireProjectRole } from '@/src/http/middlewares/require-project-role';
 import { ConflictError } from '@/src/use-cases/errors/conflict-error';
 import { InsufficientPermissionsError } from '@/src/use-cases/errors/insufficient-permissions-error';
@@ -9,37 +12,52 @@ import { makeGetProjectMembersUsecase } from '@/src/use-cases/factories/make-get
 import { standardError, successResponse } from '@/src/utils/http-response';
 import { addMemberSchema } from '@/src/utils/zod-schemas/add-member-schema';
 
+function authUserToUser(authUser: AuthUser): User {
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    admin: authUser.admin,
+    superadmin: authUser.superadmin,
+    idempresa: authUser.enterpriseId,
+    nome: '',
+    sobrenome: '',
+    username: '',
+    foto: '',
+    telefone: '',
+    empresa: '',
+    departamento: null,
+    time: null,
+    online: false,
+  };
+}
+
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId } = await params;
 
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  const { user, error } = await requireProjectRole({
+  const { user: authUser, error } = await requireProjectRole({
     projectId,
     minimumRole: 'viewer',
   });
 
-  if (error) return error;
+  if (error || !authUser) {
+    return error;
+  }
 
   try {
-    const getProjectMembers = makeGetProjectMembersUsecase();
+    const user = authUserToUser(authUser);
 
-    if (!user) return standardError('UNAUTHORIZED', 'User not found');
-
-    const { members } = await getProjectMembers.execute({
-      user: user,
-      projectId,
-    });
-
-    return successResponse(
-      {
-        members: members.map((m) => ({
+    const getCachedMembers = unstable_cache(
+      async (userJson: string, projId: string) => {
+        const parsedUser = JSON.parse(userJson) as User;
+        const getProjectMembers = makeGetProjectMembersUsecase();
+        const { members } = await getProjectMembers.execute({
+          user: parsedUser,
+          projectId: projId,
+        });
+        return members.map((m) => ({
           id: m.id,
           userId: m.usuarioId,
           role: m.role,
@@ -52,10 +70,22 @@ export async function GET(
             email: m.usuario.email,
             foto: m.usuario.foto,
           },
-        })),
+        }));
       },
-      200,
+      [`project-members-${projectId}`],
+      {
+        revalidate: 30,
+        tags: [`project-${projectId}-members`],
+      },
     );
+
+    const members = await getCachedMembers(JSON.stringify(user), projectId);
+
+    return successResponse({ members }, 200, undefined, {
+      maxAge: 30,
+      staleWhileRevalidate: 60,
+      private: true,
+    });
   } catch (err) {
     console.error('[GET] /api/projects/[id]/members Unexpected error', err);
     return standardError('INTERNAL_SERVER_ERROR', 'Unexpected error');
@@ -66,34 +96,32 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const projectId = Number.parseInt(id, 10);
+  const { id: projectId } = await params;
 
-  if (Number.isNaN(projectId)) {
-    return standardError('BAD_REQUEST', 'Invalid project ID');
-  }
-
-  const { user, error: authError } = await requireProjectRole({
+  const { user: authUser, error: authError } = await requireProjectRole({
     projectId,
     permission: 'invite_member',
   });
 
-  if (authError) return authError;
+  if (authError || !authUser) {
+    return authError;
+  }
 
   try {
     const body = await req.json();
     const validatedData = addMemberSchema.parse(body);
 
+    const user = authUserToUser(authUser);
     const addMember = makeAddProjectMemberUseCase();
 
-    if (!user) return standardError('UNAUTHORIZED', 'User not found');
-
     const { member } = await addMember.execute({
-      user: user,
+      user,
       projectId,
       userId: validatedData.userId,
       role: validatedData.role,
     });
+
+    revalidateTag(`project-${projectId}-members`, 'max');
 
     return successResponse(
       {

@@ -1,4 +1,5 @@
-import { makeConnectIntegrationUseCase } from '@/src/use-cases/factories/make-connect-integration';
+import { cookies } from 'next/headers';
+import { type NextRequest, NextResponse } from 'next/server';
 import { sendWelcomeNotification } from '@/src/lib/messaging';
 import {
   exchangeCodeForToken,
@@ -6,8 +7,7 @@ import {
   isValidProvider,
   type OAuthProvider,
 } from '@/src/lib/oauth/providers';
-import { cookies } from 'next/headers';
-import { type NextRequest, NextResponse } from 'next/server';
+import { makeConnectIntegrationUseCase } from '@/src/use-cases/factories/make-connect-integration';
 
 interface RouteParams {
   params: Promise<{ provider: string }>;

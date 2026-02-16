@@ -1,10 +1,8 @@
-import { cookies } from 'next/headers';
+import { clearAuthCookies } from '@/src/auth';
 import { successResponse } from '@/src/utils/http-response';
 
 export async function POST() {
-  const cookieStore = await cookies();
-
-  cookieStore.delete('auth_token');
+  await clearAuthCookies();
 
   return successResponse(
     { message: 'Logout successful' },

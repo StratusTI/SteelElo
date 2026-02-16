@@ -1,14 +1,17 @@
 import type { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
+import type { User } from '@/src/@types/user';
+import { verifyAuth } from '@/src/auth';
 import { makeSearchUsersUseCase } from '@/src/use-cases/factories/make-search-users';
 import { standardError, successResponse } from '@/src/utils/http-response';
 import { searchUsersSchema } from '@/src/utils/zod-schemas/search-users-schema';
 
 export async function GET(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth();
 
-  if (authError) return authError;
+  if (authError || !authUser) {
+    return authError;
+  }
 
   try {
     const { searchParams } = new URL(req.url);
@@ -21,14 +24,28 @@ export async function GET(req: NextRequest) {
 
     const validatedParams = searchUsersSchema.parse(rawParams);
 
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    };
+
     const searchUsers = makeSearchUsersUseCase();
 
-    if (!user) {
-      return standardError('UNAUTHORIZED', 'User not found');
-    }
-
     const { users } = await searchUsers.execute({
-      user: user,
+      user,
       query: validatedParams.q,
       excludeProjectId: validatedParams.excludeProjectId,
       limit: validatedParams.limit,

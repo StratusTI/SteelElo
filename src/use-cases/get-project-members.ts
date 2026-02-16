@@ -4,7 +4,7 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
 interface GetProjectMembersUseCaseRequest {
   user: User
-  projectId: number
+  projectId: string
 }
 
 interface GetProjectMembersUseCaseResponse {

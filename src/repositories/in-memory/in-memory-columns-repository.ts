@@ -10,7 +10,7 @@ export class InMemoryColumnsRepository implements ColumnsRepository {
 
   async create(data: CreatedColumnsData): Promise<Column> {
     const column: Column = {
-      id: this.idCounter++,
+      id: `col_${this.idCounter++}`,
       titulo: data.titulo,
       ordem: data.ordem,
       cor: data.cor || null,
@@ -31,13 +31,13 @@ export class InMemoryColumnsRepository implements ColumnsRepository {
     return created
   }
 
-  async findByProject(projectId: number): Promise<Column[]> {
+  async findByProject(projectId: string): Promise<Column[]> {
     return this.items
       .filter((c) => c.projetoId === projectId)
       .sort((a, b) => a.ordem - b.ordem)
   }
 
-  async deleteByProject(projectId: number): Promise<void> {
+  async deleteByProject(projectId: string): Promise<void> {
     this.items = this.items.filter((c) => c.projetoId !== projectId)
   }
 }

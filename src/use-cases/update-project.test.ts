@@ -30,25 +30,28 @@ const mockUser: User = {
   online: true,
 };
 
+let existingProjectId: string;
+
 describe('Update Project Use Case', () => {
   beforeEach(async () => {
     projectsRepository = new InMemoryProjectRepository();
     sut = new UpdateProjectUseCase(projectsRepository);
 
     // Criar projeto inicial para testes
-    await projectsRepository.create({
+    const existingProject = await projectsRepository.create({
       nome: 'Existing Project',
       ownerId: mockUser.id,
       idempresa: mockUser.idempresa!,
       status: ProjetoStatus.draft,
     });
+    existingProjectId = existingProject.id;
   });
 
   it('should update project name', async () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         nome: 'Updated Project',
       },
@@ -61,7 +64,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         descricao: 'New description',
       },
@@ -74,7 +77,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         status: ProjetoStatus.planning,
       },
@@ -87,7 +90,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         prioridade: ProjetoPriority.high,
       },
@@ -100,7 +103,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'owner',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         nome: 'Multi Update',
         descricao: 'Multiple fields updated',
@@ -120,7 +123,7 @@ describe('Update Project Use Case', () => {
       sut.execute({
         user: mockUser,
         userRole: 'admin',
-        projectId: 999,
+        projectId: 'non-existent-id',
         data: {
           nome: 'Non-existent',
         },
@@ -133,7 +136,7 @@ describe('Update Project Use Case', () => {
       sut.execute({
         user: mockUser,
         userRole: 'admin',
-        projectId: 1,
+        projectId: existingProjectId,
         data: {
           backgroundUrl: 'invalid-color',
         },
@@ -145,7 +148,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         backgroundUrl: '#FF5733',
       },
@@ -159,7 +162,7 @@ describe('Update Project Use Case', () => {
       sut.execute({
         user: mockUser,
         userRole: 'admin',
-        projectId: 1,
+        projectId: existingProjectId,
         data: {
           dataInicio: new Date('2024-12-31'),
           dataFim: new Date('2024-01-01'),
@@ -181,7 +184,7 @@ describe('Update Project Use Case', () => {
       sut.execute({
         user: mockUser,
         userRole: 'admin',
-        projectId: 1,
+        projectId: existingProjectId,
         data: {
           nome: 'Another Project',
         },
@@ -201,7 +204,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         nome: 'Same Name',
       },
@@ -215,7 +218,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         nome: 'Existing Project', // Mesmo nome
         descricao: 'Just updating description',
@@ -233,7 +236,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         dataInicio,
         dataFim,
@@ -249,7 +252,7 @@ describe('Update Project Use Case', () => {
     const { project } = await sut.execute({
       user: mockUser,
       userRole: 'admin',
-      projectId: 1,
+      projectId: existingProjectId,
       data: {
         descricao: 'Only description changed',
       },

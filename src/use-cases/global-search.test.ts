@@ -94,7 +94,7 @@ describe('GlobalSearchUseCase', () => {
 
   it('should trim query before searching', async () => {
     repository.addProject({
-      id: 1,
+      id: '1',
       type: 'project',
       title: 'Test Project',
       url: '/projects/1',
@@ -112,7 +112,7 @@ describe('GlobalSearchUseCase', () => {
 
   it('should search and return results', async () => {
     repository.addProject({
-      id: 1,
+      id: '1',
       type: 'project',
       title: 'Project Alpha',
       description: 'First project',
@@ -121,7 +121,7 @@ describe('GlobalSearchUseCase', () => {
     })
 
     repository.addProject({
-      id: 2,
+      id: '2',
       type: 'project',
       title: 'Project Beta',
       description: 'Second project',
@@ -141,7 +141,7 @@ describe('GlobalSearchUseCase', () => {
 
   it('should filter results by query', async () => {
     repository.addProject({
-      id: 1,
+      id: '1',
       type: 'project',
       title: 'Alpha Project',
       url: '/projects/1',
@@ -149,7 +149,7 @@ describe('GlobalSearchUseCase', () => {
     })
 
     repository.addProject({
-      id: 2,
+      id: '2',
       type: 'project',
       title: 'Beta Sprint',
       url: '/projects/2',
@@ -167,7 +167,7 @@ describe('GlobalSearchUseCase', () => {
 
   it('should search in description', async () => {
     repository.addProject({
-      id: 1,
+      id: '1',
       type: 'project',
       title: 'Project X',
       description: 'Contains alpha keyword',

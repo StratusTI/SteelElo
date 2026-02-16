@@ -16,7 +16,7 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 interface UpdateProjectUsecaseRequest {
   user: User
   userRole: ProjectRole
-  projectId: number
+  projectId: string
   data: UpdateProjectRequest
 }
 

@@ -1,3 +1,6 @@
+ Eu crie todo o visual dos quick-links em @app/components/shared/company/user/user-quick-link.tsx agora preciso que gere todo o backend, mantendo o padrão de arquitetura. Gere
+  testes para validar (unitário e integração). O link deve ser único por usuário, o mesmo não pode ter dois links iguais (mesmo com título diferentes).
+
 # Validando Usuário/JWT- Cookies Headers
 
 ## API Routes

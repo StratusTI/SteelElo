@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { User } from '../@types/user'
 import { InMemoryProjectMembersRepository } from '../repositories/in-memory/in-memory-project-members-repository'
@@ -23,10 +24,16 @@ const mockUser: User = {
   online: true,
 }
 
+let testProjectId: string
+let testProjectId2: string
+
 describe('Get User Project Role Use Case', () => {
   beforeEach(() => {
     projectMembersRepository = new InMemoryProjectMembersRepository()
     sut = new GetUserProjectRoleUseCase(projectMembersRepository)
+
+    testProjectId = createId()
+    testProjectId2 = createId()
   })
 
   it('should return superadmin role for superadmin users', async () => {
@@ -34,7 +41,7 @@ describe('Get User Project Role Use Case', () => {
 
     const { role, isUserSuperAdmin } = await sut.execute({
       user: superadminUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     expect(role).toBe('superadmin')
@@ -44,7 +51,7 @@ describe('Get User Project Role Use Case', () => {
   it('should return null role when user is not a member', async () => {
     const { role, isUserSuperAdmin } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     expect(role).toBeNull()
@@ -53,14 +60,14 @@ describe('Get User Project Role Use Case', () => {
 
   it('should return user role when user is a member', async () => {
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'member',
     })
 
     const { role, isUserSuperAdmin } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     expect(role).toBe('member')
@@ -69,20 +76,20 @@ describe('Get User Project Role Use Case', () => {
 
   it('should return most permissive role when user has multiple memberships (RN1.1)', async () => {
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'member',
     })
 
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'admin',
     })
 
     const { role } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     expect(role).toBe('admin')
@@ -90,20 +97,20 @@ describe('Get User Project Role Use Case', () => {
 
   it('should return owner when user has owner and member roles', async () => {
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'member',
     })
 
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'owner',
     })
 
     const { role } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     expect(role).toBe('owner')
@@ -111,25 +118,25 @@ describe('Get User Project Role Use Case', () => {
 
   it('should not confuse projects when checking role', async () => {
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: mockUser.id,
       role: 'admin',
     })
 
     await projectMembersRepository.create({
-      projectId: 2,
+      projectId: testProjectId2,
       userId: mockUser.id,
       role: 'viewer',
     })
 
     const resultProject1 = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     })
 
     const resultProject2 = await sut.execute({
       user: mockUser,
-      projectId: 2,
+      projectId: testProjectId2,
     })
 
     expect(resultProject1.role).toBe('admin')
@@ -141,7 +148,7 @@ describe('Get User Project Role Use Case', () => {
 
     const { role } = await sut.execute({
       user: superadminUser,
-      projectId: 999,
+      projectId: 'non-existent-id',
     })
 
     expect(role).toBe('superadmin')

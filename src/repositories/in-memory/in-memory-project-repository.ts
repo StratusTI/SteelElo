@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2';
 import {
   CreateProjectRequest,
   Project,
@@ -10,15 +11,14 @@ import { ProjectRepository } from "../project-repository";
 
 export class InMemoryProjectRepository implements ProjectRepository {
   public items: Project[] = []
-  private idCounter = 1
 
-  public memberships: Map<number, number[]> = new Map()
+  public memberships: Map<string, number[]> = new Map()
 
   async create(
     data: CreateProjectRequest & { ownerId: number; idempresa: number }
   ): Promise<Project> {
     const project: Project = {
-      id: this.idCounter++,
+      id: createId(),
       nome: data.nome,
       projectId: data.projectId || null,
       descricao: data.descricao || null,
@@ -41,7 +41,7 @@ export class InMemoryProjectRepository implements ProjectRepository {
     return project
   }
 
-  async findById(id: number): Promise<Project | null> {
+  async findById(id: string): Promise<Project | null> {
     const project = this.items.find((p) => p.id === id)
     return project || null
   }
@@ -119,7 +119,7 @@ export class InMemoryProjectRepository implements ProjectRepository {
     return { projects, total}
   }
 
-  async update(id: number, data: UpdateProjectRequest): Promise<Project> {
+  async update(id: string, data: UpdateProjectRequest): Promise<Project> {
     const index = this.items.findIndex((p) => p.id === id)
 
     if (index === -1) {
@@ -137,7 +137,7 @@ export class InMemoryProjectRepository implements ProjectRepository {
     return this.items[index]
   }
 
-  async archive(id: number): Promise<void> {
+  async archive(id: string): Promise<void> {
     const index = this.items.findIndex((p) => p.id === id)
 
     if (index === -1) {
@@ -148,7 +148,7 @@ export class InMemoryProjectRepository implements ProjectRepository {
     this.items[index].updatedAt = new Date()
   }
 
-  async isUserMember(projectId: number, userId: number): Promise<boolean> {
+  async isUserMember(projectId: string, userId: number): Promise<boolean> {
       const members = this.memberships.get(projectId)
 
       if (!members) {
@@ -158,7 +158,7 @@ export class InMemoryProjectRepository implements ProjectRepository {
       return members.includes(userId)
   }
 
-  addMember(projectId: number, userId: number): void {
+  addMember(projectId: string, userId: number): void {
     const members = this.memberships.get(projectId) || [];
     if (!members.includes(userId)) {
         members.push(userId);

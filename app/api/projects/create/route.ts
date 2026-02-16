@@ -1,7 +1,9 @@
+import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
+import type { User } from '@/src/@types/user';
+import { verifyAuth } from '@/src/auth';
 import { ProjetoPriority, ProjetoStatus } from '@/src/generated/elo';
-import { verifyJWT } from '@/src/http/middlewares/verify-jwt';
 import {
   InvalidColorFormatError,
   InvalidDateRangeError,
@@ -24,13 +26,13 @@ const createProjectSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const { user, error: authError } = await verifyJWT();
+  const { user: authUser, error: authError } = await verifyAuth();
 
-  if (authError || !user) {
+  if (authError || !authUser) {
     return authError;
   }
 
-  if (!user.idempresa) {
+  if (!authUser.enterpriseId) {
     return standardError(
       'BAD_REQUEST',
       'User must belong to a company to create projects',
@@ -51,12 +53,33 @@ export async function POST(req: NextRequest) {
         : undefined,
     };
 
+    // Criar User parcial para o use case
+    const user: User = {
+      id: authUser.id,
+      email: authUser.email,
+      admin: authUser.admin,
+      superadmin: authUser.superadmin,
+      idempresa: authUser.enterpriseId,
+      nome: '',
+      sobrenome: '',
+      username: '',
+      foto: '',
+      telefone: '',
+      empresa: '',
+      departamento: null,
+      time: null,
+      online: false,
+    };
+
     const createProject = makeCreateProjectUseCase();
 
     const { project } = await createProject.execute({
       user,
       data,
     });
+
+    revalidateTag('projects', 'max');
+    revalidateTag(`projects-enterprise-${authUser.enterpriseId}`, 'max');
 
     return successResponse({ project }, 201, 'Project created successfully');
   } catch (err) {

@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { User } from '../@types/user';
 import { InMemoryProjectMembersRepository } from '../repositories/in-memory/in-memory-project-members-repository';
@@ -24,10 +25,14 @@ const mockUser: User = {
   online: true,
 };
 
+let testProjectId: string;
+
 describe('GetProjectMembersUseCase', () => {
   beforeEach(() => {
     projectMembersRepository = new InMemoryProjectMembersRepository();
     sut = new GetProjectMembersUseCase(projectMembersRepository);
+
+    testProjectId = createId();
 
     // Setup mock users
     projectMembersRepository.users = [
@@ -40,13 +45,13 @@ describe('GetProjectMembersUseCase', () => {
   it('should get all members of a project', async () => {
     // Arrange
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: 1,
       role: 'admin',
     });
 
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: 2,
       role: 'member',
     });
@@ -54,7 +59,7 @@ describe('GetProjectMembersUseCase', () => {
     // Act
     const result = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
     // Assert
@@ -72,19 +77,19 @@ describe('GetProjectMembersUseCase', () => {
   it('should sort owners first, then alphabetically', async () => {
     // Arrange
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: 1,
       role: 'admin',
     });
 
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: 2,
       role: 'member',
     });
 
     await projectMembersRepository.create({
-      projectId: 1,
+      projectId: testProjectId,
       userId: 3,
       role: 'owner',
     });
@@ -92,7 +97,7 @@ describe('GetProjectMembersUseCase', () => {
     // Act
     const result = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
     // Assert
@@ -107,7 +112,7 @@ describe('GetProjectMembersUseCase', () => {
     await expect(() =>
       sut.execute({
         user: mockUser,
-        projectId: 999,
+        projectId: 'non-existent-id',
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });

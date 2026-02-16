@@ -25,13 +25,15 @@ const mockUser: User = {
   online: true,
 };
 
+let testProjectId: string;
+
 describe('Get Project Details Use Case', () => {
   beforeEach(async () => {
     projectsRepository = new InMemoryProjectRepository();
     sut = new GetProjectDetailsUseCase(projectsRepository);
 
     // Criar projeto para testes
-    await projectsRepository.create({
+    const testProject = await projectsRepository.create({
       nome: 'Test Project',
       projectId: 'PROJ-001',
       descricao: 'Project description',
@@ -45,18 +47,19 @@ describe('Get Project Details Use Case', () => {
       prioridade: ProjetoPriority.high,
       acesso: true,
     });
+    testProjectId = testProject.id;
 
     // Adicionar usuário como membro
-    projectsRepository.addMember(1, mockUser.id);
+    projectsRepository.addMember(testProjectId, mockUser.id);
   });
 
   it('should return project details for member', async () => {
     const { project } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
-    expect(project.id).toBe(1);
+    expect(project.id).toEqual(expect.any(String));
     expect(project.nome).toBe('Test Project');
     expect(project.projectId).toBe('PROJ-001');
     expect(project.descricao).toBe('Project description');
@@ -71,7 +74,7 @@ describe('Get Project Details Use Case', () => {
 
     const { project } = await sut.execute({
       user: superadminUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
     expect(project.nome).toBe('Test Project');
@@ -81,7 +84,7 @@ describe('Get Project Details Use Case', () => {
     await expect(
       sut.execute({
         user: mockUser,
-        projectId: 999,
+        projectId: 'non-existent-id',
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
@@ -92,7 +95,7 @@ describe('Get Project Details Use Case', () => {
     await expect(
       sut.execute({
         user: nonMemberUser,
-        projectId: 1,
+        projectId: testProjectId,
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
@@ -100,7 +103,7 @@ describe('Get Project Details Use Case', () => {
   it('should return all project fields correctly', async () => {
     const { project } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
     expect(project).toHaveProperty('id');
@@ -122,17 +125,17 @@ describe('Get Project Details Use Case', () => {
 
   it('should return project with null optional fields', async () => {
     // Criar projeto mínimo
-    await projectsRepository.create({
+    const minimalProject = await projectsRepository.create({
       nome: 'Minimal Project',
       ownerId: mockUser.id,
       idempresa: mockUser.idempresa!,
     });
 
-    projectsRepository.addMember(2, mockUser.id);
+    projectsRepository.addMember(minimalProject.id, mockUser.id);
 
     const { project } = await sut.execute({
       user: mockUser,
-      projectId: 2,
+      projectId: minimalProject.id,
     });
 
     expect(project.nome).toBe('Minimal Project');
@@ -147,7 +150,7 @@ describe('Get Project Details Use Case', () => {
   it('should return project dates as Date objects', async () => {
     const { project } = await sut.execute({
       user: mockUser,
-      projectId: 1,
+      projectId: testProjectId,
     });
 
     expect(project.dataInicio).toBeInstanceOf(Date);

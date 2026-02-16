@@ -1,3 +1,4 @@
+import { createId } from '@paralleldrive/cuid2'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { User } from '../@types/user'
 import { InMemoryProjectMembersRepository } from '../repositories/in-memory/in-memory-project-members-repository'
@@ -23,10 +24,14 @@ const mockUser: User = {
   online: true,
 }
 
+let testProjectId: string
+
 describe('Check User Permission Use Case', () => {
   beforeEach(() => {
     projectMembersRepository = new InMemoryProjectMembersRepository()
     sut = new CheckUserPermissionUseCase(projectMembersRepository)
+
+    testProjectId = createId()
   })
 
   describe('Superadmin bypass (RN1.3)', () => {
@@ -35,7 +40,7 @@ describe('Check User Permission Use Case', () => {
 
       const result = await sut.execute({
         user: superadminUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'delete_project',
       })
 
@@ -48,7 +53,7 @@ describe('Check User Permission Use Case', () => {
     it('should deny access if user is not a member', async () => {
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         minimumRole: 'viewer',
       })
 
@@ -61,14 +66,14 @@ describe('Check User Permission Use Case', () => {
   describe('Permission-based checks', () => {
     it('should allow viewer to read project', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'viewer',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'read_project',
       })
 
@@ -78,14 +83,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should deny viewer from creating tasks', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'viewer',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'create_task',
       })
 
@@ -95,14 +100,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should allow member to create tasks', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'member',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'create_task',
       })
 
@@ -111,14 +116,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should deny member from deleting project', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'member',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'delete_project',
       })
 
@@ -127,14 +132,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should allow owner to delete project', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'owner',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'delete_project',
       })
 
@@ -145,14 +150,14 @@ describe('Check User Permission Use Case', () => {
   describe('Role hierarchy checks (RN1.2)', () => {
     it('should allow admin when minimum role is member', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'admin',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         minimumRole: 'member',
       })
 
@@ -161,14 +166,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should deny member when minimum role is admin', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'member',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         minimumRole: 'admin',
       })
 
@@ -178,14 +183,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should allow owner when minimum role is admin', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'owner',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         minimumRole: 'admin',
       })
 
@@ -194,14 +199,14 @@ describe('Check User Permission Use Case', () => {
 
     it('should allow exact role match', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'member',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         minimumRole: 'member',
       })
 
@@ -212,20 +217,20 @@ describe('Check User Permission Use Case', () => {
   describe('Multiple roles - most permissive (RN1.1)', () => {
     it('should use admin role when user has both member and admin', async () => {
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'member',
       })
 
       await projectMembersRepository.create({
-        projectId: 1,
+        projectId: testProjectId,
         userId: mockUser.id,
         role: 'admin',
       })
 
       const result = await sut.execute({
         user: mockUser,
-        projectId: 1,
+        projectId: testProjectId,
         permission: 'edit_any_task', // Apenas admin tem
       })
 

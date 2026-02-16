@@ -5,7 +5,7 @@ import { GetUserProjectRoleUseCase } from "./get-user-project-role";
 
 interface CheckUserPermissionRequest {
   user: User
-  projectId: number
+  projectId: string
   permission?: ProjectPermission,
   minimumRole?: ProjectRole,
 }
