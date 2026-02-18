@@ -4,8 +4,6 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { QueryProvider } from './providers/query-provider';
-import { ThemeProvider } from './providers/theme-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -22,14 +20,10 @@ export default function RootLayout({
   return (
     <html lang='en' className={cn('dark', inter.variable)}>
       <body className='root antialiased bg-background h-screen'>
-        <ThemeProvider>
-          <QueryProvider>
-            <TooltipProvider>
-              {children}
-              <Toaster />
-            </TooltipProvider>
-          </QueryProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );
