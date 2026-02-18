@@ -19,7 +19,10 @@
       "Bash(git add:*)",
       "WebSearch",
       "Bash(git switch:*)",
-      "Bash(pnpm prisma migrate dev:*)"
+      "Bash(pnpm prisma migrate dev:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(npx -y prisma generate:*)",
+      "Bash(npx prisma studio:*)"
     ]
   }
 }
