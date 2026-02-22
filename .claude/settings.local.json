@@ -22,7 +22,9 @@
       "Bash(pnpm prisma migrate dev:*)",
       "Bash(pnpm approve-builds:*)",
       "Bash(npx -y prisma generate:*)",
-      "Bash(npx prisma studio:*)"
+      "Bash(npx prisma studio:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(cd:*)"
     ]
   }
 }

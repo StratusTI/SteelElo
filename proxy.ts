@@ -1,102 +1,62 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import * as jose from 'jose'
+import { NextResponse, type NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
 
-const PUBLIC_ROUTES = [
-  '/api/auth/login',
-  '/api/auth/logout',
-  '/api/auth/refresh',
-  '/api/health',
-]
+const PUBLIC_ROUTES = ['/login', '/api/auth/login', '/api/auth/refresh', '/api/auth/', '/api/users']
 
-const PROTECTED_API_PREFIXES = [
-  '/api/projects',
-  '/api/auth/me',
-  '/api/company',
-  '/api/users',
-  '/api/integrations',
-]
+const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 
-const JWT_SECRET = process.env.JWT_SECRET
-const ENCODED_SECRET = JWT_SECRET ? new TextEncoder().encode(JWT_SECRET) : null
+async function isValidAccessToken(token: string): Promise<boolean> {
+  try {
+    await jwtVerify(token, secret)
+    return true
+  } catch {
+    return false
+  }
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip public routes
-  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next()
-  }
-
-  // Check if protected API route
-  const isProtectedApi = PROTECTED_API_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix)
-  )
-
-  if (!isProtectedApi) {
-    return NextResponse.next()
-  }
-
-  // Verify JWT_SECRET is configured
-  if (!ENCODED_SECRET) {
-    console.error('[Middleware] JWT_SECRET not configured')
-    return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR' } },
-      { status: 500 }
-    )
-  }
-
+  const isPublic = PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
   const accessToken = request.cookies.get('auth_token')?.value
-  const refreshToken = request.cookies.get('refresh_token')?.value
 
-  // No tokens present
-  if (!accessToken && !refreshToken) {
-    return NextResponse.json(
-      { success: false, error: { code: 'UNAUTHORIZED' } },
-      { status: 401 }
-    )
-  }
+  const isAuthenticated = accessToken ? await isValidAccessToken(accessToken) : false
 
-  // Verify access token
-  if (accessToken) {
-    try {
-      await jose.jwtVerify(accessToken, ENCODED_SECRET, {
-        algorithms: ['HS256'],
-        issuer: 'nexo',
-      })
-      // Token valid - continue
-      return NextResponse.next()
-    } catch {
-      // Token invalid/expired - try refresh below
+  if (isPublic) {
+    if (isAuthenticated && pathname.startsWith('/login')) {
+      return NextResponse.redirect(new URL('/', request.url))
     }
+    return NextResponse.next()
   }
 
-  // Access token invalid, check refresh token
-  if (refreshToken) {
-    try {
-      const { payload } = await jose.jwtVerify(refreshToken, ENCODED_SECRET, {
-        algorithms: ['HS256'],
-        issuer: 'nexo',
+  if (!isAuthenticated) {
+    const refreshToken = request.cookies.get('refresh_token')?.value
+
+    if (refreshToken) {
+      const refreshUrl = new URL('/api/auth/refresh', request.url)
+      const refreshResponse = await fetch(refreshUrl, {
+        method: 'POST',
+        headers: { Cookie: `refresh_token=${refreshToken}` },
       })
 
-      if (payload.type !== 'refresh') {
-        throw new Error('Invalid refresh token type')
+      if (refreshResponse.ok) {
+        const response = NextResponse.redirect(request.url)
+
+        for (const cookie of refreshResponse.headers.getSetCookie()) {
+          response.headers.append('Set-Cookie', cookie)
+        }
+
+        return response
       }
-
-      // Refresh token valid - let the request continue
-      // The actual token refresh will happen in verifyAuth()
-      return NextResponse.next()
-    } catch {
-      // Refresh token also invalid
     }
+
+    const loginUrl = new URL('/login', request.url)
+    return NextResponse.redirect(loginUrl)
   }
 
-  return NextResponse.json(
-    { success: false, error: { code: 'INVALID_TOKEN' } },
-    { status: 401 }
-  )
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/api/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)'],
 }

@@ -86,7 +86,7 @@
 			"bracketSpacing": true,
 			"quoteProperties": "asNeeded",
 			"trailingCommas": "all",
-			"semicolons": "always",
+			"semicolons": "asNeeded",
 			"arrowParentheses": "always",
 			"bracketSameLine": false,
 			"jsxQuoteStyle": "single",

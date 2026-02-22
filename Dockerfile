@@ -27,6 +27,10 @@ COPY . .
 # Desabilita telemetria durante build
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# NEXT_PUBLIC_* vars são inlined no client bundle em build time
+ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+
 # MODIFICAÇÃO CRÍTICA: Gerar Prisma Client antes do build
 RUN corepack enable pnpm && \
     pnpm prisma:generate && \

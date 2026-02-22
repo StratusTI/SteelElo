@@ -64,6 +64,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_APP_URL=https://elo.stratustelecom.com.br:44385
           secrets: |
             hugeicons_token=${{ secrets.HUGEICONS_TOKEN }}
 
@@ -74,8 +76,11 @@ jobs:
       name: production
       url: https://elo.stratustelecom.com.br:44385
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Deploy to server
         run: |
+            cp docker-compose.yml /var/www/SteelElo/docker-compose.yml
             cd /var/www/SteelElo/
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose down

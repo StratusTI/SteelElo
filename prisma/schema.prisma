@@ -7,12 +7,38 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          String     @id @default(cuid())
+  name        String
+  email       String     @unique
+  password    String
+  role        Role       @default(MEMBER)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
 
   @@map("users")
+}
+
+model Workspace {
+  id           String         @id @default(cuid())
+  name         String
+  slug         String         @unique
+  activePlan   Plan
+  users        User[]
+
+  @@map("workspaces")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum Plan {
+  BASIC
+  PRO
+  ENTERPRISE
 }
