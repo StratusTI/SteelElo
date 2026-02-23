@@ -1,6 +1,14 @@
-import { clearAuthCookies, getRefreshToken, setAuthCookies } from '@/src/lib/cookies'
+import {
+  clearAuthCookies,
+  getRefreshToken,
+  setAuthCookies,
+} from '@/src/lib/cookies'
 import { AuthService } from '@/src/services/auth.service'
-import { handleError, standardError, successResponse } from '@/utils/http-response'
+import {
+  handleError,
+  standardError,
+  successResponse,
+} from '@/utils/http-response'
 
 export async function POST() {
   const refreshToken = await getRefreshToken()

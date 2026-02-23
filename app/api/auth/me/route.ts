@@ -1,11 +1,20 @@
 import type { NextRequest } from 'next/server'
 import { unauthorized } from '@/src/errors'
 import { getAccessToken, setAuthCookies } from '@/src/lib/cookies'
-import { signAccessToken, signRefreshToken, verifyAccessToken, type AccessTokenPayload } from '@/src/lib/jwt'
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccessToken,
+  type AccessTokenPayload,
+} from '@/src/lib/jwt'
 import { type Result, err } from '@/src/lib/result'
 import { UpdateUserSchema } from '@/src/schemas/user.schema'
 import { UserService } from '@/src/services/user.service'
-import { handleError, standardError, successResponse } from '@/utils/http-response'
+import {
+  handleError,
+  standardError,
+  successResponse,
+} from '@/utils/http-response'
 
 async function authenticateRequest(): Promise<Result<AccessTokenPayload>> {
   const accessToken = await getAccessToken()
@@ -36,7 +45,11 @@ export async function PATCH(request: NextRequest) {
   const parsed = UpdateUserSchema.safeParse(body)
 
   if (!parsed.success) {
-    return standardError('VALIDATION_ERROR', 'Dados inválidos', parsed.error.issues)
+    return standardError(
+      'VALIDATION_ERROR',
+      'Dados inválidos',
+      parsed.error.issues,
+    )
   }
 
   const result = await UserService.updateProfile(auth.value.sub, parsed.data)
