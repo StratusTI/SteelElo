@@ -1,8 +1,7 @@
-import { AuthService } from '@/src/services/auth.service'
-import { successResponse, errorResponse } from '@/src/lib/http'
 import { clearAuthCookies, getAccessToken } from '@/src/lib/cookies'
 import { verifyAccessToken } from '@/src/lib/jwt'
-import { UnauthorizedError } from '@/src/errors'
+import { AuthService } from '@/src/services/auth.service'
+import { successResponse } from '@/utils/http-response'
 
 export async function POST() {
   const accessToken = await getAccessToken()

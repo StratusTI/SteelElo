@@ -1,62 +1,47 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { UpdateUserSchema } from '@/src/schemas/user.schema'
-import { AuthService } from '@/src/services/auth.service'
-import { UserService } from '@/src/services/user.service'
-import { successResponse, errorResponse } from '@/src/lib/http'
-import {
-  verifyAccessToken,
-  signAccessToken,
-  signRefreshToken,
-} from '@/src/lib/jwt'
+import type { NextRequest } from 'next/server'
+import { unauthorized } from '@/src/errors'
 import { getAccessToken, setAuthCookies } from '@/src/lib/cookies'
-import { UnauthorizedError, ValidationError } from '@/src/errors'
+import { signAccessToken, signRefreshToken, verifyAccessToken, type AccessTokenPayload } from '@/src/lib/jwt'
+import { type Result, err } from '@/src/lib/result'
+import { UpdateUserSchema } from '@/src/schemas/user.schema'
+import { UserService } from '@/src/services/user.service'
+import { handleError, standardError, successResponse } from '@/utils/http-response'
 
-async function authenticateRequest() {
+async function authenticateRequest(): Promise<Result<AccessTokenPayload>> {
   const accessToken = await getAccessToken()
 
   if (!accessToken) {
-    return {
-      ok: false as const,
-      error: new UnauthorizedError('Token não encontrado'),
-    }
+    return err(unauthorized('Token não encontrado'))
   }
 
-  const tokenResult = await verifyAccessToken(accessToken)
-
-  if (!tokenResult.ok) {
-    return { ok: false as const, error: tokenResult.error }
-  }
-
-  return { ok: true as const, value: tokenResult.value }
+  return verifyAccessToken(accessToken)
 }
 
 export async function GET() {
   const auth = await authenticateRequest()
-  if (!auth.ok) return errorResponse(auth.error)
+  if (!auth.ok) return handleError(auth.error)
 
   const result = await UserService.getProfile(auth.value.sub)
 
-  if (!result.ok) return errorResponse(result.error)
+  if (!result.ok) return handleError(result.error)
 
   return successResponse(result.value)
 }
 
 export async function PATCH(request: NextRequest) {
   const auth = await authenticateRequest()
-  if (!auth.ok) return errorResponse(auth.error)
+  if (!auth.ok) return handleError(auth.error)
 
   const body = await request.json()
   const parsed = UpdateUserSchema.safeParse(body)
 
   if (!parsed.success) {
-    return errorResponse(
-      new ValidationError('Dados inválidos', parsed.error.issues),
-    )
+    return standardError('VALIDATION_ERROR', 'Dados inválidos', parsed.error.issues)
   }
 
   const result = await UserService.updateProfile(auth.value.sub, parsed.data)
 
-  if (!result.ok) return errorResponse(result.error)
+  if (!result.ok) return handleError(result.error)
 
   const [accessToken, refreshToken] = await Promise.all([
     signAccessToken({

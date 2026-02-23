@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface SmallProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function Small({ children, className }: SmallProps) {
@@ -12,5 +12,5 @@ export function Small({ children, className }: SmallProps) {
     >
       {children}
     </small>
-  );
+  )
 }

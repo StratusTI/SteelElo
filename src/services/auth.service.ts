@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { UnauthorizedError } from '@/src/errors'
+import { unauthorized } from '@/src/errors'
 import { type Result, ok, err } from '@/src/lib/result'
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '@/src/lib/jwt'
 import { UserRepository } from '@/src/repositories/user.repository'
@@ -22,12 +22,12 @@ export const AuthService = {
 
     const user = result.value
     if (!user) {
-      return err(new UnauthorizedError('E-mail ou senha inválidos'))
+      return err(unauthorized('E-mail ou senha inválidos'))
     }
 
     const passwordMatch = await bcrypt.compare(dto.password, user.password)
     if (!passwordMatch) {
-      return err(new UnauthorizedError('E-mail ou senha inválidos'))
+      return err(unauthorized('E-mail ou senha inválidos'))
     }
 
     const userDTO = toUserDTO(user)
@@ -53,14 +53,14 @@ export const AuthService = {
 
     const storedToken = await SessionCache.getRefreshToken(userId)
     if (!storedToken || storedToken !== currentRefreshToken) {
-      return err(new UnauthorizedError('Refresh token inválido'))
+      return err(unauthorized('Refresh token inválido'))
     }
 
     let userDTO = await UserCache.get(userId)
 
     if (!userDTO) {
       const userResult = await UserRepository.findById(userId)
-      if (!userResult.ok) return err(new UnauthorizedError('Usuário não encontrado'))
+      if (!userResult.ok) return err(unauthorized('Usuário não encontrado'))
 
       userDTO = toUserDTO(userResult.value)
       await UserCache.set(userId, userDTO)

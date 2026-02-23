@@ -1,7 +1,7 @@
 import type { Role, User } from '@prisma/client'
 import { prisma } from '@/src/lib/prisma'
 import { type Result, ok, err } from '@/src/lib/result'
-import { ConflictError, DatabaseError, NotFoundError } from '@/src/errors'
+import { conflict, databaseError, notFound } from '@/src/errors'
 
 export const UserRepository = {
   async findById(id: string): Promise<Result<User>> {
@@ -9,12 +9,12 @@ export const UserRepository = {
       const user = await prisma.user.findUnique({ where: { id } })
 
       if (!user) {
-        return err(new NotFoundError('User'))
+        return err(notFound('User'))
       }
 
       return ok(user)
     } catch {
-      return err(new DatabaseError('Failed to find user by id'))
+      return err(databaseError('Failed to find user by id'))
     }
   },
 
@@ -23,7 +23,7 @@ export const UserRepository = {
       const user = await prisma.user.findUnique({ where: { email } })
       return ok(user)
     } catch {
-      return err(new DatabaseError('Failed to find user by email'))
+      return err(databaseError('Failed to find user by email'))
     }
   },
 
@@ -43,9 +43,9 @@ export const UserRepository = {
         'code' in error &&
         error.code === 'P2002'
       ) {
-        return err(new ConflictError('E-mail já está em uso'))
+        return err(conflict('E-mail já está em uso'))
       }
-      return err(new DatabaseError('Failed to create user'))
+      return err(databaseError('Failed to create user'))
     }
   },
 
@@ -57,7 +57,7 @@ export const UserRepository = {
       const user = await prisma.user.update({ where: { id }, data })
       return ok(user)
     } catch {
-      return err(new DatabaseError('Failed to update user'))
+      return err(databaseError('Failed to update user'))
     }
   },
 }

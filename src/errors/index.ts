@@ -1,9 +1,10 @@
 export {
-  AppError,
-  NotFoundError,
-  ConflictError,
-  UnauthorizedError,
-  ForbiddenError,
-  ValidationError,
-  DatabaseError,
+  unauthorized,
+  invalidCredentials,
+  forbidden,
+  notFound,
+  conflict,
+  validationError,
+  badRequest,
+  databaseError,
 } from './app-error'

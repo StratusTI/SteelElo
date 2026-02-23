@@ -1,9 +1,9 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { setAuthCookies } from '@/src/lib/cookies'
 import { LoginSchema } from '@/src/schemas/auth.schema'
 import { AuthService } from '@/src/services/auth.service'
-import { setAuthCookies } from '@/src/lib/cookies'
 
 export interface LoginState {
   error: string | null

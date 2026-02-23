@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { ConflictError } from '@/src/errors'
+import { conflict } from '@/src/errors'
 import { type Result, ok, err } from '@/src/lib/result'
 import { UserRepository } from '@/src/repositories/user.repository'
 import { UserCache } from '@/src/cache/user.cache'
@@ -13,7 +13,7 @@ export const UserService = {
     if (!existingResult.ok) return existingResult
 
     if (existingResult.value) {
-      return err(new ConflictError('E-mail já está em uso'))
+      return err(conflict('E-mail já está em uso'))
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10)
@@ -51,7 +51,7 @@ export const UserService = {
       if (!existingResult.ok) return existingResult
 
       if (existingResult.value && existingResult.value.id !== actorId) {
-        return err(new ConflictError('E-mail já está em uso'))
+        return err(conflict('E-mail já está em uso'))
       }
     }
 

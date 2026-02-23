@@ -14,9 +14,9 @@ Não adicione novos padrões sem problema identificado que os justifique
 **Regras:**
 - Um repository por entidade principal do domínio
 - Métodos nomeados pela intenção, não pela query (`findByWorkspace`, não `selectWhereWorkspaceId`)
-- Retorna result — nunca lança exceção
+- Retorna `Result<T, AppError>` — nunca lança exceção
 - Try/catch obrigatório ao redor de toda chamada Prisma
-- Erros do Prisma são convertidos para erros de domínio antes de retornar
+- Erros do Prisma são convertidos via factory functions (`notFound()`, `databaseError()`, `conflict()`)
 
 ---
 
@@ -90,4 +90,4 @@ Cada função faz uma coisa. Se você precisar de "e" para descrever o que ela f
 | Service | `PascalCaseService` | `ProjectService` |
 | Repository | `PascalCaseRepository` | `ProjectRepository` |
 | Mapper | `toCamelCaseDTO` | `toProjectDTO` |
-| Erro de domínio | `PascalCaseError` | `ConflictError` |
+| Erro de domínio (factory) | `camelCase` | `conflict()`, `notFound()` |

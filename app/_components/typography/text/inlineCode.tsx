@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface InlineCodeProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function InlineCode({ children, className }: InlineCodeProps) {
@@ -15,5 +15,5 @@ export function InlineCode({ children, className }: InlineCodeProps) {
     >
       {children}
     </code>
-  );
+  )
 }

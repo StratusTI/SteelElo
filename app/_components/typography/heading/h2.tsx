@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface H2Props {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function H2({ children, className }: H2Props) {
@@ -15,5 +15,5 @@ export function H2({ children, className }: H2Props) {
     >
       {children}
     </h2>
-  );
+  )
 }

@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose'
-import { UnauthorizedError } from '@/src/errors'
+import { unauthorized } from '@/src/errors'
 import { type Result, ok, err } from '@/src/lib/result'
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET)
@@ -35,7 +35,7 @@ export async function verifyAccessToken(
     const { payload } = await jwtVerify(token, secret)
 
     if (!payload.sub) {
-      return err(new UnauthorizedError('Invalid token payload'))
+      return err(unauthorized('Invalid token payload'))
     }
 
     return ok({
@@ -44,7 +44,7 @@ export async function verifyAccessToken(
       workspaceId: (payload.workspaceId as string | null) ?? null,
     })
   } catch {
-    return err(new UnauthorizedError('Invalid or expired token'))
+    return err(unauthorized('Invalid or expired token'))
   }
 }
 
@@ -55,11 +55,11 @@ export async function verifyRefreshToken(
     const { payload } = await jwtVerify(token, secret)
 
     if (!payload.sub) {
-      return err(new UnauthorizedError('Invalid refresh token'))
+      return err(unauthorized('Invalid refresh token'))
     }
 
     return ok({ sub: payload.sub })
   } catch {
-    return err(new UnauthorizedError('Invalid or expired refresh token'))
+    return err(unauthorized('Invalid or expired refresh token'))
   }
 }

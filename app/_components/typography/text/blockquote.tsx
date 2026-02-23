@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface BlockquoteProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function Blockquote({ children, className }: BlockquoteProps) {
@@ -12,5 +12,5 @@ export function Blockquote({ children, className }: BlockquoteProps) {
     >
       {children}
     </blockquote>
-  );
+  )
 }

@@ -1,24 +1,21 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { setAuthCookies } from '@/src/lib/cookies'
 import { LoginSchema } from '@/src/schemas/auth.schema'
 import { AuthService } from '@/src/services/auth.service'
-import { successResponse, errorResponse } from '@/src/lib/http'
-import { setAuthCookies } from '@/src/lib/cookies'
-import { ValidationError } from '@/src/errors'
+import { handleError, standardError, successResponse } from '@/utils/http-response'
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
   const parsed = LoginSchema.safeParse(body)
 
   if (!parsed.success) {
-    return errorResponse(
-      new ValidationError('Dados inválidos', parsed.error.issues),
-    )
+    return standardError('VALIDATION_ERROR', 'Dados inválidos', parsed.error.issues)
   }
 
   const result = await AuthService.login(parsed.data)
 
   if (!result.ok) {
-    return errorResponse(result.error)
+    return handleError(result.error)
   }
 
   await setAuthCookies(result.value.accessToken, result.value.refreshToken)

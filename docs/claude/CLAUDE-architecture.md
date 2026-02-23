@@ -1,4 +1,4 @@
-# Arqutietura: Service Layer
+# Arquitetura: Service Layer
 
 ## Visão Geral
 
@@ -17,7 +17,7 @@ Client -> Server Action / API Route -> Zod -> Autorização -> Service -> Reposi
 - Extrai e deserializa o body
 - Chama a validação Zod
 - Chama o Service correspondente
-- Traduz o result em resposta HTTP ou retorno de formulário
+- Traduz o `Result` em resposta HTTP (`handleError()` / `standardError()`) ou retorno de formulário
 - **Não contém lógica de negócio**
 - **Não importa Prisma diretamente**
 
@@ -46,7 +46,7 @@ Client -> Server Action / API Route -> Zod -> Autorização -> Service -> Reposi
 
 - Única camada que importa e usa Prisma
 - Executa queries, nada mais
-- Captura erros do Prisma e os converte em Result com erros de domínio
+- Captura erros do Prisma e os converte em `Result` via factory functions (`notFound()`, `databaseError()`, `conflict()`)
 - **Não contém lógica de negócio**
 - **Não valida regras de negócio**
 

@@ -1,44 +1,41 @@
-export class AppError {
-  constructor(
-    public readonly code: string,
-    public readonly message: string,
-    public readonly statusCode: number,
-    public readonly details?: unknown,
-  ) {}
+import type { ErrorCode } from './codes'
+
+export interface AppError {
+  readonly code: ErrorCode
+  readonly message: string
+  readonly details?: unknown
 }
 
-export class NotFoundError extends AppError {
-  constructor(resource: string) {
-    super('RESOURCE_NOT_FOUND', `${resource} not found`, 404)
-  }
-}
+export const appError = (
+  code: ErrorCode,
+  message: string,
+  details?: unknown,
+): AppError => ({
+  code,
+  message,
+  ...(details !== undefined && { details }),
+})
 
-export class ConflictError extends AppError {
-  constructor(message: string) {
-    super('CONFLICT', message, 409)
-  }
-}
+export const unauthorized = (message = 'Não autorizado'): AppError =>
+  appError('UNAUTHORIZED', message)
 
-export class UnauthorizedError extends AppError {
-  constructor(message = 'Invalid credentials') {
-    super('UNAUTHORIZED', message, 401)
-  }
-}
+export const invalidCredentials = (message = 'Credenciais inválidas'): AppError =>
+  appError('INVALID_CREDENTIALS', message)
 
-export class ForbiddenError extends AppError {
-  constructor(message = 'Permissão insuficiente') {
-    super('FORBIDDEN', message, 403)
-  }
-}
+export const forbidden = (message = 'Permissão insuficiente'): AppError =>
+  appError('FORBIDDEN', message)
 
-export class ValidationError extends AppError {
-  constructor(message: string, details?: unknown) {
-    super('VALIDATION_ERROR', message, 422, details)
-  }
-}
+export const notFound = (resource: string): AppError =>
+  appError('RESOURCE_NOT_FOUND', `${resource} not found`)
 
-export class DatabaseError extends AppError {
-  constructor(message = 'Database error') {
-    super('DATABASE_ERROR', message, 500)
-  }
-}
+export const conflict = (message: string): AppError =>
+  appError('CONFLICT', message)
+
+export const validationError = (message: string, details?: unknown): AppError =>
+  appError('VALIDATION_ERROR', message, details)
+
+export const badRequest = (message: string): AppError =>
+  appError('BAD_REQUEST', message)
+
+export const databaseError = (message = 'Database error'): AppError =>
+  appError('DATABASE_ERROR', message)

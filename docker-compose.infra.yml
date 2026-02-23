@@ -31,25 +31,6 @@ services:
       timeout: 5s
       retries: 5
 
-  nexo-app:
-    profiles: [app]
-    image: ghcr.io/stratusti/steelelo:latest
-    container_name: nexo-app-dev
-    restart: unless-stopped
-    depends_on:
-      nexo-db:
-        condition: service_healthy
-      nexo-cache:
-        condition: service_healthy
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: http://localhost:3000
-      JWT_SECRET: ${JWT_SECRET:-dev-secret}
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nexo-db:5432/${POSTGRES_DB}
-      REDIS_URL: redis://nexo-cache:6379
-
 volumes:
   pgdata:
   redisdata:

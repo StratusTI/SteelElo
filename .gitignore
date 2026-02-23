@@ -32,7 +32,7 @@ yarn-error.log*
 
 # env files
 .env*
-!.env
+.env
 !.env.example
 
 # vercel
@@ -46,7 +46,6 @@ next-env.d.ts
 storybook-static
 
 # AI Agents & Skills
-.agents/*
+.agents*
 .claude
 /docs/claude
-CLAUDE.md

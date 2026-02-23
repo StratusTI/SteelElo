@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface LargeProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function Large({ children, className }: LargeProps) {
@@ -10,5 +10,5 @@ export function Large({ children, className }: LargeProps) {
     <div className={cn('text-lg font-semibold text-primary', className)}>
       {children}
     </div>
-  );
+  )
 }

@@ -16,7 +16,10 @@ const initialState: LoginState = {
 }
 
 export default function Login() {
-  const [state, formAction, isPending] = useActionState(loginAction, initialState)
+  const [state, formAction, isPending] = useActionState(
+    loginAction,
+    initialState,
+  )
 
   return (
     <div className='min-h-screen flex flex-col items-center justiyf-center p-4 pb-12'>
@@ -27,12 +30,8 @@ export default function Login() {
       </div>
       <div className='flex-1 w-full flex flex-col justify-center space-y-6 max-w-90'>
         <div>
-          <H4>
-            Trabalhe em todas as dimensões.
-          </H4>
-          <H4 className='text-muted-foreground'>
-            Bem-vindo ao Elo.
-          </H4>
+          <H4>Trabalhe em todas as dimensões.</H4>
+          <H4 className='text-muted-foreground'>Bem-vindo ao Elo.</H4>
         </div>
         <form action={formAction} className='w-full space-y-4'>
           {state.error && (
@@ -71,21 +70,21 @@ export default function Login() {
 
           <div className='flex items-center justify-center'>
             <Muted className='text-center text-sm p-4'>
-              Ao iniciar a sessão, você concorda com nossos {' '}
+              Ao iniciar a sessão, você concorda com nossos{' '}
               <Link href='#' className='text-primary hover:underline'>
                 Termos de Serviço
-              </Link> e {' '}
+              </Link>{' '}
+              e{' '}
               <Link href='#' className='text-primary hover:underline'>
                 Política de Privacidade
-              </Link> .
+              </Link>{' '}
+              .
             </Muted>
           </div>
         </form>
       </div>
       <div>
-        <Muted>
-          Junte-se a mais de 1.000 times no Elo
-        </Muted>
+        <Muted>Junte-se a mais de 1.000 times no Elo</Muted>
       </div>
     </div>
   )

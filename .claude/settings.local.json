@@ -24,7 +24,15 @@
       "Bash(npx -y prisma generate:*)",
       "Bash(npx prisma studio:*)",
       "Bash(git ls-tree:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(docker exec:*)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"require\\('dotenv/config'\\); console.log\\(process.env.DATABASE_URL\\)\" 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npx prisma validate 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"\nrequire\\('dotenv/config'\\);\nconst { PrismaClient } = require\\('./src/generated/prisma'\\);\nconst p = new PrismaClient\\(\\);\np.\\\\$connect\\(\\).then\\(\\(\\) => { console.log\\('OK'\\); p.\\\\$disconnect\\(\\); }\\).catch\\(e => console.error\\('FAIL:', e.message\\)\\);\n\" 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"\nconst net = require\\('net'\\);\nconst s = new net.Socket\\(\\);\ns.setTimeout\\(3000\\);\ns.connect\\(5432, '127.0.0.1', \\(\\) => { console.log\\('Port 5432 reachable'\\); s.destroy\\(\\); }\\);\ns.on\\('error', e => console.error\\('Error:', e.message\\)\\);\ns.on\\('timeout', \\(\\) => { console.error\\('Timeout'\\); s.destroy\\(\\); }\\);\n\" 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"\nconst { Client } = require\\('pg'\\);\nconst c = new Client\\({ connectionString: 'postgresql://root:M7a64tl0@localhost:5432/elo' }\\);\nc.connect\\(\\).then\\(\\(\\) => c.query\\('SELECT 1'\\)\\).then\\(r => { console.log\\('OK:', r.rows\\); c.end\\(\\); }\\).catch\\(e => console.error\\('FAIL:', e.message\\)\\);\n\" 2>&1)",
+      "Bash(netstat -ano | grep \":5432\" 2>/dev/null || powershell.exe -Command \"Get-NetTCPConnection -LocalPort 5432 | Select-Object LocalAddress,LocalPort,OwningProcess | Format-Table\" 2>&1)",
+      "Bash(powershell.exe:*)"
     ]
   }
 }

@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface H1Props {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function H1({ children, className }: H1Props) {
@@ -15,5 +15,5 @@ export function H1({ children, className }: H1Props) {
     >
       {children}
     </h1>
-  );
+  )
 }
