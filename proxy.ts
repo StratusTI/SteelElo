@@ -1,57 +1,23 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { jwtVerify } from 'jose'
 
-const PUBLIC_ROUTES = ['/login', '/api/auth/login', '/api/auth/refresh', '/api/auth/', '/api/users']
+const PUBLIC_ROUTES = ['/sign-in', '/sign-up', '/api/auth']
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET)
-
-async function isValidAccessToken(token: string): Promise<boolean> {
-  try {
-    await jwtVerify(token, secret)
-    return true
-  } catch {
-    return false
-  }
-}
-
-export async function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isPublic = PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
-  const accessToken = request.cookies.get('auth_token')?.value
-
-  const isAuthenticated = accessToken ? await isValidAccessToken(accessToken) : false
+  const sessionToken = request.cookies.get('better-auth.session_token')?.value
 
   if (isPublic) {
-    if (isAuthenticated && pathname.startsWith('/login')) {
+    if (sessionToken && (pathname === '/sign-in' || pathname === '/sign-up')) {
       return NextResponse.redirect(new URL('/', request.url))
     }
     return NextResponse.next()
   }
 
-  if (!isAuthenticated) {
-    const refreshToken = request.cookies.get('refresh_token')?.value
-
-    if (refreshToken) {
-      const refreshUrl = new URL('/api/auth/refresh', request.url)
-      const refreshResponse = await fetch(refreshUrl, {
-        method: 'POST',
-        headers: { Cookie: `refresh_token=${refreshToken}` },
-      })
-
-      if (refreshResponse.ok) {
-        const response = NextResponse.redirect(request.url)
-
-        for (const cookie of refreshResponse.headers.getSetCookie()) {
-          response.headers.append('Set-Cookie', cookie)
-        }
-
-        return response
-      }
-    }
-
-    const loginUrl = new URL('/login', request.url)
-    return NextResponse.redirect(loginUrl)
+  if (!sessionToken) {
+    const signInUrl = new URL('/sign-in', request.url)
+    return NextResponse.redirect(signInUrl)
   }
 
   return NextResponse.next()

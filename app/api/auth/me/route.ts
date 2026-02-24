@@ -1,13 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { unauthorized } from '@/src/errors'
-import { getAccessToken, setAuthCookies } from '@/src/lib/cookies'
-import {
-  signAccessToken,
-  signRefreshToken,
-  verifyAccessToken,
-  type AccessTokenPayload,
-} from '@/src/lib/jwt'
-import { type Result, err } from '@/src/lib/result'
+import { getAuthSession } from '@/src/lib/auth-session'
 import { UpdateUserSchema } from '@/src/schemas/user.schema'
 import { UserService } from '@/src/services/user.service'
 import {
@@ -16,21 +8,11 @@ import {
   successResponse,
 } from '@/utils/http-response'
 
-async function authenticateRequest(): Promise<Result<AccessTokenPayload>> {
-  const accessToken = await getAccessToken()
-
-  if (!accessToken) {
-    return err(unauthorized('Token não encontrado'))
-  }
-
-  return verifyAccessToken(accessToken)
-}
-
 export async function GET() {
-  const auth = await authenticateRequest()
+  const auth = await getAuthSession()
   if (!auth.ok) return handleError(auth.error)
 
-  const result = await UserService.getProfile(auth.value.sub)
+  const result = await UserService.getProfile(auth.value.user.id)
 
   if (!result.ok) return handleError(result.error)
 
@@ -38,7 +20,7 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
-  const auth = await authenticateRequest()
+  const auth = await getAuthSession()
   if (!auth.ok) return handleError(auth.error)
 
   const body = await request.json()
@@ -52,20 +34,9 @@ export async function PATCH(request: NextRequest) {
     )
   }
 
-  const result = await UserService.updateProfile(auth.value.sub, parsed.data)
+  const result = await UserService.updateProfile(auth.value.user.id, parsed.data)
 
   if (!result.ok) return handleError(result.error)
-
-  const [accessToken, refreshToken] = await Promise.all([
-    signAccessToken({
-      sub: result.value.id,
-      role: result.value.role,
-      workspaceId: result.value.workspaceId,
-    }),
-    signRefreshToken(result.value.id),
-  ])
-
-  await setAuthCookies(accessToken, refreshToken)
 
   return successResponse(result.value)
 }

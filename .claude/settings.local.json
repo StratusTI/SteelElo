@@ -32,7 +32,24 @@
       "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"\nconst net = require\\('net'\\);\nconst s = new net.Socket\\(\\);\ns.setTimeout\\(3000\\);\ns.connect\\(5432, '127.0.0.1', \\(\\) => { console.log\\('Port 5432 reachable'\\); s.destroy\\(\\); }\\);\ns.on\\('error', e => console.error\\('Error:', e.message\\)\\);\ns.on\\('timeout', \\(\\) => { console.error\\('Timeout'\\); s.destroy\\(\\); }\\);\n\" 2>&1)",
       "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"\nconst { Client } = require\\('pg'\\);\nconst c = new Client\\({ connectionString: 'postgresql://root:M7a64tl0@localhost:5432/elo' }\\);\nc.connect\\(\\).then\\(\\(\\) => c.query\\('SELECT 1'\\)\\).then\\(r => { console.log\\('OK:', r.rows\\); c.end\\(\\); }\\).catch\\(e => console.error\\('FAIL:', e.message\\)\\);\n\" 2>&1)",
       "Bash(netstat -ano | grep \":5432\" 2>/dev/null || powershell.exe -Command \"Get-NetTCPConnection -LocalPort 5432 | Select-Object LocalAddress,LocalPort,OwningProcess | Format-Table\" 2>&1)",
-      "Bash(powershell.exe:*)"
+      "Bash(powershell.exe:*)",
+      "WebFetch(domain:www.better-auth.com)",
+      "WebFetch(domain:www.prisma.io)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npm install better-auth 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npx prisma migrate dev --name better-auth-migration 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && docker compose -f docker-compose.infra.yml up -d nexo-db 2>&1)",
+      "Bash(sleep 3 && cd /c/Users/gusttavo/apps/nexo && npx prisma migrate dev --name better-auth-migration 2>&1)",
+      "Bash(head:*)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npx prisma migrate dev --name better-auth-migration --create-only 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npx prisma db push --accept-data-loss 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npm uninstall jose bcryptjs 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && rm -rf .next && npx tsc --noEmit 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && npm run build 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"const v = require\\('vitest/config'\\); console.log\\(Object.keys\\(v\\)\\)\" 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"try { const v = require\\('vitest/node'\\); console.log\\(Object.keys\\(v\\).filter\\(k => k.includes\\('Work'\\) || k.includes\\('work'\\)\\)\\); } catch\\(e\\) { console.log\\(e.message\\); }\" 2>&1)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && node -e \"try { const v = require\\('vitest/node'\\); console.log\\(Object.keys\\(v\\).filter\\(k => k.toLowerCase\\(\\).includes\\('defin'\\)\\)\\); } catch\\(e\\) { console.log\\(e.message\\); }\" 2>&1)",
+      "WebFetch(domain:vitest.dev)",
+      "Bash(cd /c/Users/gusttavo/apps/nexo && pnpm test:unit --run 2>&1)"
     ]
   }
 }

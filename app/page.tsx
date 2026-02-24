@@ -1,3 +1,23 @@
-export default async function RootPage() {
-  return <h1>Hello world! </h1>
+'use client'
+
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { authClient } from '@/src/lib/auth-client'
+
+export default function RootPage() {
+  const router = useRouter()
+
+  async function handleSignOut() {
+    await authClient.signOut()
+    router.push('/sign-in')
+  }
+
+  return (
+    <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
+      <h1>Hello world!</h1>
+      <Button variant='outline' onClick={handleSignOut}>
+        Sair
+      </Button>
+    </div>
+  )
 }

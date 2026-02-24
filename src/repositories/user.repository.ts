@@ -30,7 +30,6 @@ export const UserRepository = {
   async create(data: {
     name: string
     email: string
-    password: string
     role?: Role
     workspaceId?: string
   }): Promise<Result<User>> {

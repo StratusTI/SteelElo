@@ -6,6 +6,8 @@ export function toUserDTO(user: User): UserDTO {
     id: user.id,
     name: user.name,
     email: user.email,
+    emailVerified: user.emailVerified,
+    image: user.image,
     role: user.role,
     workspaceId: user.workspaceId,
     createdAt: user.createdAt.toISOString(),

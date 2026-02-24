@@ -1,7 +1,7 @@
 services:
   nexo-db:
     image: postgres:17-alpine
-    container_name: nexo-postgres
+    container_name: nexo-db-1
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -19,7 +19,7 @@ services:
 
   nexo-cache:
     image: redis:7-alpine
-    container_name: nexo-redis
+    container_name: nexo-redis-1
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -31,6 +31,45 @@ services:
       timeout: 5s
       retries: 5
 
+  nexo-queue:
+    image: rabbitmq:4-management-alpine
+    container_name: nexo-mq-1
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-/}
+    ports:
+      - "5656:5672" # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nexo-storage:
+    image: minio/minio:latest
+    container_name: nexo-minio-1
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console Web
+    volumes:
+      - miniodata:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
   redisdata:
+  rabbitmqdata:
+  miniodata:
